@@ -41,7 +41,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                         </Stack>
                         <FormControl required>
                             <FormLabel>Titre</FormLabel>
-                            <Input disabled={session != null} onChange={(e) => { setPost({...post, title: e.target.value})} } color="neutral" defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title"
+                            <Input disabled={session == null || (session?.user?.email != post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } color="neutral" defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title"
                                 sx={{
                                     p: 2,
                                     '&::before': {
