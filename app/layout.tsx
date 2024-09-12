@@ -31,6 +31,7 @@ export default async function RootLayout({
                   bgcolor: 'white',
                   gridTemplateRows: '52px 0px 1fr',
                   minHeight: '90dvh',
+                  p:1
                 }}
               >
                 <Sheet>

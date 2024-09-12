@@ -52,9 +52,7 @@ const PostViewer = ({content= "<p>Hello World! 🌎️</p>"}: {content?: string}
 
 
   return (
-    <Stack  spacing={2} sx={{bgcolor: "#fff", p: 2, m: 10}}>
       <EditorContent editor={editord} />
-    </Stack>
   )
 }
 

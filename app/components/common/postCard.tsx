@@ -20,8 +20,8 @@ import { PostCardType } from "@/app/common/types/posts";
 import { convertDateToString, toUppercaseFirstChar } from "@/app/lib/utils";
 
 
-export default function PostCard({post}: {post: PostCardType}) {
-  const { id, title, createdAt, owner, likes, _count } = post
+export default function PostCard({data}: {data: PostCardType}) {
+  const { id, title, createdAt, owner, likes, _count } = data
   const router = useRouter()
   const { data : session } = useSession()
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
