@@ -12,9 +12,10 @@ import { useEffect, useState } from 'react'
 import { SessionContextValue, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation";
 import { Button, CircularProgress, IconButton, Stack } from "@mui/joy"
-import { File, Save } from "react-feather"
+import { Save } from "react-feather"
 import { z } from "zod";
 
+import { RobotIcon } from "@/app/components/common/icons/RobotIcon"
 import { addPost, updatePost } from "@/app/actions/post"
 import { GetPostType } from "@/app/common/types/posts"
 
@@ -241,8 +242,8 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
   const handlePostAddButtonClick = async () => {
     if (post != null) {
       const { id, owner, ...data } = post 
-      await addPost({post: {...data, title: "New article", description: newDescription, userId: session?.user?.id}})
-      router.replace(`/posts`)
+      await addPost({post: {...data, description: newDescription, userId: session?.user?.id}})
+      router.push(`/`)
       alert("Créer avec succès")
     } else {
       alert("Erreur lors de la création du post")
@@ -270,8 +271,11 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
   }
 
   const generateDescription = async (title: string) => {
-    if (!post) {
+    if (!post || !title) {
       alert("Error : Impossible de générer la description")
+      console.log("post => ", post);
+      console.log("title => ", title);
+      
       return
     }
     setIsLoading(true)
@@ -307,14 +311,14 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
       <IconButton sx={{gap: 1, p: 1}} variant="outlined"  onClick={handlePostCancelChangeButtonClick}>
         Ignorer les modifications
       </IconButton>
-      <IconButton sx={{bgcolor: "#000", p: 1, gap: 1}} variant="solid" onClick={() => {
+      <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => {
         if (post) {
           generateDescription(post.title)
         }
       }}>
-        { isLoading ? <CircularProgress sx={{color: "#fff"}}/> : <File/> }  Générer la description
+        { isLoading ? <CircularProgress sx={{color: "#fff"}}/> : <RobotIcon/> }  Générer la description
       </IconButton>
-      <IconButton sx={{bgcolor: "#000", p: 1, gap: 1}} variant="solid" onClick={() => isNewPost ? handlePostAddButtonClick() : handlePostSaveButtonClick()}>
+      <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => isNewPost ? handlePostAddButtonClick() : handlePostSaveButtonClick()}>
         <Save/> {isNewPost ? "Créer" : "Enregistrer"}
       </IconButton>
     </Stack>
@@ -339,12 +343,10 @@ const PostEditor = ({data, isNew}: {data: GetPostType, isNew: boolean}) => {
   },[data])
 
   return (
-    <Stack key={"post_editor"} spacing={2} sx={{bgcolor: "#fff", p: 2, m: 10}}>
       <EditorProvider key={editorKey} slotBefore={<MenuBar />} extensions={extensions} content={desc} children={<PostEditorActions post={data} newDescription={desc} isNewPost={isNew} setter={handleDescriptionChange}/>} onUpdate={({editor})=>{
         handleDescriptionChange(editor.getHTML())
       }}
       ></EditorProvider>
-    </Stack>
   )
 }
 
