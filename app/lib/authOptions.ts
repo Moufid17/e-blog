@@ -67,34 +67,3 @@ jwt: Ce callback est appelé chaque fois qu'un JSON Web Token est créé ou mis 
 
 Ces callbacks sont tous optionnels et peuvent être utilisés en fonction de vos besoins spécifiques. Vous pouvez en savoir plus sur ces callbacks et comment les utiliser dans la documentation de NextAuth.js.
  */
-
-/**
- *     callbacks: {
-      signIn: async ({ user, account, profile }: any ) => {
-        if (account.provider === "google") {
-          if (profile.email_verified && profile.email.endsWith("@gmail.com")) {
-            console.log('auth page user => ', user);
-            return true
-          }
-        }
-        return false
-      },
-      redirect: async ({ url, baseUrl }: any) => {
-        // Allows relative callback URLs
-        // if (url.startsWith("/")) return `${baseUrl}${url}`
-        // // Allows callback URLs on the same origin
-        // else if (new URL(url).origin === baseUrl) return url
-        return baseUrl
-      },
-      session: async ({ session, token } :any) => {
-        // session.user.id = token.userId
-        return session;
-      },
-      jwt: async ({ user, token, account } : any) => {
-          console.log('auth page suser => ', user);
-          console.log('auth page saccount => ', account);
-          // token.userId =  user.id 
-        return token
-      },
-    },
- */
