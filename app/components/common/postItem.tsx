@@ -31,7 +31,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     
     return (
         <Stack spacing={2} sx={{bgcolor: "#fff"}}>
-            { post ? 
+            {post ? 
                 <Stack key={post.id} alignItems="center" sx={{pt: "1.5rem"}} spacing={1}>
                     <Stack key={"post_title"} width="100%" sx={{p:1}}>
                         <Stack direction={"row"} spacing={2} width="100%" sx={{pr: 4, justifyContent: "end"}}>
@@ -56,10 +56,9 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                             />    
                         </FormControl>
                     </Stack>
-                    {/* <Stack direction={"column"} spacing={1} width="100%"> */}
-                    <Stack key={"post_descritption_editor_or_viewer"} width="100%"  spacing={2} sx={{bgcolor: "#fff", p: 1, m: 10}}>
+                    <Stack key={"post_descritption_editor_or_viewer"} width="100%"  spacing={3} sx={{bgcolor: "#fff", p: 1, m: 10}}>
                         <Box>
-                            <Typography level="body-md"  sx={{mb:"-8px"}}>Description :</Typography>
+                            <Typography level="body-md"  sx={{mb:"-8px"}}>{(session && session?.user?.email == post?.owner?.email) ? "Editer" : ""} Description :</Typography>
                         </Box>
                         <Box sx={{p:0.5}}>
                             {/* Check logged user is owner */}

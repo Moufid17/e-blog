@@ -9,7 +9,7 @@
 
 ```bash
 make up
-make dpm // Create migration
+make dpm // Create migration (optional if db already exist)
 make dev
 ```
 
@@ -36,6 +36,7 @@ make dpm
 ### Prisma
 - [Prisma/postgres](https://www.prisma.io/docs/concepts/database-connectors/postgresql)
 - [Prisma/NextJs](https://www.prisma.io/nextjs)
+- [Prisma seed](https://www.prisma.io/docs/orm/prisma-migrate/workflows/seeding#seeding-your-database-with-typescript-or-javascript)
 
 - Setup Prisma :
     ```bash
@@ -54,3 +55,15 @@ make dpm
             ...
         }
         ```
+- [Prisma `Connect` keyword: Associate an existing record to another existing record](https://www.prisma.io/docs/orm/prisma-schema/data-model/relations#associate-an-existing-record-to-another-existing-record)
+    ```
+    const Post1 = await prismaClientDB.post.create({
+        data: {
+          title: "Comment faire de bons formulaires en React ?",
+           description: "On dit qu'un développeur ne fait que des formulaires. Donc il vaut mieux savoir faire de bons formulaires et pour ça il faut comprendre les formulaires en React.",
+            owner: {
+                connect: { email: 'moufid.mtr@gmail.com' },
+            },  
+        }
+    })
+    ```

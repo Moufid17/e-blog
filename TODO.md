@@ -1,0 +1,9 @@
+- [x] PostEditor Space between desc formatter and desc input 
+- [x] Home page : justify card to line start
+- [*1] Prisma seed
+- [*0] About me page
+- [ ] Delete post with confirmation
+- [ ] Handle unexisting page
+- [ ] Profil page : Post list (overview, edit, archive, unarchive and send to)
+- [ ] Home page : Filter post by category
+- [ ] Middleware
