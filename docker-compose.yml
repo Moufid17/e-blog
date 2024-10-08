@@ -1,4 +1,4 @@
-version: "3"
+# version: "3"
 
 services:
   nodejs:
@@ -15,7 +15,7 @@ services:
     networks:
       - dev
   db:
-    image: postgres:14.2
+    image: postgres:15-alpine3.16
     container_name: esgiblog-db
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
