@@ -4,7 +4,7 @@
  */
 import Link from 'next/link';
 import { getServerSession } from 'next-auth/next';
-import { Box, IconButton, Stack, Typography } from '@mui/joy'
+import { Box, Grid, IconButton, Stack, Typography } from '@mui/joy'
 
 import authOptions from './lib/authOptions';
 import { prismaClientDB } from '@/app/lib/prismaClient'
@@ -58,11 +58,25 @@ export default async function Home() {
           </IconButton>
         </Link>
       </Stack>
-      <Box key="home_posts" sx={{ gap: 2,  bgcolor: "white", display: "flex", justifyContent:"space-around", flexDirection:"row", flexWrap: 'wrap'}}>
-        {[...getAllPosts].map(
-          (post, index: number) => <PostCard key={"home_post_"+index} data={post}/>)
-        } 
-      </Box>
+
+      
+      {getAllPosts.length > 0 ? 
+        <Grid container 
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+          sx={{ flexGrow: 1 }}
+        >
+          {[...getAllPosts].map(
+              (post, index: number) => 
+                <Grid key={index} xs={2} sm={4} md={4}>
+                  <PostCard key={"home_post_"+index} data={post}/>
+                </Grid>
+              )
+            } 
+        </Grid>
+       : <Box sx={{textAlign:"center"}}>No posts found</Box>
+      }
+      
     </Box>
   )
 }

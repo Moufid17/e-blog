@@ -34,185 +34,189 @@ const MenuBar = () => {
   }
 
   return (
-    <Stack direction="row" spacing={1}  sx={{bgcolor:"#000", justifyContent:"space-around", p: 1}}>
-      <Button
-        color={editor.isActive('bold') ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        disabled={
-          !editor.can()
-            .chain()
-            .focus()
-            .toggleBold()
-            .run()
-        }
-        // className={editor.isActive('bold') ? 'is-active' : ''}
-      >
-        bold
-      </Button>
-      <Button
-        color={editor.isActive('italic') ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        disabled={
-          !editor.can()
-            .chain()
-            .focus()
-            .toggleItalic()
-            .run()
-        }
-        // className={editor.isActive('italic') ? 'is-active' : ''}
-      >
-        italic
-      </Button>
-      <Button
-        color={editor.isActive('strike') ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleStrike().run()}
-        disabled={
-          !editor.can()
-            .chain()
-            .focus()
-            .toggleStrike()
-            .run()
-        }
-        // className={editor.isActive('strike') ? 'is-active' : ''}
-      >
-        strike
-      </Button>
-      <Button
-        color={editor.isActive('code') ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleCode().run()}
-        disabled={
-          !editor.can()
-            .chain()
-            .focus()
-            .toggleCode()
-            .run()
-        }
-        // className={editor.isActive('code') ? 'is-active' : ''}
-      >
-        code
-      </Button>
-      <Button color={editor.isActive('unsetAllMarks') ? "warning" : "neutral"} onClick={() => editor.chain().focus().unsetAllMarks().run()}>
-        clear marks
-      </Button>
-      <Button color={editor.isActive('clearNodes') ? "warning" : "neutral"} onClick={() => editor.chain().focus().clearNodes().run()}>
-        clear nodes
-      </Button>
-      <Button
-        color={editor.isActive('paragraph') ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().setParagraph().run()}
-        // className={editor.isActive('paragraph') ? 'is-active' : ''}
-      >
-        paragraph
-      </Button>
-      <Button
-        color={editor.isActive('heading', { level: 1 }) ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        // className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
-      >
-        h1
-      </Button>
-      <Button
-        color={editor.isActive('heading', { level: 2 }) ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        // className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
-      >
-        h2
-      </Button>
-      <Button
-        color={editor.isActive('heading', { level: 3 }) ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-        // className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}
-      >
-        h3
-      </Button>
-      <Button
-        color={editor.isActive('heading', { level: 4 }) ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
-        // className={editor.isActive('heading', { level: 4 }) ? 'is-active' : ''}
-      >
-        h4
-      </Button>
-      <Button
-        color={editor.isActive('heading', { level: 5 }) ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
-        // className={editor.isActive('heading', { level: 5 }) ? 'is-active' : ''}
-      >
-        h5
-      </Button>
-      <Button
-        color={editor.isActive('heading', { level: 6 }) ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
-        // className={editor.isActive('heading', { level: 6 }) ? 'is-active' : ''}
-      >
-        h6
-      </Button>
-      <Button
-        color={editor.isActive('bulletList') ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        // className={editor.isActive('bulletList') ? 'is-active' : ''}
-      >
-        bullet list
-      </Button>
-      <Button
-        color={editor.isActive('orderedList') ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        // className={editor.isActive('orderedList') ? 'is-active' : ''}
-      >
-        ordered list
-      </Button>
-      <Button
-        color={editor.isActive('codeBlock') ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-        className={editor.isActive('codeBlock') ? 'is-active' : ''}
-      >
-        code block
-      </Button>
-      <Button
-        color={editor.isActive('blockquote') ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        className={editor.isActive('blockquote') ? 'is-active' : ''}
-      >
-        blockquote
-      </Button>
-      <Button color={editor.isActive('bold') ? "warning" : "neutral"} onClick={() => editor.chain().focus().setHorizontalRule().run()}>
-        horizontal rule
-      </Button>
-      <Button color={editor.isActive('bold') ? "warning" : "neutral"} onClick={() => editor.chain().focus().setHardBreak().run()}>
-        hard break
-      </Button>
-      <Button
-        color={editor.isActive('undo') ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().undo().run()}
-        disabled={
-          !editor.can()
-            .chain()
-            .focus()
-            .undo()
-            .run()
-        }
-      >
-        undo
-      </Button>
-      <Button
-        color={editor.isActive('redo') ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().redo().run()}
-        disabled={
-          !editor.can()
-            .chain()
-            .focus()
-            .redo()
-            .run()
-        }
-      >
-        redo
-      </Button>
-      {/* <Button
-        color={editor.isActive('bold') ? "warning" : "neutral"}
-        onClick={() => editor.chain().focus().setColor('#958DF1').run()}
-        className={editor.isActive('textStyle', { color: '#958DF1' }) ? 'is-active' : ''}
-      >
-        purple
-      </Button> */}
+    <Stack spacing={1} sx={{mb:3}}>
+      <Stack direction="row"  sx={{bgcolor:"#000", justifyContent:"space-around", p: 1, borderRadius:5}}>
+        <Button
+          color={editor.isActive('bold') ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          disabled={
+            !editor.can()
+              .chain()
+              .focus()
+              .toggleBold()
+              .run()
+          }
+          // className={editor.isActive('bold') ? 'is-active' : ''}
+        >
+          bold
+        </Button>
+        <Button
+          color={editor.isActive('italic') ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          disabled={
+            !editor.can()
+              .chain()
+              .focus()
+              .toggleItalic()
+              .run()
+          }
+          // className={editor.isActive('italic') ? 'is-active' : ''}
+        >
+          italic
+        </Button>
+        <Button
+          color={editor.isActive('strike') ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          disabled={
+            !editor.can()
+              .chain()
+              .focus()
+              .toggleStrike()
+              .run()
+          }
+          // className={editor.isActive('strike') ? 'is-active' : ''}
+        >
+          strike
+        </Button>
+        <Button
+          color={editor.isActive('code') ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleCode().run()}
+          disabled={
+            !editor.can()
+              .chain()
+              .focus()
+              .toggleCode()
+              .run()
+          }
+          // className={editor.isActive('code') ? 'is-active' : ''}
+        >
+          code
+        </Button>
+        <Button color={editor.isActive('unsetAllMarks') ? "warning" : "neutral"} onClick={() => editor.chain().focus().unsetAllMarks().run()}>
+          clear marks
+        </Button>
+        <Button color={editor.isActive('clearNodes') ? "warning" : "neutral"} onClick={() => editor.chain().focus().clearNodes().run()}>
+          clear nodes
+        </Button>
+        <Button
+          color={editor.isActive('paragraph') ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().setParagraph().run()}
+          // className={editor.isActive('paragraph') ? 'is-active' : ''}
+        >
+          paragraph
+        </Button>
+        <Button
+          color={editor.isActive('heading', { level: 1 }) ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          // className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
+        >
+          Title 1
+        </Button>
+        <Button
+          color={editor.isActive('heading', { level: 2 }) ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          // className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
+        >
+          Title 2
+        </Button>
+        <Button
+          color={editor.isActive('heading', { level: 3 }) ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          // className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}
+        >
+          Title 3
+        </Button>
+        {/* <Button
+          color={editor.isActive('heading', { level: 4 }) ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
+          // className={editor.isActive('heading', { level: 4 }) ? 'is-active' : ''}
+        >
+          h4
+        </Button>
+        <Button
+          color={editor.isActive('heading', { level: 5 }) ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
+          // className={editor.isActive('heading', { level: 5 }) ? 'is-active' : ''}
+        >
+          h5
+        </Button>
+        <Button
+          color={editor.isActive('heading', { level: 6 }) ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
+          // className={editor.isActive('heading', { level: 6 }) ? 'is-active' : ''}
+        >
+          h6
+        </Button> */}
+        <Button
+          color={editor.isActive('bulletList') ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          // className={editor.isActive('bulletList') ? 'is-active' : ''}
+        >
+          bullet list
+        </Button>
+        <Button
+          color={editor.isActive('orderedList') ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          // className={editor.isActive('orderedList') ? 'is-active' : ''}
+        >
+          ordered list
+        </Button>
+        <Button
+          color={editor.isActive('codeBlock') ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+          className={editor.isActive('codeBlock') ? 'is-active' : ''}
+        >
+          code block
+        </Button>
+        <Button
+          color={editor.isActive('blockquote') ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          className={editor.isActive('blockquote') ? 'is-active' : ''}
+        >
+          blockquote
+        </Button>
+        <Button color={editor.isActive('bold') ? "warning" : "neutral"} onClick={() => editor.chain().focus().setHorizontalRule().run()}>
+          horizontal rule
+        </Button>
+        <Button color={editor.isActive('bold') ? "warning" : "neutral"} onClick={() => editor.chain().focus().setHardBreak().run()}>
+          hard break
+        </Button>
+        <Button
+          color={editor.isActive('undo') ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().undo().run()}
+          disabled={
+            !editor.can()
+              .chain()
+              .focus()
+              .undo()
+              .run()
+          }
+        >
+          undo
+        </Button>
+        <Button
+          color={editor.isActive('redo') ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().redo().run()}
+          disabled={
+            !editor.can()
+              .chain()
+              .focus()
+              .redo()
+              .run()
+          }
+        >
+          redo
+        </Button>
+        {/* <Button
+          color={editor.isActive('bold') ? "warning" : "neutral"}
+          onClick={() => editor.chain().focus().setColor('#958DF1').run()}
+          className={editor.isActive('textStyle', { color: '#958DF1' }) ? 'is-active' : ''}
+        >
+          purple
+        </Button> */}
+      </Stack>
+      <hr/>
+
     </Stack>
   )
 }
@@ -307,20 +311,23 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
   }
 
   return (
-    <Stack direction="row" spacing={2} justifyContent="center">
-      <IconButton sx={{gap: 1, p: 1}} variant="outlined"  onClick={handlePostCancelChangeButtonClick}>
-        Ignorer les modifications
-      </IconButton>
-      <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => {
-        if (post) {
-          generateDescription(post.title)
-        }
-      }}>
-        { isLoading ? <CircularProgress sx={{color: "#fff"}}/> : <RobotIcon/> }  Générer la description
-      </IconButton>
-      <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => isNewPost ? handlePostAddButtonClick() : handlePostSaveButtonClick()}>
-        <Save/> {isNewPost ? "Créer" : "Enregistrer"}
-      </IconButton>
+    <Stack spacing={2} sx={{mt:3}}>
+      <hr/>
+      <Stack direction="row" spacing={2} justifyContent="center">
+        <IconButton sx={{gap: 1, p: 1}} variant="outlined"  onClick={handlePostCancelChangeButtonClick}>
+          Ignorer les modifications
+        </IconButton>
+        <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => {
+          if (post) {
+            generateDescription(post.title)
+          }
+        }}>
+          { isLoading ? <CircularProgress sx={{color: "#fff"}}/> : <RobotIcon/> }  Générer la description
+        </IconButton>
+        <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => isNewPost ? handlePostAddButtonClick() : handlePostSaveButtonClick()}>
+          <Save/> {isNewPost ? "Créer" : "Enregistrer"}
+        </IconButton>
+      </Stack>
     </Stack>
   )
 }
@@ -343,10 +350,12 @@ const PostEditor = ({data, isNew}: {data: GetPostType, isNew: boolean}) => {
   },[data])
 
   return (
-      <EditorProvider key={editorKey} slotBefore={<MenuBar />} extensions={extensions} content={desc} children={<PostEditorActions post={data} newDescription={desc} isNewPost={isNew} setter={handleDescriptionChange}/>} onUpdate={({editor})=>{
+    <Stack sx={{p:1, }}>
+      <EditorProvider immediatelyRender={false} key={editorKey} slotBefore={<MenuBar />} extensions={extensions} content={desc} children={<PostEditorActions post={data} newDescription={desc} isNewPost={isNew} setter={handleDescriptionChange}/>} onUpdate={({editor})=>{
         handleDescriptionChange(editor.getHTML())
       }}
-      ></EditorProvider>
+      />
+    </Stack>
   )
 }
 
