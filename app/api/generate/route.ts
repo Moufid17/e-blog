@@ -17,8 +17,8 @@ export async function POST(request: Request) {
         const {title} = postSchema.parse(body);
 
         const prompt = `Tu est un éditeur d'article de blog. Ton travail est de proposer une description pour un article sur le sujet suivant: "${title}". 
-        Donne un résultat de comme le body d'un fichier html, incluant uniquement le contenu du corps (balises <body>). 
-        Utilise les moteurs de recherche et les réseaux sociaux puis génère une description de cohérente et pertinente sur au moins 40 lignes.`
+        Donne un résultat comme le body d'un fichier html, incluant uniquement le contenu du corps (balises <body>). 
+        Utilise les moteurs de recherche et les réseaux sociaux puis génère une description cohérente et pertinente sur au moins 40 lignes.`
 
         const completions = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
