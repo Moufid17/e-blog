@@ -1,5 +1,6 @@
-dbinit:
-	docker compose exec nodejs npx prisma db push --force-reset # Not to be used in your production environment : to push the initial schema to the database. --force-reset to ignore the current state of the database and apply the schema from scratch.
+ps:
+	docker compose ps
+
 up:
 	docker compose up -d
 
@@ -17,6 +18,10 @@ next_secret:
 
 bash:
 	docker compose exec nodejs /bin/sh
+
+# Prisma commands
+dbinit:
+	docker compose exec nodejs npx prisma db push --force-reset # Not to be used in your production environment : to push the initial schema to the database. --force-reset to ignore the current state of the database and apply the schema from scratch.
 
 dpm:
 	docker compose exec nodejs npx prisma migrate dev # To create a new migration based on the changes you made to your Prisma schema.
