@@ -36,7 +36,6 @@ export default function PostCard({data}: {data: PostCardType}) {
       return
     } 
     
-    setIsFavorite(prev => !prev)
     if (isFavorite) {
       setCountLike(prevCountLike => prevCountLike -1)
       removeLikeToPost()
@@ -44,6 +43,7 @@ export default function PostCard({data}: {data: PostCardType}) {
       setCountLike(prevCountLike => prevCountLike + 1)
       addLikeToPost()
     }
+    setIsFavorite(prev => !prev)
   }
 
   useEffect(() => {
@@ -88,13 +88,13 @@ export default function PostCard({data}: {data: PostCardType}) {
         />
       </AspectRatio>
       <CardContent>
-        <Typography>Auteur : {owner.name?.toLocaleUpperCase()}</Typography>
+        <Typography>Owner : {owner.name?.toLocaleUpperCase()}</Typography>
       </CardContent>
       <CardOverflow variant="soft">
         <Divider inset="context" />
         <CardActions orientation="horizontal" sx={{display: 'flex', justifyContent: 'space-between'}}>
           <Typography level="body-xs">{countLike.toString()} like(s)</Typography>
-          <Typography level="body-xs" suppressHydrationWarning>Publié : {convertDateToString(createdAt)}</Typography>
+          <Typography level="body-xs" suppressHydrationWarning>Published : {convertDateToString(createdAt)}</Typography>
         </CardActions>
       </CardOverflow>
     </Card>

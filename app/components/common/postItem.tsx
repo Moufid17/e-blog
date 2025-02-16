@@ -39,7 +39,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                             <Divider orientation="vertical"/>
                             <Typography level="body-sm" alignSelf="flex-end">{toUppercaseFirstChar(convertDateToString(post.updatedAt ?? (new Date())))}</Typography>
                         </Stack>
-                        <FormControl required>
+                        <FormControl required={session?.user?.email == post?.owner?.email}>
                             <FormLabel>Titre</FormLabel>
                             <Input disabled={session == null || (session?.user?.email != post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } color="neutral" defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title"
                                 sx={{

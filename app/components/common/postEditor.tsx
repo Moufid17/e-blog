@@ -208,9 +208,12 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
   const handlePostAddButtonClick = async () => {
     if (post != null) {
       const { id, owner, ...data } = post 
-      await addPost({post: {...data, description: newDescription, userId: session?.user?.id}})
-      router.push(`/`)
-      alert("Créer avec succès")
+      await addPost({post: {...data, description: newDescription, userId: session?.user?.id}}).then((res) => {
+        alert("Créer avec succès")
+        router.push(`/`)
+        router.refresh()
+      })
+      
     } else {
       alert("Erreur lors de la création du post")
     }
@@ -228,9 +231,10 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
   const handlePostSaveButtonClick = async () => {
     if (post != null) {
       const { owner, description, ...data } = post     
-      await updatePost({post: {...data, description: newDescription}})
-      router.push(`/posts/${post?.id}`)
+      await updatePost({post: {...data, description: newDescription}}).then((res) => {  })
+      // router.push(`/posts/${post?.id}`)
       alert("Mise à jour avec succès")
+      router.refresh()
     } else {
       alert("Error")
     }
