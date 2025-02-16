@@ -1,11 +1,9 @@
 import { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
-import { PrismaClient } from "@prisma/client"
 import { prismaClientDB } from "./prismaClient"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import type { Adapter } from "next-auth/adapters";
 
-const prisma = new PrismaClient()
 const authOptions : NextAuthOptions = {
     adapter: PrismaAdapter(prismaClientDB) as Adapter,
     // adapter: PrismaAdapter(prisma) as Adapter,
@@ -23,7 +21,6 @@ const authOptions : NextAuthOptions = {
           }
         },
       }),
-      // ...add more providers here
     ],
     callbacks: {
       signIn: async ({ user, account, profile }: any ) => {
@@ -55,7 +52,7 @@ const authOptions : NextAuthOptions = {
 export default authOptions;
 
 /**
- * Dans NextAuth.js, les callbacks sont des fonctions qui sont appelées pendant le cycle de vie de l'authentification. Ils vous permettent de contrôler et de personnaliser le comportement de NextAuth.js à différents points. Voici l'ordre dans lequel ils sont appelés :
+Dans NextAuth.js, les callbacks sont des fonctions qui sont appelées pendant le cycle de vie de l'authentification. Ils vous permettent de contrôler et de personnaliser le comportement de NextAuth.js à différents points. Voici l'ordre dans lequel ils sont appelés :
 
 signIn: Ce callback est appelé quand un utilisateur tente de se connecter. Vous pouvez utiliser ce callback pour empêcher la connexion en fonction de divers critères.
 
@@ -65,5 +62,4 @@ session: Ce callback est appelé chaque fois qu'une session est accédée. Vous 
 
 jwt: Ce callback est appelé chaque fois qu'un JSON Web Token est créé ou mis à jour. Vous pouvez utiliser ce callback pour encoder et décoder le JWT.
 
-Ces callbacks sont tous optionnels et peuvent être utilisés en fonction de vos besoins spécifiques. Vous pouvez en savoir plus sur ces callbacks et comment les utiliser dans la documentation de NextAuth.js.
  */
