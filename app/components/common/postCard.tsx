@@ -22,7 +22,6 @@ import { convertDateToString, toUppercaseFirstChar } from "@/app/lib/utils";
 
 export default function PostCard({data}: {data: PostCardType}) {
   const { id, title, createdAt, owner, likes, _count } = data
-  const router = useRouter()
   const { data : session } = useSession()
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
   const [countLike, setCountLike] = useState<number>(0)
@@ -47,32 +46,22 @@ export default function PostCard({data}: {data: PostCardType}) {
   }
 
   useEffect(() => {
-    // Mettre à jour visuellement après chaque clic sur le bouton
-    setCountLike(_count.likes);
-  
-    // Vérifier si l'utilisateur a aimé ce poste après chaque clic sur le bouton
-    const isUserFavorite = likes.find((value) => value.user.email === session?.user?.email);
-    setIsFavorite(!!isUserFavorite);
-  }, [likes, _count.likes, session?.user?.email]);
-
-  useEffect(() => {
     const fetchData = async () => {
-      const likeCount = await fetchLikeCount({postId: id})
-      if (likeCount) setCountLike(likeCount)
-
+      setCountLike(_count.likes)
+  
       const isUserFavorite = likes.find((value) => value.user.email == session?.user?.email)
       if (isUserFavorite) setIsFavorite(true)
     }
 
     fetchData();
-  }, [])
+  }, [session?.user?.email]);
   
   return (
     <Card key={`postCard_${id}`} variant="outlined" sx={{ width: 390 }}>
       <Box key={`postCard_head${id}`} sx={{display:"flex", alignItems: "flex-start", justifyContent: "space-between", wordWrap: "break-word"}}>
-        <Box key={`postCard_head_title${id}`}  width={'80%'}>
+        <Box key={`postCard_head_title${id}`}  width={'85%'}>
           <Link href={`/posts/${ id }`}>
-            <Typography level="title-lg" >{toUppercaseFirstChar(title)}</Typography>
+            <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 31)) + (title.length > 31 ? "...": "")}</Typography>
           </Link>
         </Box>
         <IconButton aria-label="Like minimal photography" variant="plain" onClick={handleSetFavorite} sx={{mt: "-0.5rem", "&:hover:":{color: "red"}}}>
