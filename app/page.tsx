@@ -50,33 +50,29 @@ export default async function Home() {
   return (
     <Box key={"main_app"} sx={{p: "12px", bgcolor: "#fff",}}>
       <Stack direction={"row"} key="home_title" sx={{mb: "12px", justifyContent: "space-between"}} >
-        <Typography level="title-lg" lineHeight="2rem" fontSize="25px" textTransform="uppercase" sx={{ letterSpacing: '0.2rem', }}>Posts</Typography>
-        {/* Dirige vers la page de création d'un post si un utilisateur est connecté sinon vers la page de connection. */}
+        <Typography level="title-lg" lineHeight="2rem" fontSize="25px" textTransform="uppercase" sx={{ letterSpacing: '0.2rem', }}>Articles</Typography>
         <Link href={session ? "/posts/new" : "/api/auth/signin"}>
           <IconButton sx={{bgcolor: "#000", p: 2, gap: 1, }} variant="solid">
-            Créer un post
+            New article
           </IconButton>
         </Link>
       </Stack>
-
       
-      {getAllPosts.length > 0 ? 
+      {getAllPosts.length > 0 ?
         <Grid container 
-          spacing={{ xs: 2, md: 3 }}
-          columns={{ xs: 4, sm: 8, md: 12 }}
-          sx={{ flexGrow: 1 }}
+          spacing={{ xs: 2, sm: 3, md: 4 }}
+          columns={{ xs: 4, sm: 12, md: 12 }}
+          sx={{ flexGrow: 1 , }}
         >
           {[...getAllPosts].map(
               (post, index: number) => 
-                <Grid key={index} xs={2} sm={4} md={4}>
+                <Grid key={index} xs={9} sm={6} md={3}>
                   <PostCard key={"home_post_"+index} data={post}/>
                 </Grid>
-              )
-            } 
+          )} 
         </Grid>
-       : <Box sx={{textAlign:"center"}}>No posts found</Box>
+       : <Box sx={{textAlign:"center"}}>No articles found</Box>
       }
-      
     </Box>
   )
 }
