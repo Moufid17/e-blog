@@ -1,8 +1,9 @@
 // This page will split into PROFILE (https://berrydashboard.io/apps/blog/general-settings) and dashboard (https://berrydashboard.io/dashboard/blog)
-import { Avatar, Box, Card, CardContent, Chip, Grid, List, ListItem, ListItemContent, ListItemDecorator, Stack, Typography } from "@mui/joy";
+import { Avatar, Box, Card, CardActions, CardContent, CardOverflow, Chip, Divider, Grid, List, ListItem, ListItemContent, ListItemDecorator, Stack, Typography } from "@mui/joy";
 import { getServerSession, Session } from "next-auth";
 import { redirect } from "next/navigation";
 import type { Metadata } from 'next'
+import {Linkedin, Mail, MapPin, Phone} from "react-feather"
 
 import authOptions from "@/app/lib/authOptions";
 import Link from "next/link";
@@ -26,8 +27,8 @@ export default async function AccountPage () {
         <Grid key="account_main" component={'main'} container spacing={2} sx={{ flexGrow: 1, p: 2, bgcolor: "background.body",}}>
             <Grid key="account_card_profil" xs={12} md={3}>
                 <Card key="account_card" sx={{height: "100%"}}>
-                    <Stack key="profil_stack" direction={{xs: "column", xl:"row"}} sx={{gap: 2, alignItems: 'center',}}>
-                        <Box key="profil_stack_box" sx={{justifyContent: 'space-around',}}>
+                    <Stack key="profil_stack" direction={{xs: "column", xl:"row"}} sx={{gap: 2, alignItems: 'center', justifyContent: "space-between"}}>
+                        <Box key="profil_stack_box">
                             <List key="profil_list" sx={{alignItems: 'center', flexDirection: {xs: "column", lg: "row"}}}>
                                 <ListItem>
                                     <ListItemContent>
@@ -37,18 +38,56 @@ export default async function AccountPage () {
                                 <ListItem sx={{gap: 2, alignItems: 'center',  justifyContent: "center", direction: {md: "column", lg: "row"}}}>
                                     <ListItemContent sx={{textAlign: {xs: "center", lg: "left"}}}>
                                         <Typography level="body-lg" fontWeight='bold' textTransform="uppercase" >{session.user?.name ?? "John Deo"}</Typography>
-                                        <Typography level="body-md" noWrap>{session.user?.email ?? "johndeo@gmail.com"}</Typography>
+                                        <Typography level="body-md" noWrap>Javascript Developer</Typography>
                                     </ListItemContent>
                                 </ListItem>
                             </List>
                         </Box>
                         <Box key="profil_tag">
-                            <Chip key="profil_tag_chip" color="primary" variant="solid">Pro</Chip>
+                            <Chip key="profil_tag_chip" color="primary" variant="solid" sx={{fontSize:{xs:"lg", lg:"md"}}}>Pro</Chip>
                         </Box>
                     </Stack>
+                    <Divider inset="context"/>
                     <CardContent>
-                        
+                        <Box key="profil_card_content" sx={{display: 'flex', alignItems:"center", justifyContent: 'center', gap: 1}}>
+                            <List key="profil_card_content_list">
+                                <ListItem key="profil_card_content_list_0" sx={{justifyContent: "space-between", alignItems: 'center'}}>
+                                    <Box component="label" sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                                        <Mail/>
+                                        Email
+                                    </Box>
+                                    <Typography level="body-md" noWrap>{session.user?.email ?? "johndeo@gmail.com"}</Typography>
+                                </ListItem>
+                                <Divider/>
+                                <ListItem key="profil_card_content_list_1" sx={{justifyContent: "space-between", alignItems: 'center'}}>
+                                    <Box component="label" sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                                        <Box ><Linkedin/></Box>
+                                        <Box>LinkedIn</Box>
+                                    </Box>
+                                    <Link href="https://www.linkedin.com/in/moufid-mtr/">linkedin/{"https://www.linkedin.com/in/moufid-mtr".split("/").pop()}</Link>
+                                </ListItem>
+                                <Divider/>
+                                <ListItem key="profil_card_content_list_2" sx={{justifyContent: "space-between", alignItems: 'center'}}>
+                                    <Box component="label" sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                                        <Box component={"span"}><MapPin/></Box>
+                                        <Box>Location</Box>
+                                    </Box>
+                                    <Typography level="body-md" noWrap textAlign={"left"}> Paris, France</Typography>
+                                </ListItem>
+                            </List>
+                        </Box>
                     </CardContent>
+                    <CardOverflow>
+                        <CardActions orientation="horizontal" sx={{display: 'flex', justifyContent: 'space-around'}}>
+                            {Array.from({length: 3}).map((_, index) => (
+                                    <Box key={index} component={'span'} sx={{display: 'flex', flexDirection:"column", alignItems:"center", justifyContent: 'center'}}>
+                                        <Typography level="title-lg">20</Typography>
+                                        <Typography level="body-xs">like(s)</Typography>
+                                    </Box>
+                                ))
+                            }
+                        </CardActions>
+                    </CardOverflow>
                 </Card>
             </Grid>
             <Grid xs={12} md={9}>
