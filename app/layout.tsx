@@ -24,26 +24,26 @@ export default async function RootLayout({
   return (
     <html lang="en">
         <body className={inter.className} suppressHydrationWarning={true}>
-          <AuthProvider>
-      <CssVarsProvider theme={CustomTheme}>
-        <CssBaseline />
-            <nav><Header/></nav>
-            <main>
-              <Box
-                  sx={{
-                    bgcolor: 'white',
-                    gridTemplateRows: '52px 0px 1fr',
-                    minHeight: '90dvh',
-                    p:1
-                  }}
-                  >
-                  <Sheet>
-                    {children}
-                  </Sheet>
-              </Box>
-            </main>
-      </CssVarsProvider>
-          </AuthProvider>
+          <CssVarsProvider theme={CustomTheme}>
+            <CssBaseline />
+            <AuthProvider>
+              <nav><Header/></nav>
+              <main>
+                <Box
+                    sx={{
+                      bgcolor: 'white',
+                      gridTemplateRows: '52px 0px 1fr',
+                      minHeight: '90dvh',
+                      p:1
+                    }}
+                    >
+                    <Sheet>
+                      {children}
+                    </Sheet>
+                </Box>
+              </main>
+            </AuthProvider>
+          </CssVarsProvider>
         </body>
     </html>
   )
