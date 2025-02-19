@@ -16,7 +16,8 @@ const lightPalette = {
     },
     success: {
         solidBg: 'rgb(234,179,8)',
-        solidColor: '#fff',
+        solidBorder: '#fff',
+        solidColor: '#000',
         solidActiveBg: '#000',
         solidHoverBg: '#fff',
         solidDisabledBg: 'rgba(234,179,8, 0.5)',
