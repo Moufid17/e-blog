@@ -22,23 +22,26 @@ ChartJS.register(
   Legend
 );
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+const months = {
+    en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    fr: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+};
 
 
 
 export default function StackedBarChart() {
     const theme = useTheme(); // The runtime theme.
     const data = {
-        labels,
+        labels: months.en,
         datasets: [
             {
                 label: 'View(s)',
-                data: labels.map(() => 500),
+                data: months.en.map(() => 500),
                 backgroundColor: `${theme.palette.primary.solidBg})`,
             },
             {
                 label: 'Like(s)',
-                data: labels.map(() => 600),
+                data: months.en.map(() => 600),
                 backgroundColor: `${theme.palette.success.solidBg}`,
             },
         ],
@@ -56,5 +59,5 @@ export default function StackedBarChart() {
           },
         },
     };
-  return <Bar options={options} data={data} />;
+    return <Bar options={options} data={data} />;
 }

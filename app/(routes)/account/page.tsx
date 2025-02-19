@@ -7,6 +7,7 @@ import {Linkedin, Mail, MapPin, Phone} from "react-feather"
 import authOptions from "@/app/lib/authOptions";
 import Link from "next/link";
 import StackedBarChart from "@/app/components/common/StackedBarChart";
+import AccountArticleCard from "@/app/components/account/AccountArticleCard";
 
 
 export const metadata: Metadata = {
@@ -108,84 +109,34 @@ export default async function AccountPage () {
                                 <Typography level="body-md">Views(All Time)</Typography>
                             </Card>
                         </Stack>
-                        <div key="stackedBarChartDiv">
-                           <StackedBarChart key="stackedBarChart"/>
-
-                        </div>
-                        
+                        <Stack key="stackedBarChartDiv">
+                            <StackedBarChart key="stackedBarChart"/>
+                        </Stack>
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid key="account_details_x" xs={12} lg={9}>
-                <Card title="details_card_x" sx={{height: "100%"}}>
+            <Grid key="account_list_articles" xs={12} lg={9}>
+                <Card title="account_lists_articles_card" sx={{height: "100%"}}>
                     <Typography>Recent Blog List</Typography>
                     <Divider inset="context"/>
-                    
+                    <Stack key={`account_articles_cards`} gap={1}>
+                        {Array.from({length: 5}).map((_, index) => (
+                                <AccountArticleCard data={{id: index, title: `Title ${index}`}} />
+                            ))
+                        }
+                    </Stack>
                 </Card>
             </Grid>
-            <Grid key="account_articles_z" xs={12} lg={3}>
-                <Card key="account_card_articles" sx={{height: "100%"}}>
-                    <Stack key="profil_stack" direction={{xs: "column", xl:"row"}} sx={{gap: 2, alignItems: 'center', justifyContent: "space-between"}}>
-                        <Box key="profil_stack_box">
-                            <List key="profil_list" sx={{alignItems: 'center', flexDirection: {xs: "column", lg: "row"}}}>
-                                <ListItem>
-                                    <ListItemContent>
-                                        <Avatar src={session.user?.image ?? "P"}/>
-                                    </ListItemContent>
-                                </ListItem>
-                                <ListItem sx={{gap: 2, alignItems: 'center',  justifyContent: "center", direction: {md: "column", lg: "row"}}}>
-                                    <ListItemContent sx={{textAlign: {xs: "center", lg: "left"}}}>
-                                        <Typography level="body-lg" fontWeight='bold' textTransform="uppercase" >{session.user?.name ?? "John Deo"}</Typography>
-                                        <Typography level="body-md" noWrap>Javascript Developer</Typography>
-                                    </ListItemContent>
-                                </ListItem>
-                            </List>
-                        </Box>
-                        <Box key="profil_tag">
-                            <Chip key="profil_tag_chip" color="primary" variant="solid" sx={{fontSize:{xs:"lg", lg:"md"}}}>Pro</Chip>
-                        </Box>
-                    </Stack>
+            <Grid key="account_lists_drafts" xs={12} lg={9}>
+                <Card title="account_lists_drafts_card" sx={{height: "100%"}}>
+                    <Stack direction={"row"} gap={1.5}><Typography>Drafts</Typography><Chip color="success" variant="solid">6</Chip></Stack>
                     <Divider inset="context"/>
-                    <CardContent>
-                        <Box key="profil_card_content" sx={{display: 'flex', alignItems:"center", justifyContent: 'center', gap: 1}}>
-                            <List key="profil_card_content_list">
-                                <ListItem key="profil_card_content_list_0" sx={{justifyContent: "space-between", alignItems: 'center'}}>
-                                    <Box component="label" sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                                        <Mail/>
-                                        Email
-                                    </Box>
-                                    <Typography level="body-md" noWrap>{session.user?.email ?? "johndeo@gmail.com"}</Typography>
-                                </ListItem>
-                                <Divider/>
-                                <ListItem key="profil_card_content_list_1" sx={{justifyContent: "space-between", alignItems: 'center'}}>
-                                    <Box component="label" sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                                        <Box ><Linkedin/></Box>
-                                        <Box>LinkedIn</Box>
-                                    </Box>
-                                    <Link href="https://www.linkedin.com/in/moufid-mtr/">linkedin/{"https://www.linkedin.com/in/moufid-mtr".split("/").pop()}</Link>
-                                </ListItem>
-                                <Divider/>
-                                <ListItem key="profil_card_content_list_2" sx={{justifyContent: "space-between", alignItems: 'center'}}>
-                                    <Box component="label" sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                                        <Box component={"span"}><MapPin/></Box>
-                                        <Box>Location</Box>
-                                    </Box>
-                                    <Typography level="body-md" noWrap textAlign={"left"}> Paris, France</Typography>
-                                </ListItem>
-                            </List>
-                        </Box>
-                    </CardContent>
-                    <CardOverflow>
-                        <CardActions orientation="horizontal" sx={{display: 'flex', justifyContent: 'space-around'}}>
-                            {Array.from({length: 3}).map((_, index) => (
-                                    <Box key={index} component={'span'} sx={{display: 'flex', flexDirection:"column", alignItems:"center", justifyContent: 'center'}}>
-                                        <Typography level="title-lg">20</Typography>
-                                        <Typography level="body-xs">like(s)</Typography>
-                                    </Box>
-                                ))
-                            }
-                        </CardActions>
-                    </CardOverflow>
+                    <Stack key={`account_drafts_cards`} gap={1}>
+                        {Array.from({length: 5}).map((_, index) => (
+                                <AccountArticleCard data={{id: index, title: `Title ${index}`}} />
+                            ))
+                        }
+                    </Stack>
                 </Card>
             </Grid>
         </Grid>
