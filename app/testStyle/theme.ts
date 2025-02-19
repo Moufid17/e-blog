@@ -14,10 +14,13 @@ const lightPalette = {
         solidHoverBg: '#a5d6d8',
         solidDisabledBg: 'lightgrey',
     },
-    // secondary
-    // neutral: {
-
-    // }
+    success: {
+        solidBg: 'rgb(234,179,8)',
+        solidColor: '#fff',
+        solidActiveBg: '#000',
+        solidHoverBg: '#fff',
+        solidDisabledBg: 'rgba(234,179,8, 0.5)',
+    },
 }
 
 const darkPalette = {
