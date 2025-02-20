@@ -6,7 +6,7 @@ import { Circle, Eye, Heart, MessageSquare, MoreVertical } from "react-feather";
 import { toUppercaseFirstChar } from "@/app/lib/utils";
 
 
-export default function AccountArticleCard({data}: {data: any}) {
+export default function AccountArticleCard({data, isOwner = false}: {data: any, isOwner?: boolean}) {
     const { id, title, owner: {name, image} = {name: "John Doe", image: ""} } = data
     return (
         <Card key={`account_article_card_${id}`} sx={{height: "100%", gap: 2,}}>
@@ -14,9 +14,9 @@ export default function AccountArticleCard({data}: {data: any}) {
                 <Link href={`/posts/${ id }`}>
                     <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 31)) + (title.length > 31 ? "...": "")}</Typography>
                 </Link>
-                <IconButton>
+                {isOwner && <IconButton>
                     <MoreVertical size={"12px"}/>
-                </IconButton>
+                </IconButton>}
             </Box>
             <CardContent>
                 <Box sx={{display: 'flex', flexDirection:"row", justifyContent: 'flex-start', alignItems: "center", gap: 1.5}}>
@@ -27,10 +27,10 @@ export default function AccountArticleCard({data}: {data: any}) {
             </CardContent>
             <CardOverflow>
                 <Box sx={{display: 'flex', flexDirection:"row", justifyContent: 'space-between', alignItems: "center", gap: 1.5}}>
-                    <Stack direction={"row"} gap={0.5}>
-                        <Circle size={"6px"}/><span style={{ fontSize: "12px", lineHeight:"0.4rem"}}>5 minutes</span>
+                    <Stack direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
+                        <Circle size={"6px"}/><Typography level="body-xs">5 minutes</Typography>
                     </Stack>
-                    <Box key="account_article_card_profil">
+                    {!isOwner && <Box key="account_article_card_profil">
                         <List key="profil_list" sx={{flexDirection: "row",}}>
                             <ListItem sx={{p: 0}}>
                                 <ListItemContent>
@@ -44,7 +44,7 @@ export default function AccountArticleCard({data}: {data: any}) {
                                 </ListItemContent>
                             </ListItem>
                         </List>
-                    </Box>
+                    </Box>}
                 </Box>
             </CardOverflow>
         </Card>
