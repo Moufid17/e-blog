@@ -243,9 +243,6 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
   const generateDescription = async (title: string) => {
     if (!post || !title) {
       alert("Error : Impossible de générer la description")
-      console.log("post => ", post);
-      console.log("title => ", title);
-      
       return
     }
     setIsLoading(true)

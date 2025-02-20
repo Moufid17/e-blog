@@ -1,15 +1,16 @@
-import { toUppercaseFirstChar } from "@/app/lib/utils";
-import { Avatar, Box, Card, CardContent, CardOverflow, IconButton, List, ListItem, ListItemContent, Stack, Typography } from "@mui/joy";
 import Link from "next/link";
-import { Messages } from "openai/resources/beta/threads/messages.mjs";
+
+import { Avatar, Box, Card, CardContent, CardOverflow, IconButton, List, ListItem, ListItemContent, Stack, Typography } from "@mui/joy";
 import { Circle, Eye, Heart, MessageSquare, MoreVertical } from "react-feather";
+
+import { toUppercaseFirstChar } from "@/app/lib/utils";
 
 
 export default function AccountArticleCard({data}: {data: any}) {
     const { id, title, owner: {name, image} = {name: "John Doe", image: "P"} } = data
     return (
         <Card key={`account_article_card_${id}`} sx={{height: "100%", gap: 2,}}>
-            <Box key={`account_article_card_title${id}`} sx={{display:"flex", flexDirection:"row", alignItems: "flex-start", justifyContent: "space-between", wordWrap: "break-word"}}>
+            <Box key={`account_article_card_title${id}`} sx={{display:"flex", flexDirection:"row", alignItems: "center", justifyContent: "space-between", wordWrap: "break-word"}}>
                 <Link href={`/posts/${ id }`}>
                     <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 31)) + (title.length > 31 ? "...": "")}</Typography>
                 </Link>
@@ -47,7 +48,5 @@ export default function AccountArticleCard({data}: {data: any}) {
                 </Box>
             </CardOverflow>
         </Card>
-        
     );
-
 }

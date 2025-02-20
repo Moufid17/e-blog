@@ -8,6 +8,7 @@ import authOptions from "@/app/lib/authOptions";
 import Link from "next/link";
 import StackedBarChart from "@/app/components/common/StackedBarChart";
 import AccountArticleCard from "@/app/components/account/AccountArticleCard";
+import AccountDraftCard from "@/app/components/account/AccountDraftCard";
 
 
 export const metadata: Metadata = {
@@ -89,27 +90,30 @@ export default async function AccountPage () {
                     </CardOverflow>
                 </Card>
             </Grid>
-            <Grid key="account_list_articles" xs={12} lg={4}>
-                <Card title="account_lists_articles_card" sx={{ maxHeight: "907px" }}>
-                    <Typography>Recent Blog List</Typography>
+            <Grid key="account_list_articles" xs={12} lg={5}>
+                <Card title="account_lists_articles_card">
+                    <Typography level="h4">Recent Blog List</Typography>
                     <Divider inset="context" />
-                    <Stack key={`account_articles_cards`} gap={1} sx={{overflow: "auto", p: 1 }}>
-                        {Array.from({ length: articleLength +3 }).map((_, index) => (
+                    <Stack key={`account_articles_cards`} gap={1}>
+                        {Array.from({ length: articleLength }).map((_, index) => (
                             <AccountArticleCard data={{ id: index, title: `Title ${index}` }} />
                         ))}
                     </Stack>
                 </Card>
             </Grid>
-            <Grid key="account_lists_drafts" xs={12} lg={4}>
-                    <Card title="account_lists_drafts_card" sx={{ height: "100%" }}>
-                        <Stack direction={"row"} gap={1.5}><Typography>Drafts</Typography><Chip color="success" variant="solid">6</Chip></Stack>
-                        <Divider inset="context" />
-                        <Stack key={`account_drafts_cards`} gap={1}>
-                            {Array.from({ length: 5 }).map((_, index) => (
-                                <AccountArticleCard data={{ id: index, title: `Title ${index}` }} />
-                            ))}
-                        </Stack>
-                    </Card>
+            <Grid key="account_lists_drafts" xs={12} lg={3}>
+                <Card title="account_lists_drafts_card" sx={{ maxHeight: "950px" }}>
+                    <Stack direction={"row"} gap={1.5}><Typography level="h4">Drafts</Typography><Chip color="success" variant="solid">6</Chip></Stack>
+                    <Divider inset="context"/>
+                    <Stack key={`account_drafts_cards`} gap={1} sx={{overflow: "auto",}}>
+                        {Array.from({ length: articleLength + 3 }).map((_, index) => (
+                            <>
+                                <AccountDraftCard data={{ id: index, title: `Responsive UI Design With Material-UI & React ${index}` }} />
+                                <Divider />
+                            </>
+                        ))}
+                    </Stack>
+                </Card>
             </Grid>
             <Grid key="account_stats" xs={12} lg={9}>
                     <Card title="stats_card" sx={{ height: "100%" }}>
