@@ -1,11 +1,13 @@
 // This page will split into PROFILE (https://berrydashboard.io/apps/blog/general-settings) and dashboard (https://berrydashboard.io/dashboard/blog)
-import { Avatar, Box, Card, CardActions, CardContent, CardOverflow, Chip, Divider, Grid, List, ListItem, ListItemContent, ListItemDecorator, Stack, Typography } from "@mui/joy";
-import { getServerSession, Session } from "next-auth";
-import { redirect } from "next/navigation";
 import type { Metadata } from 'next'
-import {Linkedin, Mail, MapPin, Phone} from "react-feather"
-import authOptions from "@/app/lib/authOptions";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getServerSession, Session } from "next-auth";
+
+import { Avatar, Box, Button, Card, CardActions, CardContent, CardOverflow, Chip, Divider, Grid, List, ListItem, ListItemContent, Stack, Typography } from "@mui/joy";
+import {Linkedin, Mail, MapPin} from "react-feather";
+
+import authOptions from "@/app/lib/authOptions";
 import StackedBarChart from "@/app/components/common/StackedBarChart";
 import AccountArticleCard from "@/app/components/account/AccountArticleCard";
 import AccountDraftCard from "@/app/components/account/AccountDraftCard";
@@ -99,20 +101,25 @@ export default async function AccountPage () {
                             <AccountArticleCard data={{ id: index, title: `Title ${index}` }} />
                         ))}
                     </Stack>
+                    <CardOverflow sx={{px: 0}}>
+                        <Link href="/">
+                            <Button fullWidth sx={{borderRadius: `0 0 6px 6px`}}>View all</Button>
+                        </Link>
+                    </CardOverflow>
                 </Card>
             </Grid>
             <Grid key="account_lists_drafts" xs={12} lg={3}>
                 <Card title="account_lists_drafts_card" sx={{ maxHeight: "950px" }}>
                     <Stack direction={"row"} gap={1.5}><Typography level="h4">Drafts</Typography><Chip color="success" variant="solid">6</Chip></Stack>
                     <Divider inset="context"/>
-                    <Stack key={`account_drafts_cards`} gap={1} sx={{overflow: "auto",}}>
-                        {Array.from({ length: articleLength + 3 }).map((_, index) => (
-                            <>
-                                <AccountDraftCard data={{ id: index, title: `Responsive UI Design With Material-UI & React ${index}` }} />
-                                <Divider />
-                            </>
-                        ))}
-                    </Stack>
+                        <Stack key={`account_drafts_cards`} gap={1} sx={{overflow: "auto",}}>
+                            {Array.from({ length: articleLength + 3 }).map((_, index) => (
+                                <>
+                                    <AccountDraftCard data={{ id: index, title: `Responsive UI Design With Material-UI & React` }} />
+                                    <Divider />
+                                </>
+                            ))}
+                        </Stack>
                 </Card>
             </Grid>
             <Grid key="account_stats" xs={12} lg={9}>

@@ -7,7 +7,7 @@ import { toUppercaseFirstChar } from "@/app/lib/utils";
 
 
 export default function AccountArticleCard({data}: {data: any}) {
-    const { id, title, owner: {name, image} = {name: "John Doe", image: "P"} } = data
+    const { id, title, owner: {name, image} = {name: "John Doe", image: ""} } = data
     return (
         <Card key={`account_article_card_${id}`} sx={{height: "100%", gap: 2,}}>
             <Box key={`account_article_card_title${id}`} sx={{display:"flex", flexDirection:"row", alignItems: "center", justifyContent: "space-between", wordWrap: "break-word"}}>
