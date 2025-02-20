@@ -25,8 +25,8 @@ export default async function AccountPage () {
     
     return (
         <Grid key="account_main" component={'main'} container spacing={2} sx={{ flexGrow: 1, p: 2, bgcolor: "background.body",}}>
-            <Grid key="account_profil" xs={12} lg={3}>
-                <Card key="account_card" sx={{height: "100%"}}>
+            <Grid key="account_profil" xs={12} lg={4}>
+                <Card key="account_card" sx={{height: "auto"}}>
                     <Stack key="profil_stack" direction={{xs: "column", xl:"row"}} sx={{gap: 2, alignItems: 'center', justifyContent: "space-between"}}>
                         <Box key="profil_stack_box">
                             <List key="profil_list" sx={{alignItems: 'center', flexDirection: {xs: "column", lg: "row"}}}>
@@ -90,6 +90,30 @@ export default async function AccountPage () {
                     </CardOverflow>
                 </Card>
             </Grid>
+            <Grid key="account_list_articles" xs={12} lg={4} sx={{scroll: "auto" , scrollBehavior: "smooth"}}>
+                <Card title="account_lists_articles_card" sx={{height: "100%"}}>
+                    <Typography>Recent Blog List</Typography>
+                    <Divider inset="context"/>
+                    <Stack key={`account_articles_cards`} gap={1}>
+                        {Array.from({length: 5}).map((_, index) => (
+                                <AccountArticleCard data={{id: index, title: `Title ${index}`}} />
+                            ))
+                        }
+                    </Stack>
+                </Card>
+            </Grid>
+            <Grid key="account_lists_drafts" xs={12} lg={4}>
+                <Card title="account_lists_drafts_card" sx={{height: "100%"}}>
+                    <Stack direction={"row"} gap={1.5}><Typography>Drafts</Typography><Chip color="success" variant="solid">6</Chip></Stack>
+                    <Divider inset="context"/>
+                    <Stack key={`account_drafts_cards`} gap={1}>
+                        {Array.from({length: 5}).map((_, index) => (
+                                <AccountArticleCard data={{id: index, title: `Title ${index}`}} />
+                            ))
+                        }
+                    </Stack>
+                </Card>
+            </Grid>
             <Grid key="account_stats" xs={12} lg={9}>
                 <Card title="stats_card" sx={{height: "100%"}}>
                     <Typography level="h4">Analytics Summary</Typography>
@@ -113,30 +137,6 @@ export default async function AccountPage () {
                             <StackedBarChart key="stackedBarChart"/>
                         </Stack>
                     </CardContent>
-                </Card>
-            </Grid>
-            <Grid key="account_list_articles" xs={12} lg={9}>
-                <Card title="account_lists_articles_card" sx={{height: "100%"}}>
-                    <Typography>Recent Blog List</Typography>
-                    <Divider inset="context"/>
-                    <Stack key={`account_articles_cards`} gap={1}>
-                        {Array.from({length: 5}).map((_, index) => (
-                                <AccountArticleCard data={{id: index, title: `Title ${index}`}} />
-                            ))
-                        }
-                    </Stack>
-                </Card>
-            </Grid>
-            <Grid key="account_lists_drafts" xs={12} lg={9}>
-                <Card title="account_lists_drafts_card" sx={{height: "100%"}}>
-                    <Stack direction={"row"} gap={1.5}><Typography>Drafts</Typography><Chip color="success" variant="solid">6</Chip></Stack>
-                    <Divider inset="context"/>
-                    <Stack key={`account_drafts_cards`} gap={1}>
-                        {Array.from({length: 5}).map((_, index) => (
-                                <AccountArticleCard data={{id: index, title: `Title ${index}`}} />
-                            ))
-                        }
-                    </Stack>
                 </Card>
             </Grid>
         </Grid>
