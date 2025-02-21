@@ -4,22 +4,22 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession, Session } from "next-auth";
 
-import { Avatar, Box, Button, Card, CardActions, CardContent, CardOverflow, Chip, Divider, Grid, List, ListItem, ListItemContent, Stack, Typography } from "@mui/joy";
+import { Avatar, Box, Card, CardActions, CardContent, CardOverflow, Chip, Divider, Grid, List, ListItem, ListItemContent, Stack, Typography } from "@mui/joy";
 import {Linkedin, Mail, MapPin} from "react-feather";
 
 import authOptions from "@/app/lib/authOptions";
 import StackedBarChart from "@/app/components/common/StackedBarChart";
 import {AccountDraftListArticleCard, AccountMyListArticleCard, AccountRecentListArticleCard} from '@/app/components/account/AccountListArticleCard';
+import { DEFAULT_AVATAR_IMAGE } from '@/app/help/constants';
 
 
 export const metadata: Metadata = {
     title: 'EsgiBloc • Account',
-    description: 'Blog dédié à l\'esgi',
+    description: 'Account page',
 }
 
 export default async function AccountPage () {
     const session : Session | null = await getServerSession(authOptions)
-    const articleLength = 5
     // Redirect if user session is not defined
     if (!session) {
         redirect('/')
@@ -34,7 +34,7 @@ export default async function AccountPage () {
                             <List key="profil_list" sx={{ alignItems: 'center', flexDirection: { xs: "column", lg: "row" } }}>
                                 <ListItem>
                                     <ListItemContent>
-                                        <Avatar src={session.user?.image ?? "P"} />
+                                        <Avatar src={session.user?.image ?? DEFAULT_AVATAR_IMAGE} />
                                     </ListItemContent>
                                 </ListItem>
                                 <ListItem sx={{ gap: 2, alignItems: 'center', justifyContent: "center", direction: { md: "column", lg: "row" } }}>

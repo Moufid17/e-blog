@@ -1,0 +1,1 @@
+export const DEFAULT_AVATAR_IMAGE : string = "https://cdn.jsdelivr.net/gh/alohe/memojis/png/memo_32.png" 
