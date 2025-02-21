@@ -7,7 +7,10 @@ import { toUppercaseFirstChar } from "@/app/lib/utils";
 
 
 export default function AccountDraftCard({data}: {data: any}) {
-    const { id = "0", title = "", subtitle = `${title}`, category: {name, color} = {name: "UI/UX", color: "success.solidBg"} } = data
+    const { id = "0", title = "", subtitle = `${title}`, updateAt= "June 20, 2024", 
+            category: {name, color} = {name: "UI/UX", color: "success.solidBg"}
+    } = data
+    
     return (
         <Card key={`account_article_card_${id}`} sx={{ p: 0, height: "100%", gap: 2, border: "none", boxShadow: "none",}}>
             <Box key={`account_article_card_title_${id}`} sx={{display:"flex", flexDirection:"row", alignItems: "center", justifyContent: "space-between"}}>
@@ -22,7 +25,7 @@ export default function AccountDraftCard({data}: {data: any}) {
             </CardContent>
             <CardOverflow>
                 <Stack direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
-                    <Circle size={"6px"}/><Typography level="body-xs">Last update June 20, 2024</Typography>
+                    <Circle size={"6px"}/><Typography level="body-xs">Last update {updateAt}</Typography>
                 </Stack>
             </CardOverflow>
         </Card>
