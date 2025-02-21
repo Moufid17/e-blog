@@ -11,6 +11,7 @@ import authOptions from "@/app/lib/authOptions";
 import StackedBarChart from "@/app/components/common/StackedBarChart";
 import AccountArticleCard from "@/app/components/account/AccountArticleCard";
 import AccountDraftCard from "@/app/components/account/AccountDraftCard";
+import {AccountMyListArticleCard, AccountRecentListArticleCard} from '@/app/components/account/AccountListArticleCard';
 
 
 export const metadata: Metadata = {
@@ -92,21 +93,8 @@ export default async function AccountPage () {
                     </CardOverflow>
                 </Card>
             </Grid>
-            <Grid key="account_list_articles" xs={12} lg={5}>
-                <Card title="account_lists_articles_card">
-                    <Typography level="h4">Recent Blog List</Typography>
-                    <Divider inset="context" />
-                    <Stack key={`account_articles_cards`} gap={1}>
-                        {Array.from({ length: articleLength }).map((_, index) => (
-                            <AccountArticleCard data={{ id: index, title: `Title ${index}` }} />
-                        ))}
-                    </Stack>
-                    <CardOverflow sx={{px: 0}}>
-                        <Link href="/">
-                            <Button fullWidth sx={{borderRadius: `0 0 6px 6px`}}>View all</Button>
-                        </Link>
-                    </CardOverflow>
-                </Card>
+            <Grid key="account_recent_articles" xs={12} lg={5}>
+                <AccountRecentListArticleCard data={{}}/>
             </Grid>
             <Grid key="account_lists_drafts" xs={12} lg={3}>
                 <Card title="account_lists_drafts_card" sx={{ maxHeight: "950px" }}>
@@ -146,6 +134,9 @@ export default async function AccountPage () {
                             </Stack>
                         </CardContent>
                     </Card>
+            </Grid>
+            <Grid key="account_lists_articles" xs={12} lg={3}>
+                <AccountMyListArticleCard data={{}}/>
             </Grid>
         </Grid>
     );
