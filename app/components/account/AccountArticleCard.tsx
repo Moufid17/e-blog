@@ -8,7 +8,7 @@ import { toUppercaseFirstChar } from "@/app/lib/utils";
 
 
 export default function AccountArticleCard({data, isOwner = false}: {data: any, isOwner?: boolean}) {
-    const { id, title, createAt = "5 minutes", likes = 20, comments = 50, views = 100,
+    const { id ="0", title="Title", createAt = "5 minutes", likes = 20, comments = 50, views = 100,
             owner: {
                 name = "John Doe", image = "https://cdn.jsdelivr.net/gh/alohe/memojis/png/vibrent_1.png", job = "<Not mention />"
             } = {}
