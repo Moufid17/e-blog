@@ -5,12 +5,13 @@ import { Avatar, Box, Card, CardContent, CardOverflow, IconButton, List, ListIte
 import { Circle, Eye, Heart, MessageSquare, MoreVertical } from "react-feather";
 
 import { toUppercaseFirstChar } from "@/app/lib/utils";
+import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from "@/app/help/constants";
 
 
 export default function AccountArticleCard({data, isOwner = false}: {data: any, isOwner?: boolean}) {
     const { id ="0", title="Title", createAt = "5 minutes", likes = 20, comments = 50, views = 100,
             owner: {
-                name = "John Doe", image = "https://cdn.jsdelivr.net/gh/alohe/memojis/png/vibrent_1.png", job = "<Not mention />"
+                name = DEFAULT_PSEUDO, image = DEFAULT_AVATAR_IMAGE, job = DEFAULT_JOB_NAME
             } = {}
     } = data
     

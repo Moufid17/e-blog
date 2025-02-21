@@ -10,7 +10,7 @@ import {Linkedin, Mail, MapPin} from "react-feather";
 import authOptions from "@/app/lib/authOptions";
 import StackedBarChart from "@/app/components/common/StackedBarChart";
 import {AccountDraftListArticleCard, AccountMyListArticleCard, AccountRecentListArticleCard} from '@/app/components/account/AccountListArticleCard';
-import { DEFAULT_AVATAR_IMAGE } from '@/app/help/constants';
+import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from '@/app/help/constants';
 
 
 export const metadata: Metadata = {
@@ -39,8 +39,8 @@ export default async function AccountPage () {
                                 </ListItem>
                                 <ListItem sx={{ gap: 2, alignItems: 'center', justifyContent: "center", direction: { md: "column", lg: "row" } }}>
                                     <ListItemContent sx={{ textAlign: { xs: "center", lg: "left" } }}>
-                                        <Typography level="body-lg" fontWeight='bold' textTransform="uppercase">{session.user?.name ?? "John Deo"}</Typography>
-                                        <Typography level="body-md" noWrap>Javascript Developer</Typography>
+                                        <Typography level="body-lg" fontWeight='bold' textTransform="uppercase">{session.user?.name ?? DEFAULT_PSEUDO}</Typography>
+                                        <Typography level="body-md" noWrap>{DEFAULT_JOB_NAME}</Typography>
                                     </ListItemContent>
                                 </ListItem>
                             </List>
@@ -98,7 +98,7 @@ export default async function AccountPage () {
                 <AccountDraftListArticleCard data={{}}/>
             </Grid>
             <Grid key="account_stats" xs={12} lg={9}>
-                    <Card title="stats_card" sx={{ height: "100%" }}>
+                    <Card title="stats_card" sx={{ height: "100%", width: "100%" }}>
                         <Typography level="h4">Analytics Summary</Typography>
                         <Divider inset="context" />
                         <CardContent>

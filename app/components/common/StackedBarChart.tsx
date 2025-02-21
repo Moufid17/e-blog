@@ -12,6 +12,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import { MONTHS } from '@/app/help/constants';
 
 ChartJS.register(
   CategoryScale,
@@ -22,26 +23,19 @@ ChartJS.register(
   Legend
 );
 
-const months = {
-    en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-    fr: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-};
-
-
-
 export default function StackedBarChart() {
     const theme = useTheme(); // The runtime theme.
     const data = {
-        labels: months.en,
+        labels: MONTHS.en,
         datasets: [
             {
                 label: 'View(s)',
-                data: months.en.map(() => 500),
+                data: MONTHS.en.map(() => Math.floor(Math.random() * 1000)),
                 backgroundColor: `${theme.palette.primary.solidBg})`,
             },
             {
                 label: 'Like(s)',
-                data: months.en.map(() => 600),
+                data: MONTHS.en.map(() => Math.floor(Math.random() * 1000)),
                 backgroundColor: `${theme.palette.success.solidBg}`,
             },
         ],
