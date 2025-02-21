@@ -10,42 +10,13 @@ import authOptions from './lib/authOptions';
 import { prismaClientDB } from '@/app/lib/prismaClient'
 import { Posts } from "@/app/common/types/posts";
 import PostCard from '@/app/components/common/postCard'
+import { getAllPosts } from './actions/postList';
 
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-  // La liste des posts dans l'ordre décroissant.
-  const getAllPosts: Posts = await prismaClientDB.post.findMany({
-    select: {
-      id: true,
-      title: true,
-      createdAt: true,
-      owner: {
-        select: {
-          id: true,
-          name: true,
-        }
-      },
-      likes: {
-        select: {
-          userId: true,
-          user: {
-            select: {
-              email: true
-            }
-          }
-        }
-      },
-      _count: {
-        select: { likes: true },
-      },
-    },
-    orderBy: [
-      {
-        updatedAt: 'desc',
-      }
-    ],
-  })
+  
+  const allPosts: Posts = await getAllPosts()
   
   return (
     <Box key={"main_app"} sx={{p: "12px", bgcolor: "#fff",}}>
@@ -58,13 +29,13 @@ export default async function Home() {
         </Link>
       </Stack>
       
-      {getAllPosts.length > 0 ?
+      {allPosts.length > 0 ?
         <Grid container 
           spacing={{ xs: 2, sm: 3, md: 4 }}
           columns={{ xs: 4, sm: 12, md: 12 }}
           sx={{ flexGrow: 1 , }}
         >
-          {[...getAllPosts].map(
+          {[...allPosts].map(
               (post, index: number) => 
                 <Grid key={index} xs={9} sm={6} md={3}>
                   <PostCard key={"home_post_"+index} data={post}/>
