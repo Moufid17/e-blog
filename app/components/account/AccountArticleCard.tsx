@@ -18,7 +18,7 @@ export default function AccountArticleCard({data, isOwner = false}: {data: any, 
         <Card key={`account_article_card_${id}`} sx={{height: "100%", gap: 2,}}>
             <Box key={`account_article_card_title${id}`} sx={{display:"flex", flexDirection:"row", alignItems: "center", justifyContent: "space-between", wordWrap: "break-word"}}>
                 <Link href={`/posts/${ id }`}>
-                    <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 31)) + (title.length > 31 ? "...": "")}</Typography>
+                    <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 21).trim()) + (title.length > 21 ? "...": "")}</Typography>
                 </Link>
                 {isOwner && <IconButton>
                     <MoreVertical size={"12px"}/>

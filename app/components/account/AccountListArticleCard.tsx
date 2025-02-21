@@ -130,7 +130,7 @@ export function AccountMyListArticleCard({data}: {data: any}) {
 
 const draftArticleList: any[] = [
     {
-        id:"cm71nl3bw0006ywcxnl8gw17c",
+        id:"0",
         title: "Responsive UI Design With Material-UI & React",
         subtitle: "Responsive UI Design With Material-UI & React",
         updateAt: "June 20, 2024",
