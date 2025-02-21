@@ -1,3 +1,4 @@
+// [ ] MoreVertical to menu with edit and delete
 import Link from "next/link";
 
 import { Avatar, Box, Card, CardContent, CardOverflow, IconButton, List, ListItem, ListItemContent, Stack, Typography } from "@mui/joy";
@@ -7,7 +8,12 @@ import { toUppercaseFirstChar } from "@/app/lib/utils";
 
 
 export default function AccountArticleCard({data, isOwner = false}: {data: any, isOwner?: boolean}) {
-    const { id, title, owner: {name, image} = {name: "John Doe", image: ""} } = data
+    const { id, title, createAt = "5 minutes", likes = 20, comments = 50, views = 100,
+            owner: {
+                name = "John Doe", image = "https://cdn.jsdelivr.net/gh/alohe/memojis/png/vibrent_1.png", job = "<Not mention />"
+            } = {}
+    } = data
+    
     return (
         <Card key={`account_article_card_${id}`} sx={{height: "100%", gap: 2,}}>
             <Box key={`account_article_card_title${id}`} sx={{display:"flex", flexDirection:"row", alignItems: "center", justifyContent: "space-between", wordWrap: "break-word"}}>
@@ -19,16 +25,16 @@ export default function AccountArticleCard({data, isOwner = false}: {data: any, 
                 </IconButton>}
             </Box>
             <CardContent>
-                <Box sx={{display: 'flex', flexDirection:"row", justifyContent: 'flex-start', alignItems: "center", gap: 1.5}}>
-                    <Stack direction={"row"} gap={0.5}><Heart size={"12px"}/><span style={{ fontSize: "12px", lineHeight:"0.75rem"}}>20 likes</span></Stack>
-                    <Stack direction={"row"} gap={0.5}><MessageSquare  size={"12px"}/><span style={{ fontSize: "12px", lineHeight:"0.75rem"}}>50 comments</span></Stack>
-                    <Stack direction={"row"} gap={0.5}><Eye size={"12px"}/><span style={{ fontSize: "12px", lineHeight:"0.75rem"}}>100 views</span></Stack>
+                <Box sx={{display: 'flex', flexDirection:"row", justifyContent: {xs: 'flex-start', md: "space-evenly"}, alignItems: "center", gap: 1.5}}>
+                    <Stack direction={"row"} gap={0.5}><Heart size={"12px"}/><span style={{ fontSize: "12px", lineHeight:"0.75rem"}}>{likes} like(s)</span></Stack>
+                    <Stack direction={"row"} gap={0.5}><MessageSquare  size={"12px"}/><span style={{ fontSize: "12px", lineHeight:"0.75rem"}}>{comments} comment(s)</span></Stack>
+                    <Stack direction={"row"} gap={0.5}><Eye size={"12px"}/><span style={{ fontSize: "12px", lineHeight:"0.75rem"}}>{views} view(s)</span></Stack>
                 </Box>
             </CardContent>
             <CardOverflow>
                 <Box sx={{display: 'flex', flexDirection:"row", justifyContent: 'space-between', alignItems: "center", gap: 1.5}}>
                     <Stack direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
-                        <Circle size={"6px"}/><Typography level="body-xs">5 minutes</Typography>
+                        <Circle size={"6px"}/><Typography level="body-xs">{createAt} ago</Typography>
                     </Stack>
                     {!isOwner && <Box key="account_article_card_profil">
                         <List key="profil_list" sx={{flexDirection: "row",}}>
@@ -40,7 +46,7 @@ export default function AccountArticleCard({data, isOwner = false}: {data: any, 
                             <ListItem sx={{alignItems: 'center',  justifyContent: "center", direction: "column"}}>
                                 <ListItemContent>
                                     <Typography level="body-xs" fontWeight='bold' textTransform="uppercase" >{name}</Typography>
-                                    <Typography level="body-xs" noWrap>Javascript Developer</Typography>
+                                    <Typography level="body-xs" noWrap>{job}</Typography>
                                 </ListItemContent>
                             </ListItem>
                         </List>

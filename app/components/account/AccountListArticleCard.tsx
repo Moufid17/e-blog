@@ -52,7 +52,6 @@ const recentArticleList: any[] = [
 ]
 export function AccountRecentListArticleCard({data}: {data: any}) {
     const { title = "Recent Blog List",  articles = recentArticleList} = data
-    const articleLength = 5
     return (
         <Card title="account_recent_articles_card">
             <Typography level="h4">{title}</Typography>
@@ -111,7 +110,6 @@ const myArticleList: any[] = [
 ]
 export function AccountMyListArticleCard({data}: {data: any}) {
     const { title = "My Articles", articles = myArticleList} = data
-    const articleLength = 5
     return (
         <Card title="account_lists_articles_card" sx={{ maxHeight: "950px" }}>
             <Stack direction={"row"} gap={1.5}><Typography level="h4">{title}</Typography><Chip color="primary" variant="solid">{articles.length}</Chip></Stack>
