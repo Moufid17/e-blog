@@ -3,10 +3,11 @@ import Link from "next/link";
 import { Button, Card, CardOverflow, Chip, Divider, Stack, Typography } from "@mui/joy";
 
 import AccountArticleCard from "./AccountArticleCard";
+import AccountDraftCard from "./AccountDraftCard";
 
 const recentArticleList: any[] = [
     {
-        id: 0,
+        id: "0",
         title: "Responsive UI Design With Material-UI & React",
         owner: {
             name: "John Doe",
@@ -72,7 +73,7 @@ export function AccountRecentListArticleCard({data}: {data: any}) {
 
 const myArticleList: any[] = [
     {
-        id: 0,
+        id: "0",
         title: "Responsive UI Design With Material-UI & React"
     },
     {
@@ -118,6 +119,78 @@ export function AccountMyListArticleCard({data}: {data: any}) {
                     {articles.map((myArticle: any, index: number) => (
                         <>
                             <AccountArticleCard data={myArticle} isOwner />
+                            <Divider />
+                        </>
+                    ))}
+                </Stack>
+        </Card>
+    )
+}
+
+
+const draftArticleList: any[] = [
+    {
+        id:"cm71nl3bw0006ywcxnl8gw17c",
+        title: "Responsive UI Design With Material-UI & React",
+        subtitle: "Responsive UI Design With Material-UI & React",
+        updateAt: "June 20, 2024",
+        category: {
+            name: "UI/UX",
+            color: "success.solidDisabledBg"
+        }
+    },
+    {
+        id: "1",
+        title: "Responsive UI Design With Material-UI & React",
+        subtitle: "Responsive UI Design With Material-UI & React",
+        updateAt: "June 20, 2024",
+        category: {
+            name: "DevOps",
+        }
+        
+    },
+    {
+        id: "2",
+        title: "Responsive UI Design With Material-UI & React",
+        subtitle: "Responsive UI Design With Material-UI & React",
+        updateAt: "June 20, 2024",
+        category: {
+            name: "UI/UX",
+            color: "success.solidDisabledBg"
+        }
+        
+    },
+    {
+        id: "3",
+        title: "Responsive UI Design With Material-UI & React",
+        subtitle: "Responsive UI Design With Material-UI & React",
+        updateAt: "June 20, 2024",
+        category: {
+            name: "UI/UX",
+            color: "success.solidDisabledBg"
+        }
+    },
+    {
+        id: "4",
+        title: "Responsive UI Design With Material-UI & React",
+        subtitle: "Responsive UI Design With Material-UI & React",
+        updateAt: "June 20, 2024",
+        category: {
+            name: "UI/UX",
+            color: "success.solidDisabledBg"
+        }
+    },
+]
+export function AccountDraftListArticleCard({data}: {data: any}) {
+    const { title = "Draft(s)",  articlesDraft = draftArticleList} = data
+    return (
+        <Card title="account_lists_drafts_card" sx={{ maxHeight: "950px" }}>
+            <Stack direction={"row"} gap={1.5}><Typography level="h4">{title}</Typography><Chip color="success" variant="solid">{articlesDraft.length}</Chip></Stack>
+            <Divider inset="context"/>
+                <Stack key={`account_drafts_cards`} gap={1} sx={{overflow: "auto",}}>
+                    {articlesDraft.map((articleDraft: any) => (
+                        <>
+                            <AccountDraftCard data={articleDraft} />
                             <Divider />
                         </>
                     ))}

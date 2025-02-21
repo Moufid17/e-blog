@@ -9,9 +9,7 @@ import {Linkedin, Mail, MapPin} from "react-feather";
 
 import authOptions from "@/app/lib/authOptions";
 import StackedBarChart from "@/app/components/common/StackedBarChart";
-import AccountArticleCard from "@/app/components/account/AccountArticleCard";
-import AccountDraftCard from "@/app/components/account/AccountDraftCard";
-import {AccountMyListArticleCard, AccountRecentListArticleCard} from '@/app/components/account/AccountListArticleCard';
+import {AccountDraftListArticleCard, AccountMyListArticleCard, AccountRecentListArticleCard} from '@/app/components/account/AccountListArticleCard';
 
 
 export const metadata: Metadata = {
@@ -97,18 +95,7 @@ export default async function AccountPage () {
                 <AccountRecentListArticleCard data={{}}/>
             </Grid>
             <Grid key="account_lists_drafts" xs={12} lg={3}>
-                <Card title="account_lists_drafts_card" sx={{ maxHeight: "950px" }}>
-                    <Stack direction={"row"} gap={1.5}><Typography level="h4">Drafts</Typography><Chip color="success" variant="solid">6</Chip></Stack>
-                    <Divider inset="context"/>
-                        <Stack key={`account_drafts_cards`} gap={1} sx={{overflow: "auto",}}>
-                            {Array.from({ length: articleLength + 3 }).map((_, index) => (
-                                <>
-                                    <AccountDraftCard data={{ id: index, title: `Responsive UI Design With Material-UI & React` }} />
-                                    <Divider />
-                                </>
-                            ))}
-                        </Stack>
-                </Card>
+                <AccountDraftListArticleCard data={{}}/>
             </Grid>
             <Grid key="account_stats" xs={12} lg={9}>
                     <Card title="stats_card" sx={{ height: "100%" }}>
