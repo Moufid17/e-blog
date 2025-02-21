@@ -1,3 +1,5 @@
+// [ ] Check if postId different from "new", exist else retun notfound page (use zustand to keep all posts needed datas in memory)
+
 "use client"
 import { Box, Divider, FormControl, FormLabel, Input, Stack, Typography } from "@mui/joy";
 import { useEffect, useState } from "react";
