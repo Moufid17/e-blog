@@ -6,7 +6,7 @@ import authOptions from "@/app/lib/authOptions";
 import { prismaClientDB } from "@/app/lib/prismaClient";
 import { AddPostType } from "../common/types/posts";
 
-export const addLike = async ({id}: {id: string}) => {
+export const addLike = async ({postId}: {postId: string}) => {
   const session = await getServerSession(authOptions);
 
   if (session?.user?.email == null) return null
@@ -19,7 +19,7 @@ export const addLike = async ({id}: {id: string}) => {
   if (user == null) return null
 
   const updatedPost = await prismaClientDB.post.update({
-    where: { id : id },
+    where: { id : postId },
     data: {
       likes: {
         create: {
@@ -30,7 +30,7 @@ export const addLike = async ({id}: {id: string}) => {
   })
 }
 
-export const removeLike = async ({id}: {id: string}) => {
+export const removeLike = async ({postId}: {postId: string}) => {
     const session = await getServerSession(authOptions);
     if (session?.user?.email == null) return
     const user = await prismaClientDB.user.findUnique({
@@ -42,7 +42,7 @@ export const removeLike = async ({id}: {id: string}) => {
     if (user == null) return
 
     const updatedPost = await prismaClientDB.post.update({
-      where: { id : id },
+      where: { id : postId },
       data: {
         likes: {
             deleteMany: {
@@ -58,7 +58,7 @@ export const fetchLikeCount = async ({postId}: {postId: string}) => {
     const postLikesPosts = await prismaClientDB.post.findUnique({
         where: { id : postId },
         select: {
-            likes: true
+          likes: true
         }
     })
     return postLikesPosts?.likes.length
