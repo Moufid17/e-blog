@@ -17,6 +17,11 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     const [post, setPost] = useState<GetPostType>(null)
     const [description, setDescription] = useState<string>("")
 
+    const isOwner = (postEmail: string | null): boolean => {
+        if (postEmail == null || session == null) return false
+        return  session?.user?.email == postEmail
+    }
+    
     const getPost = async (id: string) => {
         const data : GetPostType= await fetchPost({postId: id})
         setPost(data)
@@ -32,7 +37,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     },[postId, session])
     
     return (
-        <Stack spacing={2} sx={{bgcolor: "#fff"}}>
+        <Stack spacing={2} sx={{bgcolor: "background.body"}}>
             {post ? 
                 <Stack key={post.id} alignItems="center" sx={{pt: "1.5rem"}} spacing={1}>
                     <Stack key={"post_title"} width="100%" sx={{p:1}}>
@@ -41,9 +46,9 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                             <Divider orientation="vertical"/>
                             <Typography level="body-sm" alignSelf="flex-end">{toUppercaseFirstChar(convertDateToString(post.updatedAt ?? (new Date())))}</Typography>
                         </Stack>
-                        <FormControl required={session?.user?.email == post?.owner?.email}>
+                        <FormControl required={isOwner(post?.owner?.email)}>
                             <FormLabel>Titre</FormLabel>
-                            <Input disabled={session == null || (session?.user?.email != post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } color="neutral" defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title"
+                            <Input disabled={!isOwner(post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } color="neutral" defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title"
                                 sx={{
                                     p: 2,
                                     '&::before': {
@@ -58,13 +63,13 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                             />    
                         </FormControl>
                     </Stack>
-                    <Stack key={"post_descritption_editor_or_viewer"} width="100%"  spacing={3} sx={{bgcolor: "#fff", p: 1, m: 10}}>
+                    <Stack key={"post_descritption_editor_or_viewer"} width="100%" spacing={3} sx={{bgcolor: "#fff", p: 1, m: 10}}>
                         <Box>
-                            <Typography level="body-md"  sx={{mb:"-8px"}}>{(session && session?.user?.email == post?.owner?.email) ? "Editer" : ""} Description :</Typography>
+                            <Typography level="body-md"  sx={{mb:"-8px"}}>{isOwner(post?.owner?.email) ? "Editer" : ""} Description :</Typography>
                         </Box>
                         <Box sx={{p:0.5}}>
                             {/* Check logged user is owner */}
-                            {(session && session?.user?.email == post?.owner?.email) ? 
+                            {isOwner(post?.owner?.email) ? 
                                 <PostEditor data={post} isNew={postId == "new"}/>
                                 : 
                                 <PostViewer content={description} />
