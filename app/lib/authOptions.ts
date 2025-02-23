@@ -34,7 +34,7 @@ const authOptions : NextAuthOptions = {
       redirect: async ({ url, baseUrl }: any) => {
         return baseUrl
       },
-      session: async ({ session, user, token } :any) => {
+      session: async ({ session, _, user } :any) => {
         if (user) {
           session.user.id = user.id
         }
