@@ -12,10 +12,9 @@ import {
   AspectRatio,
 } from "@mui/joy";
 import { Heart } from "react-feather";
-import { useRouter } from "next/navigation";
 import { signIn, useSession } from 'next-auth/react'
 import Link from "next/link";
-import { addLike, fetchLikeCount, removeLike } from "@/app/actions/post";
+import { addLike, removeLike } from "@/app/actions/post";
 import { PostCardType } from "@/app/common/types/posts";
 import { convertDateToString, toUppercaseFirstChar } from "@/app/lib/utils";
 
@@ -26,8 +25,8 @@ export default function PostCard({data}: {data: PostCardType}) {
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
   const [countLike, setCountLike] = useState<number>(0)
 
-  const addLikeToPost = async () => await addLike({id})
-  const removeLikeToPost = async () => await removeLike({id})
+  const addLikeToPost = async () => await addLike({postId:id})
+  const removeLikeToPost = async () => await removeLike({postId:id})
 
   const handleSetFavorite = async () => {
     if (!session || !session.user){
@@ -49,7 +48,7 @@ export default function PostCard({data}: {data: PostCardType}) {
     const fetchData = async () => {
       setCountLike(_count.likes)
   
-      const isUserFavorite = likes.find((value) => value.user.email == session?.user?.email)
+      const isUserFavorite = likes.find((value) => value.userId == session?.user?.id)
       if (isUserFavorite) setIsFavorite(true)
     }
 
