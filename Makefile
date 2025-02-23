@@ -19,6 +19,9 @@ next_secret:
 bash:
 	docker compose exec nodejs /bin/sh
 
+logs:
+	docker compose logs nodejs -f
+
 # Prisma commands
 dbinit:
 	docker compose exec nodejs npx prisma db push --force-reset # Not to be used in your production environment : to push the initial schema to the database. --force-reset to ignore the current state of the database and apply the schema from scratch.
