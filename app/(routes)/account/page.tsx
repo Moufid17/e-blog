@@ -1,4 +1,5 @@
 // This page will split into PROFILE (https://berrydashboard.io/apps/blog/general-settings) and dashboard (https://berrydashboard.io/dashboard/blog)
+import React from 'react';
 import type { Metadata } from 'next'
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -8,6 +9,7 @@ import { Avatar, Box, Card, CardActions, CardContent, CardOverflow, Chip, Divide
 import {Linkedin, Mail, MapPin} from "react-feather";
 
 import authOptions from "@/app/lib/authOptions";
+import { likeReceived } from '@/app/actions/account';
 import StackedBarChart from "@/app/components/common/StackedBarChart";
 import {AccountDraftListArticleCard, AccountMyListArticleCard, AccountRecentListArticleCard} from '@/app/components/account/AccountListArticleCard';
 import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from '@/app/help/constants';
@@ -24,6 +26,8 @@ export default async function AccountPage () {
     if (!session) {
         redirect('/')
     }
+    const allLikeReceived = await likeReceived({userId: session?.user?.id}) ?? 0
+    
     
     return (
         <Grid key="account_main" component={'main'} container spacing={2} sx={{ flexGrow: 1, p: 2, bgcolor: "background.body", }}>
@@ -81,10 +85,14 @@ export default async function AccountPage () {
                     </CardContent>
                     <CardOverflow>
                         <CardActions orientation="horizontal" sx={{ display: 'flex', justifyContent: 'space-around' }}>
-                            {Array.from({ length: 3 }).map((_, index) => (
+                            <Box key={""} component={'span'} sx={{ display: 'flex', flexDirection: "column", alignItems: "center", justifyContent: 'center' }}>
+                                <Typography level="title-lg">{allLikeReceived}</Typography>
+                                <Typography level="body-xs">like(s)</Typography>
+                            </Box>
+                            {["comment(s)", "view(s)"].map((t, index) => (
                                 <Box key={index} component={'span'} sx={{ display: 'flex', flexDirection: "column", alignItems: "center", justifyContent: 'center' }}>
-                                    <Typography level="title-lg">20</Typography>
-                                    <Typography level="body-xs">like(s)</Typography>
+                                    <Typography level="title-lg">{index}</Typography>
+                                    <Typography level="body-xs">{t}</Typography>
                                 </Box>
                             ))}
                         </CardActions>
