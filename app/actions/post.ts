@@ -16,7 +16,20 @@ export const addLike = async ({postId}: {postId: string}) => {
       email: session?.user?.email
     }
   })
-  if (user == null) return null
+  if (user == null) return
+  
+  // Verifiez si l'utilisateur a déjà liké le post
+  const postLikes = await prismaClientDB.post.findUnique({
+    where: { id : postId },
+    select: {
+      likes: {
+        where: {
+          userId: user.id,
+        },
+      },
+    },
+  })
+  if (postLikes) return
 
   const updatedPost = await prismaClientDB.post.update({
     where: { id : postId },
