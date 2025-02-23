@@ -9,34 +9,29 @@ import { AddPostType } from "../common/types/posts";
 export const addLike = async ({postId}: {postId: string}) => {
   const session = await getServerSession(authOptions);
 
-  if (session?.user?.email == null) return null
-  const user = await prismaClientDB.user.findUnique({
-    select: {id: true},
-    where: {
-      email: session?.user?.email
-    }
-  })
-  if (user == null) return
-  
+  if (session?.user?.id == null) return null
   // Verifiez si l'utilisateur a déjà liké le post
   const postLikes = await prismaClientDB.post.findUnique({
     where: { id : postId },
     select: {
       likes: {
         where: {
-          userId: user.id,
+          userId: session?.user?.id,
+          postId: postId
         },
       },
     },
   })
-  if (postLikes) return
+  if (postLikes) {
+    if (postLikes?.likes.length > 0) return
+  }
 
-  const updatedPost = await prismaClientDB.post.update({
+  await prismaClientDB.post.update({
     where: { id : postId },
     data: {
       likes: {
         create: {
-          userId: user.id,
+          userId: session?.user?.id,
         },
       },
     },
