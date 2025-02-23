@@ -40,22 +40,15 @@ export const addLike = async ({postId}: {postId: string}) => {
 
 export const removeLike = async ({postId}: {postId: string}) => {
     const session = await getServerSession(authOptions);
-    if (session?.user?.email == null) return
-    const user = await prismaClientDB.user.findUnique({
-      select: {id: true},
-      where: {
-        email: session?.user?.email
-      }
-    })
-    if (user == null) return
 
-    const updatedPost = await prismaClientDB.post.update({
+    if (session?.user?.id == null) return null
+
+    await prismaClientDB.post.update({
       where: { id : postId },
       data: {
         likes: {
             deleteMany: {
-                // Spécifiez les conditions pour supprimer le like du user puis l'association du like et du user
-                userId: user.id,
+                userId: session.user.id,
             },
         },
       },
