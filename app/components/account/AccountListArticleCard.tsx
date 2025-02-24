@@ -118,7 +118,7 @@ export function AccountMyListArticleCard({data}: {data: any}) {
                 <Stack key={`account_articles_cards`} gap={1} sx={{overflow: "auto",}}>
                     {articles.map((myArticle: any, index: number) => (
                         <>
-                            <AccountArticleCard data={myArticle} isOwner />
+                            <AccountArticleCard key={"account_articles_cards_card"} data={myArticle} isOwner />
                             <Divider />
                         </>
                     ))}
@@ -190,7 +190,7 @@ export function AccountDraftListArticleCard({data}: {data: any}) {
                 <Stack key={`account_drafts_cards`} gap={1} sx={{overflow: "auto",}}>
                     {articlesDraft.map((articleDraft: any) => (
                         <>
-                            <AccountDraftCard data={articleDraft} />
+                            <AccountDraftCard key={"account_drafts_cards_card"} data={articleDraft} />
                             <Divider />
                         </>
                     ))}

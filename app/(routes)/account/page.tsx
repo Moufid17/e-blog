@@ -9,11 +9,11 @@ import { Avatar, Box, Card, CardActions, CardContent, CardOverflow, Chip, Divide
 import {Linkedin, Mail, MapPin} from "react-feather";
 
 import authOptions from "@/app/lib/authOptions";
-import { getAllOwnPost, likeReceived, OwnPostGroupByType } from '@/app/actions/account';
+import { getAllOwnPost, likeReceived } from '@/app/actions/account';
 import StackedBarChart from "@/app/components/common/StackedBarChart";
 import {AccountDraftListArticleCard, AccountMyListArticleCard, AccountRecentListArticleCard} from '@/app/components/account/AccountListArticleCard';
 import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from '@/app/help/constants';
-import { AccountPostOwnType } from '@/app/common/types/account';
+import { AccountPostOwnType, OwnPostGroupByType } from '@/app/common/types/account';
 
 
 export const metadata: Metadata = {
@@ -27,41 +27,39 @@ export default async function AccountPage () {
     if (!session) {
         redirect('/')
     }
-    const data : OwnPostGroupByType = await getAllOwnPost({userId: session?.user?.id}) ?? []
+    const allPostOwn : OwnPostGroupByType = await getAllOwnPost({userId: session?.user?.id}) ?? []
     const allLikeReceived = await likeReceived({userId: session?.user?.id}) ?? 0
     
     
     return (
         <Grid key="account_main" component={'main'} container spacing={2} sx={{ flexGrow: 1, p: 2, bgcolor: "background.body", }}>
-            <Grid key="account_header" xs={12} lg={4}>
+            <Grid key="account_header" xs={12} lg={4} spacing={2}>
                 <Card key="heuder">
-                    {data.isPublished.map((d: AccountPostOwnType, index) => {
-                        return (
-                            <>
-                                <p>title :{d.title}</p>
-                                <p>likes : {d._count ? d._count.likes : "-" }</p>
-                                <p>cat :{d.category ? d.category.name : "-"}</p>
-                                <p>cat color : {d?.category? d.category.color : "-"}</p>
-                                <p>update at : {d?.updatedAt ? d?.updatedAt.toISOString() : "-"}</p>
-                            </>
-                        )
-                    }
-                      
+                    {allPostOwn.isPublished.map((d: AccountPostOwnType, index:number) => {
+                            return (
+                                <>
+                                    <p>title :{d.title}</p>
+                                    <p>likes : {d._count ? d._count.likes : "-" }</p>
+                                    <p>cat :{d.category ? d.category.name : "-"}</p>
+                                    <p>cat color : {d?.category? d.category.color : "-"}</p>
+                                    <p>update at : {d?.updatedAt ? d?.updatedAt.toISOString() : "-"}</p>
+                                </>
+                            )
+                        }
                     )}
                 </Card>
-                <Card key="heuder">
-                    {data.isNotPublished.map((d: AccountPostOwnType, index) => {
-                        return (
-                            <>
-                                <p>title :{d.title}</p>
-                                <p>likes : {d._count ? d._count.likes : "-" }</p>
-                                <p>cat :{d.category ? d.category.name : "-"}</p>
-                                <p>cat color : {d?.category? d.category.color : "-"}</p>
-                                <p>update at : {d?.updatedAt ? d?.updatedAt.toISOString() : "-"}</p>
-                            </>
-                        )
-                    }
-                      
+                <Card key="heuder-2">
+                    {allPostOwn.isNotPublished.map((d: AccountPostOwnType, index:number) => {
+                            return (
+                                <>
+                                    <p>title :{d.title}</p>
+                                    <p>likes : {d._count ? d._count.likes : "-" }</p>
+                                    <p>cat :{d.category ? d.category.name : "-"}</p>
+                                    <p>cat color : {d?.category? d.category.color : "-"}</p>
+                                    <p>update at : {d?.updatedAt ? d?.updatedAt.toISOString() : "-"}</p>
+                                </>
+                            )
+                        }
                     )}
                 </Card>
             </Grid>
@@ -92,26 +90,17 @@ export default async function AccountPage () {
                         <Box key="profil_card_content">
                             <List key="profil_card_content_list" sx={{ display: 'flex', alignItems: "stretch", justifyContent: 'center', gap: 1 }}>
                                 <ListItem key="profil_card_content_list_0" sx={{ justifyContent: "space-between", alignItems: 'center' }}>
-                                    <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        <Mail />
-                                        Email
-                                    </Box>
+                                    <Typography level="body-md" noWrap textAlign={"left"} startDecorator={<Mail />}>Email</Typography>
                                     <Typography level="body-md" noWrap>{session.user?.email ?? "johndeo@gmail.com"}</Typography>
                                 </ListItem>
                                 <Divider />
                                 <ListItem key="profil_card_content_list_1" sx={{ justifyContent: "space-between", alignItems: 'center' }}>
-                                    <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        <Box><Linkedin /></Box>
-                                        <Box>LinkedIn</Box>
-                                    </Box>
+                                    <Typography level="body-md" noWrap textAlign={"left"} startDecorator={<Linkedin />}>LinkedIn</Typography>
                                     <Link href="https://www.linkedin.com/in/moufid-mtr/">linkedin/{"https://www.linkedin.com/in/moufid-mtr".split("/").pop()}</Link>
                                 </ListItem>
                                 <Divider />
                                 <ListItem key="profil_card_content_list_2" sx={{ justifyContent: "space-between", alignItems: 'center' }}>
-                                    <Box component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        <Box component={"span"}><MapPin /></Box>
-                                        <Box>Location</Box>
-                                    </Box>
+                                    <Typography level="body-md" noWrap textAlign={"left"} startDecorator={<MapPin />}>Location</Typography>
                                     <Typography level="body-md" noWrap textAlign={"left"}> Paris, France</Typography>
                                 </ListItem>
                             </List>
@@ -137,7 +126,7 @@ export default async function AccountPage () {
                 <AccountRecentListArticleCard data={{}}/>
             </Grid>
             <Grid key="account_lists_drafts" xs={12} lg={3}>
-                <AccountDraftListArticleCard data={{}}/>
+                <AccountDraftListArticleCard data={allPostOwn.isNotPublished}/>
             </Grid>
             <Grid key="account_stats" xs={12} lg={9}>
                     <Card title="stats_card" sx={{ height: "100%", width: "100%" }}>
@@ -165,7 +154,7 @@ export default async function AccountPage () {
                     </Card>
             </Grid>
             <Grid key="account_lists_articles" xs={12} lg={3}>
-                <AccountMyListArticleCard data={{}}/>
+                <AccountMyListArticleCard data={allPostOwn.isPublished}/>
             </Grid>
         </Grid>
     );
