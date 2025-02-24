@@ -13,7 +13,8 @@ import { getAllOwnPost, likeReceived } from '@/app/actions/account';
 import StackedBarChart from "@/app/components/common/StackedBarChart";
 import {AccountDraftListArticleCard, AccountMyListArticleCard, AccountRecentListArticleCard} from '@/app/components/account/AccountListArticleCard';
 import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from '@/app/help/constants';
-import { AccountPostOwnType, OwnPostGroupByType } from '@/app/common/types/account';
+import { AccountPostOwnType, AccountRecentPostType, OwnPostGroupByType } from '@/app/common/types/account';
+import { getAllNbLastPostsNotOwned } from '@/app/actions/postList';
 
 
 export const metadata: Metadata = {
@@ -28,27 +29,11 @@ export default async function AccountPage () {
         redirect('/')
     }
     const allPostOwn : OwnPostGroupByType = await getAllOwnPost({userId: session?.user?.id}) ?? []
-    const allLikeReceived = await likeReceived({userId: session?.user?.id}) ?? 0
-    
+    const allRecentPost: AccountRecentPostType[] = await getAllNbLastPostsNotOwned({userId: session?.user?.id}) ?? []
+    const allLikeReceived : number = await likeReceived({userId: session?.user?.id}) ?? 0
     
     return (
         <Grid key="account_main" component={'main'} container spacing={2} sx={{ flexGrow: 1, p: 2, bgcolor: "background.body", }}>
-            {/* <Grid key="account_header" xs={12} lg={4} spacing={2}>
-                <Card key="heuder">
-                    {allPostOwn.isPublished.map((d: AccountPostOwnType, index:number) => {
-                            return (
-                                <>
-                                    <p>title :{d.title}</p>
-                                    <p>likes : {d._count ? d._count.likes : "-" }</p>
-                                    <p>cat :{d.category ? d.category.name : "-"}</p>
-                                    <p>cat color : {d?.category? d.category.color : "-"}</p>
-                                    <p>update at : {d?.updatedAt ? d?.updatedAt.toISOString() : "-"}</p>
-                                </>
-                            )
-                        }
-                    )}
-                </Card>
-            </Grid> */}
             <Grid key="account_profil" xs={12} lg={4}>
                 <Card key="account_profil_card" sx={{ height: "auto" }}>
                     <Stack key="account_profil_card_stack" direction={{ xs: "column", xl: "row" }} sx={{ gap: 2, alignItems: 'center', justifyContent: "space-between" }}>
@@ -109,7 +94,7 @@ export default async function AccountPage () {
                 </Card>
             </Grid>
             <Grid key="account_recent_articles" xs={12} lg={5}>
-                <AccountRecentListArticleCard data={{}}/>
+                <AccountRecentListArticleCard data={{title: "Recent Blog List", articles: allRecentPost}}/>
             </Grid>
             <Grid key="account_lists_drafts" xs={12} lg={3}>
                 <AccountDraftListArticleCard data={{title: "Draft(s)", articlesDraft: allPostOwn.isNotPublished}}/>

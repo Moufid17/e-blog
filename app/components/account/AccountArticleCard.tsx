@@ -4,14 +4,14 @@ import Link from "next/link";
 import { Avatar, Box, Card, CardContent, CardOverflow, IconButton, List, ListItem, ListItemContent, Stack, Typography } from "@mui/joy";
 import { Circle, Eye, Heart, MessageSquare, MoreVertical } from "react-feather";
 
-import { toUppercaseFirstChar } from "@/app/lib/utils";
+import { dateTimeToLastTimeAgo, toUppercaseFirstChar } from "@/app/lib/utils";
 import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from "@/app/help/constants";
 
 
 export default function AccountArticleCard({data, isOwner = false}: {data: any, isOwner?: boolean}) {
-    const { id ="0", title="Title", createAt = "5 minutes", likes = 20, comments = 50, views = 100,
+    const { id ="0", title="Title", createdAt= new Date(), updatedAt = new Date(), _count: {likes = 20}, comments = 50, views = 100,
             owner: {
-                name = DEFAULT_PSEUDO, image = DEFAULT_AVATAR_IMAGE, job = DEFAULT_JOB_NAME
+                name = DEFAULT_PSEUDO, image = DEFAULT_AVATAR_IMAGE, jobName = DEFAULT_JOB_NAME
             } = {}
     } = data
     
@@ -35,7 +35,7 @@ export default function AccountArticleCard({data, isOwner = false}: {data: any, 
             <CardOverflow>
                 <Box key={`account_article_card_${id}`} sx={{display: 'flex', flexDirection:"row", justifyContent: 'space-between', alignItems: "center", gap: 1.5}}>
                     <Stack direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
-                        <Circle size={"6px"}/><Typography level="body-xs">{createAt} ago</Typography>
+                        <Circle size={"6px"}/><Typography level="body-xs">{dateTimeToLastTimeAgo(isOwner ? updatedAt : createdAt)}</Typography>
                     </Stack>
                     {!isOwner && <Box key={`account_article_card_author_${id}`}>
                         <List key={`account_article_card_author_list_${id}`} sx={{flexDirection: "row",}}>
@@ -47,7 +47,7 @@ export default function AccountArticleCard({data, isOwner = false}: {data: any, 
                             <ListItem key={`account_article_card_author_list_item1_${id}`} sx={{alignItems: 'center',  justifyContent: "center", direction: "column"}}>
                                 <ListItemContent>
                                     <Typography level="body-xs" fontWeight='bold' textTransform="uppercase" >{name}</Typography>
-                                    <Typography level="body-xs" noWrap>{job}</Typography>
+                                    <Typography level="body-xs" noWrap>{jobName}</Typography>
                                 </ListItemContent>
                             </ListItem>
                         </List>
