@@ -17,34 +17,34 @@ export default function AccountArticleCard({data, isOwner = false}: {data: any, 
     
     return (
         <Card key={`account_article_card_${id}`} sx={{height: "100%", gap: 2,}}>
-            <Box key={`account_article_card_title${id}`} sx={{display:"flex", flexDirection:"row", alignItems: "center", justifyContent: "space-between", wordWrap: "break-word"}}>
+            <Box key={`account_article_card_title_${id}`} sx={{display:"flex", flexDirection:"row", alignItems: "center", justifyContent: "space-between", wordWrap: "break-word"}}>
                 <Link href={`/posts/${ id }`}>
                     <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 21).trim()) + (title.length > 21 ? "...": "")}</Typography>
                 </Link>
                 {isOwner && <IconButton>
-                    <MoreVertical size={"12px"}/>
+                    <MoreVertical key={""} size={"12px"}/>
                 </IconButton>}
             </Box>
             <CardContent>
                 <Box sx={{display: 'flex', flexDirection:"row", justifyContent: {xs: 'flex-start', md: "space-evenly"}, alignItems: "center", gap: 1.5}}>
-                    <Stack direction={"row"} gap={0.5}><Heart size={"12px"}/><span style={{ fontSize: "12px", lineHeight:"0.75rem"}}>{likes} like(s)</span></Stack>
-                    <Stack direction={"row"} gap={0.5}><MessageSquare  size={"12px"}/><span style={{ fontSize: "12px", lineHeight:"0.75rem"}}>{comments} comment(s)</span></Stack>
-                    <Stack direction={"row"} gap={0.5}><Eye size={"12px"}/><span style={{ fontSize: "12px", lineHeight:"0.75rem"}}>{views} view(s)</span></Stack>
+                    <Stack key={"0"} direction={"row"} gap={0.5}><Heart size={"12px"}/><span style={{ fontSize: "12px", lineHeight:"0.75rem"}}>{likes} like(s)</span></Stack>
+                    <Stack key={"1"} direction={"row"} gap={0.5}><MessageSquare  size={"12px"}/><span style={{ fontSize: "12px", lineHeight:"0.75rem"}}>{comments} comment(s)</span></Stack>
+                    <Stack key={"2"} direction={"row"} gap={0.5}><Eye size={"12px"}/><span style={{ fontSize: "12px", lineHeight:"0.75rem"}}>{views} view(s)</span></Stack>
                 </Box>
             </CardContent>
             <CardOverflow>
-                <Box sx={{display: 'flex', flexDirection:"row", justifyContent: 'space-between', alignItems: "center", gap: 1.5}}>
+                <Box key={`account_article_card_${id}`} sx={{display: 'flex', flexDirection:"row", justifyContent: 'space-between', alignItems: "center", gap: 1.5}}>
                     <Stack direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
                         <Circle size={"6px"}/><Typography level="body-xs">{createAt} ago</Typography>
                     </Stack>
-                    {!isOwner && <Box key="account_article_card_profil">
-                        <List key="profil_list" sx={{flexDirection: "row",}}>
-                            <ListItem sx={{p: 0}}>
+                    {!isOwner && <Box key={`account_article_card_author_${id}`}>
+                        <List key={`account_article_card_author_list_${id}`} sx={{flexDirection: "row",}}>
+                            <ListItem key={`account_article_card_author_list_item0_${id}`} sx={{p: 0}}>
                                 <ListItemContent>
                                     <Avatar src={image} size="sm"/>
                                 </ListItemContent>
                             </ListItem>
-                            <ListItem sx={{alignItems: 'center',  justifyContent: "center", direction: "column"}}>
+                            <ListItem key={`account_article_card_author_list_item1_${id}`} sx={{alignItems: 'center',  justifyContent: "center", direction: "column"}}>
                                 <ListItemContent>
                                     <Typography level="body-xs" fontWeight='bold' textTransform="uppercase" >{name}</Typography>
                                     <Typography level="body-xs" noWrap>{job}</Typography>
