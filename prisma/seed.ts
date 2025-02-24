@@ -4,7 +4,7 @@ async function main() {
   const CATEGORIES = [
     {
       name: 'UX/UI',
-      color: "primary.solidDisabledBg",
+      color: "success.solidDisabledBg",
     },
     {
       name: 'Frontend Developer',
@@ -12,15 +12,15 @@ async function main() {
     },
     {
       name: 'Backend Developer',
-      color: "neutral.solidDisabledBg",
+      color: "neutral.solidBg",
     },
     {
       name: 'DevOps',
-      color: "warning.solidDisabledBg",
+      color: "success.solidBg",
     },
     {
       name: 'Data Science',
-      color: "info.solidDisabledBg",
+      color: "primary.solidDisabledBg",
     }
   ]
 
