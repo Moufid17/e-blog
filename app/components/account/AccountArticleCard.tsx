@@ -22,7 +22,7 @@ export default function AccountArticleCard({data, isOwner = false}: {data: any, 
                     <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 21).trim()) + (title.length > 21 ? "...": "")}</Typography>
                 </Link>
                 {isOwner && <IconButton>
-                    <MoreVertical key={""} size={"12px"}/>
+                    <MoreVertical key={`account_article_card_more_menu_${id}`} size={"12px"}/>
                 </IconButton>}
             </Box>
             <CardContent>
