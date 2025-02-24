@@ -9,10 +9,11 @@ import { Avatar, Box, Card, CardActions, CardContent, CardOverflow, Chip, Divide
 import {Linkedin, Mail, MapPin} from "react-feather";
 
 import authOptions from "@/app/lib/authOptions";
-import { likeReceived } from '@/app/actions/account';
+import { getAllOwnPost, likeReceived, OwnPostGroupByType } from '@/app/actions/account';
 import StackedBarChart from "@/app/components/common/StackedBarChart";
 import {AccountDraftListArticleCard, AccountMyListArticleCard, AccountRecentListArticleCard} from '@/app/components/account/AccountListArticleCard';
 import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from '@/app/help/constants';
+import { AccountPostOwnType } from '@/app/common/types/account';
 
 
 export const metadata: Metadata = {
@@ -26,11 +27,44 @@ export default async function AccountPage () {
     if (!session) {
         redirect('/')
     }
+    const data : OwnPostGroupByType = await getAllOwnPost({userId: session?.user?.id}) ?? []
     const allLikeReceived = await likeReceived({userId: session?.user?.id}) ?? 0
     
     
     return (
         <Grid key="account_main" component={'main'} container spacing={2} sx={{ flexGrow: 1, p: 2, bgcolor: "background.body", }}>
+            <Grid key="account_header" xs={12} lg={4}>
+                <Card key="heuder">
+                    {data.isPublished.map((d: AccountPostOwnType, index) => {
+                        return (
+                            <>
+                                <p>title :{d.title}</p>
+                                <p>likes : {d._count ? d._count.likes : "-" }</p>
+                                <p>cat :{d.category ? d.category.name : "-"}</p>
+                                <p>cat color : {d?.category? d.category.color : "-"}</p>
+                                <p>update at : {d?.updatedAt ? d?.updatedAt.toISOString() : "-"}</p>
+                            </>
+                        )
+                    }
+                      
+                    )}
+                </Card>
+                <Card key="heuder">
+                    {data.isNotPublished.map((d: AccountPostOwnType, index) => {
+                        return (
+                            <>
+                                <p>title :{d.title}</p>
+                                <p>likes : {d._count ? d._count.likes : "-" }</p>
+                                <p>cat :{d.category ? d.category.name : "-"}</p>
+                                <p>cat color : {d?.category? d.category.color : "-"}</p>
+                                <p>update at : {d?.updatedAt ? d?.updatedAt.toISOString() : "-"}</p>
+                            </>
+                        )
+                    }
+                      
+                    )}
+                </Card>
+            </Grid>
             <Grid key="account_profil" xs={12} lg={4}>
                 <Card key="account_card" sx={{ height: "auto" }}>
                     <Stack key="profil_stack" direction={{ xs: "column", xl: "row" }} sx={{ gap: 2, alignItems: 'center', justifyContent: "space-between" }}>

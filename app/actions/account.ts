@@ -1,4 +1,5 @@
 import { prismaClientDB } from "@/app/lib/prismaClient";
+import { AccountPostOwnType, OwnPostGroupByType } from "../common/types/account";
 
 export const likeReceived = async ({userId}: {userId: string| null}) => {
   if (!userId) return 0;
@@ -15,33 +16,37 @@ export const likeReceived = async ({userId}: {userId: string| null}) => {
   return postLikesPosts.reduce((sum, post) => sum + post._count.likes, 0);
 }
 
-export const getAllOwnPostPublished = async () => {
-  return await prismaClientDB.post.findMany({
-      select: {
-          id: true,
-          title: true,
-          createdAt: true,
-          owner: {
-              select: {
-                  id: true,
-                  name: true,
-                  image: true,
-              }
-          },
-          likes: {
-              select: {
-                  user: {
-                      select: {
-                        name: true,
-                        image: true
-                      }
-                  }
-              }
-          },
-          _count: {
-            select: { likes: true },
-          },
+export const getAllOwnPost = async ({userId}: {userId: string | null}) => {
+  if (!userId) return {isPublished: [], isNotPublished: []}
+  const allOwn = await prismaClientDB.post.findMany({
+    where: {
+      userId: userId,
+    },
+    select: {
+      id: true,
+      title: true,
+      updatedAt: true,
+      category: {
+        select: {
+          name: true,
+          color: true,
+        },
       },
-      orderBy: [{ updatedAt: 'desc', }],
+      isPublished: true,
+      _count: {
+        select: { likes: true },
+      },
+    },
+    orderBy: [{ updatedAt: 'desc', }],
   })
+
+  if (!allOwn) return {isPublished: [], isNotPublished: []};
+  return allOwn.reduce<OwnPostGroupByType>((acc, post) => {
+    if (post.isPublished) {
+      acc.isPublished.push(post);
+    } else {
+      acc.isNotPublished.push(post);
+    }
+    return acc;
+  }, {isPublished: [], isNotPublished: []});
 }
