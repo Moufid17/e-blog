@@ -81,6 +81,7 @@ export const fetchPost = async ({postId}: {postId: string}) => {
       },
       updatedAt: true,
       createdAt: true,
+      categoryId: true,
     }
   })
 }
@@ -90,6 +91,11 @@ export const addPost = async ({post}: {post: AddPostType}) => {
     data: {
       title: post.title,
       description: post.description,
+      category: {
+        connect: {
+          id: post.categoryId, // Remplacez ceci par l'ID de la catégorie
+        },
+      },
       owner: {
         connect: {
           id: post.userId, // Remplacez ceci par l'ID de l'utilisateur

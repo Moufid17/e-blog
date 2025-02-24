@@ -1,7 +1,7 @@
-// [ ] Check if postId different from "new", exist else retun notfound page (use zustand to keep all posts needed datas in memory)
+// [ ] Check if postId different of "new" or an existing, otherwise retun notfound page (use zustand to keep all posts needed datas in memory)
 
 "use client"
-import { Box, Divider, FormControl, FormLabel, Input, Stack, Typography } from "@mui/joy";
+import { Box, Divider, FormControl, FormLabel, Input, ListItemDecorator, Option, Select, Stack, Typography } from "@mui/joy";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
@@ -10,11 +10,14 @@ import { GetPostType } from "@/app/common/types/posts";
 import { convertDateToString, toUppercaseFirstChar } from "@/app/lib/utils";
 import PostEditor from "@/app/components/common/postEditor";
 import PostViewer from "@/app/components/common/postViewer";
+import { getAllCategories } from "@/app/actions/category";
+import { GetCategoriesType } from "@/app/common/types/category";
 
 
 export default function PostItem({ postId = "new" }: { postId?: string }) {
     const { data: session } = useSession()
     const [post, setPost] = useState<GetPostType>(null)
+    const [categories, setCategories] = useState<GetCategoriesType>([])
     const [description, setDescription] = useState<string>("")
 
     const isOwner = (postEmail: string | null): boolean => {
@@ -23,10 +26,21 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     }
     
     const getPost = async (id: string) => {
-        const data : GetPostType= await fetchPost({postId: id})
+        const data : GetPostType = await fetchPost({postId: id})
         setPost(data)
         if (data?.description) setDescription(data?.description) 
     }
+    const getCategories = async () => {
+        const d = await getAllCategories()
+        setCategories([...d])
+    }
+    const handleChange = (
+        event: React.SyntheticEvent | null,
+        newValue: string | null,
+    ) => {
+        if (newValue == null) return
+        setPost({...post, categoryId: newValue} as GetPostType)
+    };
     
     useEffect(() => {
         if (postId == "new") {
@@ -35,6 +49,10 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
             getPost(postId as string)
         }
     },[postId, session])
+
+    useEffect(() => {
+        getCategories()
+    },[])
     
     return (
         <Stack spacing={2} sx={{bgcolor: "background.body"}}>
@@ -60,7 +78,17 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                                       outlineOffset: '2px',
                                     },
                                 }}
-                            />    
+                            /> 
+                            <Select required defaultValue={post.categoryId} onChange={handleChange} color="neutral" placeholder="Select your category" sx={{p: 2}}>
+                                <>
+                                    {categories.map((c) => (
+                                        <Option key={c.id} value={c.id}>
+                                            <Box sx={{ borderRadius: "50%", height: "40px", width: "40px", bgcolor: c.color, }}/>
+                                            <Typography>{c.name}</Typography>
+                                        </Option>
+                                    ))}
+                                </>
+                            </Select>
                         </FormControl>
                     </Stack>
                     <Stack key={"post_descritption_editor_or_viewer"} width="100%" spacing={3} sx={{bgcolor: "#fff", p: 1, m: 10}}>
