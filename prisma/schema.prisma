@@ -35,6 +35,7 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+
 model User {
   id                        String    @id @default(cuid())
   name                      String?
@@ -45,7 +46,21 @@ model User {
   sessions      Session[]
   posts     Post[]
   likedPosts    PostLikes[]
-  
+
+  role               String   @default("75")
+  jobName            String?
+  socialBio          String?
+  socialLinkedin     String?
+  socialGithub       String?
+  socialTwitter      String?
+  socialWebsite      String?
+  socialInstagram    String?
+  socialFacebook     String?
+  socialYoutube      String?
+  socialTwitch       String?
+  socialDiscord      String?
+  location           String?
+  type               String   @default("basic")
 }
 
 model VerificationToken {
@@ -57,7 +72,7 @@ model VerificationToken {
 }
 
 model Post {
-  id     String  @id @default(cuid())
+  id     String  @id @default(cuid()) @unique
   title  String
   description String   
   userId String
@@ -67,6 +82,10 @@ model Post {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
+  isPublished Boolean @default(false)
+  // publishedAt DateTime?
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String
 }
 
 model PostLikes {
@@ -76,4 +95,11 @@ model PostLikes {
   user   User @relation(fields: [userId], references: [id])
 
   @@id([postId, userId])
+}
+
+model Category {
+  id     String  @id @default(cuid())
+  name   String  @unique
+  color  String
+  posts  Post[]
 }
