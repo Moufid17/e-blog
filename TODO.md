@@ -1,21 +1,25 @@
 - [x] PostEditor Space between desc formatter and desc input 
-- [x] Home page : justify card to line start
+- [x] Handle unexisting page
 - [x] Category seed
+- [*] Home page : 
+    - [3bis] Grid mobile first
+    - [ ] Article Card : Catgeory flag and save article (then create the save lists)
+    - [ ] filter by category
 - [ ] Author public page (/about-me)
 - [ ] Delete post with confirmation
-- [x] Handle unexisting page
 - [*] Account page : 
     - [x] Post list (draft, published, others)
-    - [0] Display account details (linkedin, social media links, location)
+    - [0] account details (linkedin, social media links, location)
+        - [x] Display
+        - [ ] Accordion
     - [1] overview stats (likes per months)
     - [2bis] Draft edit Icon (link) - My Article card "More vertical menu (edit, archive, delete)"
     - [3] Edit account details : Modal Card
     - [5] Global state (test on allLikesReceived from home page to account : synchro without refresh page (use zustand))
     - [ ] Stat : view
-- [*] Post add/edit : 
+- [*] Post add/edit :
     - [2] Category and isPublished UI  
     - [4] archive, unarchive and share link
-- [ ] Home page : Filter post by category
 - [ ] Wysiwig Editor: create one (mui/joy: Toggle Button Group)
 
 
