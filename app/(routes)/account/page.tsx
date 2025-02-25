@@ -11,7 +11,7 @@ import authOptions from "@/app/lib/authOptions";
 import { getAllNbLastPostsNotOwned } from '@/app/actions/postList';
 import { getAccountDetails, getAllOwnPost, getStatsByMonth, likeReceived } from '@/app/actions/account';
 import AccountProfileCard from '@/app/components/account/AccountProfileCard';
-import { AcccountPrivilegeType, AccountRecentPostType, AccountStatsMonthType, AccoutProfilType, OwnPostGroupByType } from '@/app/common/types/account';
+import { AcccountPrivilegeType, AccountRecentPostType, AccoutProfilType, OwnPostGroupByType } from '@/app/common/types/account';
 
 import { DEFAULT_ACCOUNT_PRIVILEGE, DEFAULT_AVATAR_IMAGE, DEFAULT_EMAIL, DEFAULT_GITHUB, DEFAULT_JOB_NAME, DEFAULT_LINKEDIN, DEFAULT_LOCATION, DEFAULT_PSEUDO, DEFAULT_WEBSITE, DEFAULT_YOUTUBE } from '@/app/help/constants';
 
@@ -50,21 +50,10 @@ export default async function AccountPage () {
         }
     }
 
-    const statsPerMonth : AccountStatsMonthType[] = await getStatsByMonth({userId: session?.user?.id}) ?? []
+    const statsPerMonth = await getStatsByMonth({userId: session?.user?.id}) ?? []
     
     return (
         <Grid key="account_main" component={'main'} container spacing={2} sx={{ flexGrow: 1, p: 2, bgcolor: "background.body", }}>
-            <Grid key="account_test" xs={12} lg={4}>
-                <Card title="test_card" sx={{ height: "100%", width: "100%" }}>
-                        <Typography level="h4">Test</Typography>
-                    <CardContent>
-                        {statsPerMonth.map((stat) => (
-                            <Typography key={stat.month} level="body-md">{stat.month} : {stat.stats.likes}</Typography>
-                        ))
-                        }
-                    </CardContent>
-                </Card>
-            </Grid>
             <Grid key="account_profil" xs={12} lg={4}>
                 <AccountProfileCard userDetails={{...session?.user, ...acountProfilData}} />
             </Grid>
@@ -81,15 +70,15 @@ export default async function AccountPage () {
                         <CardContent>
                             <Stack direction={{ xs: "column", sm: "row" }} sx={{ gap: 2, justifyContent: "space-between" }}>
                                 <Card sx={{ width: "100%" }}>
-                                    <Typography level="title-lg">50</Typography>
+                                    <Typography level="title-lg">{"-"}</Typography>
                                     <Typography level="body-md">Views(7 days)</Typography>
                                 </Card>
                                 <Card sx={{ width: "100%" }}>
-                                    <Typography level="title-lg">1230</Typography>
+                                    <Typography level="title-lg">{statsPerMonth.find((stat) => stat.month === (new Date()).getMonth())?.stats.views ?? "-"}</Typography>
                                     <Typography level="body-md">Views(30 days)</Typography>
                                 </Card>
                                 <Card sx={{ width: "100%" }}>
-                                    <Typography level="title-lg">20,987</Typography>
+                                    <Typography level="title-lg">{"-"}</Typography>
                                     <Typography level="body-md">Views(All Time)</Typography>
                                 </Card>
                             </Stack>

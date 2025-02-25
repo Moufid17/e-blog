@@ -1,5 +1,5 @@
 import { prismaClientDB } from "@/app/lib/prismaClient";
-import { MonthType, OwnPostGroupByType, } from "../common/types/account";
+import { AccountStatsMonthType, MonthType, OwnPostGroupByType, } from "../common/types/account";
 import { MONTHS } from "../help/constants";
 
 // Get account details
@@ -75,7 +75,6 @@ export const getAllOwnPost = async ({userId}: {userId: string | null}) => {
   }, {isPublished: [], isNotPublished: []});
 }
 
-
 // Get all stats by userId by month
 export const getStatsByMonth = async ({userId}: {userId: string | null}) => {
   if (!userId) return [];
@@ -84,21 +83,37 @@ export const getStatsByMonth = async ({userId}: {userId: string | null}) => {
       userId: userId,
     },
     select: {
-      createdAt: true,
-      _count: {
-        select: { likes: true },
+      likes: {
+        select: {
+          createdAt: true,
+        }
       }
     }
   });
   if (!data) return [];
-
-  return MONTHS["en"].map((_, index: number) => {
-    const monthData = data.filter((post) => post.createdAt.getMonth() === index);
-    return {
-      month: index as MonthType,
-      stats: {
-        likes: monthData.reduce((sum: number, post:  {_count: {likes: number;}; createdAt: Date;}) => sum + post._count.likes, 0),
-      }
+  const existingMonth : number[] = [];
+  data.forEach((post) => {
+    if (post.likes.length > 0) {
+      post.likes.forEach((like) => {
+        if (!existingMonth.includes(like.createdAt.getMonth())) {
+          existingMonth.push(like.createdAt.getMonth());
+        }
+      });
     }
-  });
+  })
+  const statPerMonth : AccountStatsMonthType[] = []
+  data.forEach((post) => {
+    if (post.likes.length > 0) {
+      post.likes.forEach((like) => {
+        const monthIndex = like.createdAt.getMonth();
+        const monthData = statPerMonth.find((m) => m.month === monthIndex);
+        if (monthData) {
+          if (monthData.stats.likes) monthData.stats.likes += 1;
+        } else {
+          statPerMonth.push({month: monthIndex, stats: {likes: 1}});
+        }
+      });
+    }
+  })
+  return statPerMonth;
 }
