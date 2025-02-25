@@ -1,9 +1,22 @@
-export type AcccountPrivilegeType = "Argent" | "Or" | "Platine" | "Diamant" | "Pro" | "Admin" | "SuperAdmin"
+export type AcccountPrivilegeType = "Basic" | "Argent" | "Or" | "Platine" | "Diamant" | "Pro" | "Admin" | "SuperAdmin"
 
 type AnalyticType = {
   likes?: number,
   comments?: number,
   views?: number,
+} 
+
+type SocialType = {
+  linkedin?: string,
+  github?: string,
+  twitter?: string,
+  facebook?: string,
+  instagram?: string,
+  website?: string,
+  youtube?: string,
+  twitch?: string,
+  discord?: string,
+  tiktok?: string,
 } 
 
 type OwnerType = {
@@ -13,10 +26,13 @@ type OwnerType = {
 } 
 
 export type AccoutProfilType = {
-  jobName?: String,
+  name?: string | null,
+  image?: string | null,
+  email?: string | null,
+  jobName?: String | null,
   accountPrivilege?: AcccountPrivilegeType,
-  linkedin?: string,
-  location?: string,
+  socialLink?: SocialType,
+  location?: string | null,
   stats?: AnalyticType
 }
 
