@@ -39,6 +39,7 @@ export type AccountPostType = {
 
 export type AccountRecentPostType = Readonly<Omit<AccountPostType, "updatedAt">> | null
 export type AccountPostOwnType = Readonly<Omit<NonNullable<AccountPostType>, "createdAt" | "stats" | "owner">>
+export type AccountDraftPostOwnType = Readonly<Omit<NonNullable<AccountPostType>, "createdAt" | "_count" | "stats" | "owner">>
 
 export type AccountAnalyticsType = {
   week? : AnalyticType,

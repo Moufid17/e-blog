@@ -4,12 +4,14 @@ import Link from "next/link";
 import { Box, Button, Card, CardContent, CardOverflow, Chip, IconButton, Stack, Typography } from "@mui/joy";
 import { Circle, Edit2, } from "react-feather";
 
-import { toUppercaseFirstChar } from "@/app/lib/utils";
+import { dateTimeToLastTimeAgo, toUppercaseFirstChar } from "@/app/lib/utils";
+import { AccountPostOwnType } from "@/app/common/types/account";
 
 
-export default function AccountDraftCard({data}: {data: any}) {
-    const { id = "0", title = "Title", subtitle = `${title}`, updateAt= "June 20, 2024", 
-            category: {name, color} = {name: "UI/UX", color: "primary.solidDisabledBg"}
+export default function AccountDraftCard({data}: {data: AccountPostOwnType}) {
+    const { 
+        id = "0", title = "Title", updatedAt = new Date(), 
+        category: {name, color} = {name: "UI/UX", color: "primary.solidDisabledBg"}
     } = data
     
     return (
@@ -21,14 +23,11 @@ export default function AccountDraftCard({data}: {data: any}) {
                 </Link>
             </Box>
             <CardContent>
-                <>
-                    <Typography level="title-md" >{toUppercaseFirstChar(title.slice(0, 20)) + (title.length > 20 ? "...": "")}</Typography>
-                    <Typography level="body-sm" >{toUppercaseFirstChar(subtitle.slice(0, 35)) + (subtitle.length > 20 ? "...": "")}</Typography>
-                </>
+                <Typography level="title-md" >{toUppercaseFirstChar(title.slice(0, 45)) + (title.length > 45 ? "...": "")}</Typography>
             </CardContent>
             <CardOverflow>
                 <Stack direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
-                    <Circle size={"6px"}/><Typography level="body-xs">Last update {updateAt}</Typography>
+                    <Circle size={"6px"}/><Typography level="body-xs">Last update: {dateTimeToLastTimeAgo(new Date(updatedAt))}</Typography>
                 </Stack>
             </CardOverflow>
         </Card>

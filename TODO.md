@@ -1,9 +1,18 @@
 - [x] PostEditor Space between desc formatter and desc input 
 - [x] Home page : justify card to line start
-- [*1] Prisma seed
-- [*0] About me page
+- [x] Category seed
+- [ ] Author public page (/about-me)
 - [ ] Delete post with confirmation
 - [x] Handle unexisting page
-- [0*] Profil page : Post list (overview, edit, archive, unarchive and send to)
+- [*] Account page : 
+    - [x] Post list (draft, published, others)
+    - [0] Display account details (linkedin, social media links, location)
+    - [1] overview stats (likes per months)
+    - [3] Edit account details : Modal Card
+    - [5] Global state (test on allLikesReceived from home page to account : synchro without refresh page (use zustand))
+    - [ ] Stat : view
+- [*] Post add/edit : 
+    - [2] Category and isPublished UI  
+    - [4] archive, unarchive and share link
 - [ ] Home page : Filter post by category
-- [ ] Middleware
+- [ ] Wysiwig Editor: create one (mui/joy: Toggle Button Group)

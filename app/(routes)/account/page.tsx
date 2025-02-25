@@ -13,11 +13,12 @@ import { getAllOwnPost, likeReceived } from '@/app/actions/account';
 import StackedBarChart from "@/app/components/common/StackedBarChart";
 import {AccountDraftListArticleCard, AccountMyListArticleCard, AccountRecentListArticleCard} from '@/app/components/account/AccountListArticleCard';
 import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from '@/app/help/constants';
-import { AccountPostOwnType, OwnPostGroupByType } from '@/app/common/types/account';
+import { AccountPostOwnType, AccountRecentPostType, OwnPostGroupByType } from '@/app/common/types/account';
+import { getAllNbLastPostsNotOwned } from '@/app/actions/postList';
 
 
 export const metadata: Metadata = {
-    title: 'EsgiBloc • Account',
+    title: 'E-Blog • Account',
     description: 'Account page',
 }
 
@@ -28,52 +29,22 @@ export default async function AccountPage () {
         redirect('/')
     }
     const allPostOwn : OwnPostGroupByType = await getAllOwnPost({userId: session?.user?.id}) ?? []
-    const allLikeReceived = await likeReceived({userId: session?.user?.id}) ?? 0
-    
+    const allRecentPost: AccountRecentPostType[] = await getAllNbLastPostsNotOwned({userId: session?.user?.id}) ?? []
+    const allLikeReceived : number = await likeReceived({userId: session?.user?.id}) ?? 0
     
     return (
         <Grid key="account_main" component={'main'} container spacing={2} sx={{ flexGrow: 1, p: 2, bgcolor: "background.body", }}>
-            <Grid key="account_header" xs={12} lg={4} spacing={2}>
-                <Card key="heuder">
-                    {allPostOwn.isPublished.map((d: AccountPostOwnType, index:number) => {
-                            return (
-                                <>
-                                    <p>title :{d.title}</p>
-                                    <p>likes : {d._count ? d._count.likes : "-" }</p>
-                                    <p>cat :{d.category ? d.category.name : "-"}</p>
-                                    <p>cat color : {d?.category? d.category.color : "-"}</p>
-                                    <p>update at : {d?.updatedAt ? d?.updatedAt.toISOString() : "-"}</p>
-                                </>
-                            )
-                        }
-                    )}
-                </Card>
-                <Card key="heuder-2">
-                    {allPostOwn.isNotPublished.map((d: AccountPostOwnType, index:number) => {
-                            return (
-                                <>
-                                    <p>title :{d.title}</p>
-                                    <p>likes : {d._count ? d._count.likes : "-" }</p>
-                                    <p>cat :{d.category ? d.category.name : "-"}</p>
-                                    <p>cat color : {d?.category? d.category.color : "-"}</p>
-                                    <p>update at : {d?.updatedAt ? d?.updatedAt.toISOString() : "-"}</p>
-                                </>
-                            )
-                        }
-                    )}
-                </Card>
-            </Grid>
             <Grid key="account_profil" xs={12} lg={4}>
-                <Card key="account_card" sx={{ height: "auto" }}>
-                    <Stack key="profil_stack" direction={{ xs: "column", xl: "row" }} sx={{ gap: 2, alignItems: 'center', justifyContent: "space-between" }}>
-                        <Box key="profil_stack_box">
+                <Card key="account_profil_card" sx={{ height: "auto" }}>
+                    <Stack key="account_profil_card_stack" direction={{ xs: "column", xl: "row" }} sx={{ gap: 2, alignItems: 'center', justifyContent: "space-between" }}>
+                        <Box key="account_profil_card_stack_box">
                             <List key="profil_list" sx={{ alignItems: 'center', flexDirection: { xs: "column", lg: "row" } }}>
-                                <ListItem>
+                                <ListItem key="profil_list_item_0" >
                                     <ListItemContent>
                                         <Avatar src={session.user?.image ?? DEFAULT_AVATAR_IMAGE} />
                                     </ListItemContent>
                                 </ListItem>
-                                <ListItem sx={{ gap: 2, alignItems: 'center', justifyContent: "center", direction: { md: "column", lg: "row" } }}>
+                                <ListItem key="profil_list_item_1"  sx={{ gap: 2, alignItems: 'center', justifyContent: "center", direction: { md: "column", lg: "row" } }}>
                                     <ListItemContent sx={{ textAlign: { xs: "center", lg: "left" } }}>
                                         <Typography level="body-lg" fontWeight='bold' textTransform="uppercase">{session.user?.name ?? DEFAULT_PSEUDO}</Typography>
                                         <Typography level="body-md" noWrap>{DEFAULT_JOB_NAME}</Typography>
@@ -123,10 +94,10 @@ export default async function AccountPage () {
                 </Card>
             </Grid>
             <Grid key="account_recent_articles" xs={12} lg={5}>
-                <AccountRecentListArticleCard data={{}}/>
+                <AccountRecentListArticleCard data={{title: "Recent Blog List", articles: allRecentPost}}/>
             </Grid>
             <Grid key="account_lists_drafts" xs={12} lg={3}>
-                <AccountDraftListArticleCard data={allPostOwn.isNotPublished}/>
+                <AccountDraftListArticleCard data={{title: "Draft(s)", articlesDraft: allPostOwn.isNotPublished}}/>
             </Grid>
             <Grid key="account_stats" xs={12} lg={9}>
                     <Card title="stats_card" sx={{ height: "100%", width: "100%" }}>
@@ -154,7 +125,7 @@ export default async function AccountPage () {
                     </Card>
             </Grid>
             <Grid key="account_lists_articles" xs={12} lg={3}>
-                <AccountMyListArticleCard data={allPostOwn.isPublished}/>
+                <AccountMyListArticleCard data={{title: "My Articles", articles: allPostOwn.isPublished}}/>
             </Grid>
         </Grid>
     );
