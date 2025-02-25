@@ -58,10 +58,29 @@ export type AccountPostOwnType = Readonly<Omit<NonNullable<AccountPostType>, "cr
 export type AccountDraftPostOwnType = Readonly<Omit<NonNullable<AccountPostType>, "createdAt" | "_count" | "stats" | "owner">>
 
 export type AccountAnalyticsType = {
-  week? : AnalyticType,
   month? : AnalyticType,
   year? : AnalyticType,
   all? : AnalyticType,
 }
 
 export type OwnPostGroupByType = {isPublished: AccountPostOwnType[], isNotPublished: AccountPostOwnType[]};
+
+export const enum MonthType {
+  January = 0,
+  February = 1,
+  March = 2,
+  April = 3,
+  May = 4,
+  June = 5,
+  July = 6,
+  August = 7,
+  September = 8,
+  October = 9,
+  November = 10,
+  December = 11,
+}
+export type AccountStatsMonthType = {
+  month: MonthType
+  stats: AnalyticType  
+}
+export type StatsByMonthType = AccountStatsMonthType[]

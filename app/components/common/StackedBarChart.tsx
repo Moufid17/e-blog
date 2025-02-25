@@ -13,6 +13,7 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { MONTHS } from '@/app/help/constants';
+import { AccountStatsMonthType } from '@/app/common/types/account';
 
 ChartJS.register(
   CategoryScale,
@@ -23,20 +24,21 @@ ChartJS.register(
   Legend
 );
 
-export default function StackedBarChart() {
-    const theme = useTheme(); // The runtime theme.
+export default function StackedBarChart({stats}: {stats: AccountStatsMonthType[]}) {
+  
+    const theme = useTheme();
     const data = {
         labels: MONTHS.en,
         datasets: [
             {
-                label: 'View(s)',
-                data: MONTHS.en.map(() => Math.floor(Math.random() * 1000)),
-                backgroundColor: `${theme.palette.primary.solidBg})`,
+              label: 'View(s)',
+              data: MONTHS.en.map((_, index: number) => stats.find((stat) => stat.month === index)?.stats.views ?? 0),
+              backgroundColor: `${theme.palette.primary.solidBg})`,
             },
             {
-                label: 'Like(s)',
-                data: MONTHS.en.map(() => Math.floor(Math.random() * 1000)),
-                backgroundColor: `${theme.palette.success.solidBg}`,
+              label: 'Like(s)',
+              data: MONTHS.en.map((_, index: number) => stats.find((stat) => stat.month === index)?.stats.likes ?? 0),
+              backgroundColor: `${theme.palette.success.solidBg}`,
             },
         ],
     };
