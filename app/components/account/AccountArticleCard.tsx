@@ -1,11 +1,13 @@
+"use client"
 // [ ] MoreVertical to menu with edit and delete
 import Link from "next/link";
 
-import { Avatar, Box, Card, CardContent, CardOverflow, IconButton, List, ListItem, ListItemContent, Stack, Typography } from "@mui/joy";
-import { Circle, Eye, Heart, MessageSquare, MoreVertical } from "react-feather";
+import { Avatar, Box, Card, CardContent, CardOverflow, Dropdown, IconButton, List, ListDivider, ListItem, ListItemContent, Menu, MenuButton, MenuItem, Stack, Tooltip, Typography } from "@mui/joy";
+import { Circle, Delete, Edit2, Eye, Heart, MessageSquare, MoreVertical, Trash2, } from "react-feather";
 
 import { dateTimeToLastTimeAgo, toUppercaseFirstChar } from "@/app/lib/utils";
 import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from "@/app/help/constants";
+import { deletePost, draftPost } from "@/app/actions/post";
 
 
 export default function AccountArticleCard({data, isOwner = false}: {data: any, isOwner?: boolean}) {
@@ -14,6 +16,9 @@ export default function AccountArticleCard({data, isOwner = false}: {data: any, 
                 name = DEFAULT_PSEUDO, image = DEFAULT_AVATAR_IMAGE, jobName = DEFAULT_JOB_NAME
             } = {}
     } = data
+
+    const unPublished = async () => await draftPost({postId: id})
+    const deleteArticle = async () => await deletePost({postId: id})
     
     return (
         <Card key={`account_article_card_${id}`} sx={{height: "100%", gap: 2,}}>
@@ -21,9 +26,30 @@ export default function AccountArticleCard({data, isOwner = false}: {data: any, 
                 <Link href={`/posts/${ id }`}>
                     <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 21).trim()) + (title.length > 21 ? "...": "")}</Typography>
                 </Link>
-                {isOwner && <IconButton>
-                    <MoreVertical key={`account_article_card_more_menu_${id}`} size={"12px"}/>
-                </IconButton>}
+                {isOwner && <Dropdown>
+                    <MenuButton
+                        slots={{ root: IconButton }}
+                        slotProps={{ root: { variant: 'plain', color: 'neutral' } }}
+                    >
+                        <MoreVertical key={`account_article_card_more_menu_${id}`} size={"12px"}/>
+                    </MenuButton>
+                    <Menu 
+                        placement="bottom-end"
+                        slotProps={{ root: { variant: 'plain', color: 'neutral' } }} 
+                    >
+                        <MenuItem sx={{p:0,}}>
+                            <Link href={`/posts/${id}`}><Tooltip title={"Edit Post"}><IconButton><Edit2 size={"12px"}/></IconButton></Tooltip></Link> 
+                        </MenuItem>
+                        <ListDivider />
+                        <MenuItem  sx={{p:0}}>
+                            <Tooltip title={"Draft Post"}><IconButton onClick={unPublished}><Delete size={"12px"}/></IconButton></Tooltip>
+                        </MenuItem>
+                        <ListDivider />
+                        <MenuItem sx={{p:0}}>
+                            <Tooltip title={"Delete Post"}><IconButton onClick={deleteArticle}><Trash2 size={"12px"}/></IconButton></Tooltip>
+                        </MenuItem>
+                    </Menu>
+                </Dropdown>}
             </Box>
             <CardContent>
                 <Box sx={{display: 'flex', flexDirection:"row", justifyContent: {xs: 'flex-start', md: "space-evenly"}, alignItems: "center", gap: 1.5}}>

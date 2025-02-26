@@ -121,8 +121,57 @@ export const updatePost = async ({post}: {post: Post}) => {
   })
 }
 
-export const deletePost = async ({id}: {id: string}) => {
-  await prismaClientDB.post.delete({
-    where: {id: id}
+export const deletePost = async ({postId}: {postId: string}) => {
+  if (!postId) return
+  const post = await prismaClientDB.post.findUnique({
+    where: {id: postId}
+  })
+  if (!post) return
+
+  await prismaClientDB.$transaction([
+    prismaClientDB.postLikes.deleteMany({
+      where: {postId: postId}
+    }),
+    prismaClientDB.post.delete({
+      where: {id: postId}
+    })
+  ])
+}
+
+export const draftPost = async ({postId}: {postId: string}) => {
+  if (!postId) return 
+  const post = await prismaClientDB.post.findUnique({
+    where: {
+      id: postId,
+    },
+    select: {
+      isPublished: true
+    }
+  })
+  if (!post) return
+  if (!post.isPublished) return
+  await prismaClientDB.post.update({
+    where: {id: postId},
+    data: {
+      isPublished: false
+    }
+  })
+}
+
+export const publishPost = async ({postId}: {postId: string}) => {
+  if (!postId) return 
+  const post = await prismaClientDB.post.findUnique({
+    where: {id: postId},
+    select: {
+      isPublished: true
+    }
+  })
+  if (!post) return
+  if (post.isPublished) return
+  await prismaClientDB.post.update({
+    where: {id: postId},
+    data: {
+      isPublished: true
+    }
   })
 }
