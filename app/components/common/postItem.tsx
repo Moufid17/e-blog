@@ -24,6 +24,16 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     const [description, setDescription] = useState<string>("")
     const [allCategories, setAllCategories] = useState<GetCategoriesType>([])
     const [isPublished, setIsPublished] = useState<boolean>(false);
+    const [isError, setIsError] = useState<{
+        title: boolean,
+        description: boolean,
+        category: boolean
+    }>({
+        title: false,
+        description: false,
+        category: false
+    });
+
 
     const isOwner = (postEmail: string | null): boolean => {
         if (postEmail == null || session == null) return false
@@ -34,23 +44,30 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
         const data : GetPostType = await fetchPost({postId: id})
         if (!data) notFound() 
         setPost(data)
-        if (data?.description) setDescription(data?.description) 
+        if (data?.description) setDescription(data?.description)
+        setIsPublished(data?.isPublished)
     }
 
     const getCategories = async () => {
         const d = await getAllCategories()
         setAllCategories([...d])
     }
+
     const handleCategoryChange = (event: React.SyntheticEvent | null, newValue: string | null,) => {
         if (newValue == null) return
         setPost({...post, categoryId: newValue} as GetPostType)
     };
 
-    const handlePostAddButtonClick = async ({description} :{description: string}) => {
+    const handlePostCreateButtonClick = async ({description} :{description: string}) => {
         if (post != null) {
           const { id, owner, ...data } = post 
-            if (data.userId === undefined || post.title == "" || post.categoryId == undefined) {
-                alert("DATA iss missing")
+            if (data.userId === undefined || post.title.length <= 0 || post.categoryId == undefined || description.length === 0 || description === "<p></p>") {
+                const newIsError = {...isError}
+                
+                if (post.title.length <= 0) newIsError.title = true
+                if (post.categoryId == undefined) newIsError.category = true
+                if (description.length <= 0 || description === "<p></p>") newIsError.description = true
+                setIsError(newIsError)
             } else {
                 await addPost({post: {...data, description, userId: session?.user?.id}}).then((res) => {
                     alert("Créer avec succès")
@@ -62,19 +79,20 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
           alert("Erreur lors de la création du post")
         }
     }
-
+   
     const handlePostSaveButtonClick = async ({descriptionUpdate} :{descriptionUpdate: string}) => {
         if (post != null) {
           const { owner, description, userId, ...data } = post
           
-        if (userId === undefined || post.title == "" || post.categoryId == undefined || descriptionUpdate.length <= 0) {
-            alert("DATA is missing")
-            console.log("descriptionUpdate.length => ", descriptionUpdate.length);
-            console.log("userId => ", userId);
-            console.log("post.title => ", post.title);
-            console.log("post.categoryId => ", post.categoryId);
-            
+        if (userId === undefined || post.title.length <= 0 || post.categoryId == undefined || descriptionUpdate.length === 0 || descriptionUpdate === "<p></p>") {
+            const newIsError = {...isError}
+                
+            if (post.title.length <= 0) newIsError.title = true
+            if (post.categoryId == undefined) newIsError.category = true
+            if (description.length <= 0 || description === "<p></p>") newIsError.description = true
+            setIsError(newIsError)
         } else {
+                
               await updatePost({post: {...data, userId, description: descriptionUpdate}})
               alert("Mise à jour avec succès")
               router.refresh()
@@ -95,7 +113,6 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     useEffect(() => {
         getCategories()
     },[])
-
     
     return (
         <Stack spacing={2} sx={{bgcolor: "background.body"}}>
@@ -103,7 +120,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                 <Stack key={post.id} alignItems="center" sx={{pt: "1.5rem"}} spacing={1}>
                     <Grid key={"post_header"} width="100%" container spacing={3} direction={{xs: "column", lg: "row"}} sx={{ flexGrow: 1 }}>
                         <Grid xs={12}>
-                            <Stack key={"post_header_stack"}direction={"row"} spacing={2} width="100%" sx={{justifyContent: "end"}}>
+                            <Stack key={"post_header_stack"} direction={"row"} spacing={2} width="100%" sx={{justifyContent: "end"}}>
                                 {isOwner(post?.owner?.email) ?
                                     <>
                                         <Switch size="lg"
@@ -138,7 +155,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                         </Grid>
                         <Grid key={"post_title"} xs={12}>
                             <Stack key={"post_title_stack"} direction={{xs: "column", md: "row"}} spacing={2} width="100%" sx={{justifyContent: "space-between", alignItems: "end"}}>
-                                <FormControl required sx={{width: {xs: "100%", md: "80%"}}}>
+                                <FormControl required error={isError.title} sx={{width: {xs: "100%", md: "80%"}}}>
                                     <FormLabel>Title</FormLabel>
                                     <Input required disabled={!isOwner(post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title" 
                                         sx={{   p: 2, 
@@ -146,15 +163,15 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                                             display: 'none',
                                         },
                                         '&:focus-within': {
-                                        borderColor: 'primary.solid',
-                                        outline: '2px solid #0D0D0D',
-                                        outlineOffset: '2px',
+                                            borderColor: 'primary.solid',
+                                            outline: '2px solid #0D0D0D',
+                                            outlineOffset: '2px',
                                         },
                                         }}
                                     />
                                 </FormControl>
                                 <FormControl required sx={{width: {xs: "100%", md: "20%"}}}>
-                                    <Select required defaultValue={postId != "new" ? post.categoryId : undefined} onChange={handleCategoryChange} color="neutral" placeholder="Select your category" sx={{p: 2.2}}>
+                                    <Select defaultValue={postId != "new" ? post.categoryId : undefined} onChange={handleCategoryChange} color={isError.category ? "danger" : "neutral"} placeholder="Select your category" sx={{p: 2.2}}>
                                         <>
                                             {allCategories.map((c) => (
                                                 <Option key={c.id} value={c.id}>
@@ -169,16 +186,14 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                         </Grid>
                     </Grid>
                     <Stack key={"post_descritption_editor_or_viewer"} width="100%">
-                        <Grid key={"post_title"} container direction="column" spacing={2} sx={{ flexGrow: 1, m: {md: 2}}}>
+                        <Grid key={"post_title"} container direction="column" spacing={2} sx={{ flexGrow: 1, m: {xs: 0, md: 2}}}>
                             <Grid>
-                                <Box>
-                                    <Typography level="body-md">{postId != "new" ? "Edit" : ""} Description :</Typography>
-                                </Box>
+                                <Typography>{postId != "new" ? "Edit" : ""} Description :</Typography>
                             </Grid>
                             <Grid>
                                     {/* Check logged user is owner */}
                                     {isOwner(post?.owner?.email) ? 
-                                        <PostEditor data={post} isNew={postId == "new"} addPost={handlePostAddButtonClick} editPost={handlePostSaveButtonClick}/>
+                                        <PostEditor data={post} isNew={postId == "new"} addPost={handlePostCreateButtonClick} editPost={handlePostSaveButtonClick}/>
                                         : 
                                         <PostViewer content={description} />
                                     }
