@@ -168,26 +168,27 @@ const extensions = [
   }),
 ]
 
-const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: GetPostType, newDescription: string, isNewPost: boolean, setter: (value: string) => void}) => {
+const PostEditorActions = ({post,newDescription, addPost, editPost, isNewPost, setter}: {post: GetPostType, newDescription: string, addPost: ({ description }: { description: string }) => Promise<void>, editPost: ({ descriptionUpdate }: { descriptionUpdate: string }) => Promise<void>, isNewPost: boolean, setter: (value: string) => void}) => {
   const router = useRouter()
 
   const { data: session } = useSession()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [desc, setDesc] = useState<string>(newDescription)
 
 
-  const handlePostAddButtonClick = async () => {
-    if (post != null) {
-      const { id, owner, ...data } = post 
-      await addPost({post: {...data, description: newDescription, userId: session?.user?.id}}).then((res) => {
-        alert("Créer avec succès")
-        router.push(`/`)
-        router.refresh()
-      })
+  // const handlePostAddButtonClick = async () => {
+  //   if (post != null) {
+  //     const { id, owner, ...data } = post 
+  //     await addPost({post: {...data, description: newDescription, userId: session?.user?.id}}).then((res) => {
+  //       alert("Créer avec succès")
+  //       router.push(`/`)
+  //       router.refresh()
+  //     })
       
-    } else {
-      alert("Erreur lors de la création du post")
-    }
-  }
+  //   } else {
+  //     alert("Erreur lors de la création du post")
+  //   }
+  // }
 
   const handlePostCancelChangeButtonClick = async () => {
     if (post != null) {
@@ -198,21 +199,21 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
     }
   }
 
-  const handlePostSaveButtonClick = async () => {
-    if (post != null) {
-      const { owner, description, userId, ...data } = post
-      if (userId === undefined) {
-        alert("User ID is missing")
-        return
-      }
-      await updatePost({post: {...data, userId, description: newDescription}})
-      // router.push(`/posts/${post?.id}`)
-      alert("Mise à jour avec succès")
-      router.refresh()
-    } else {
-      alert("Error")
-    }
-  }
+  // const handlePostSaveButtonClick = async () => {
+  //   if (post != null) {
+  //     const { owner, description, userId, ...data } = post
+  //     if (userId === undefined) {
+  //       alert("User ID is missing")
+  //       return
+  //     }
+  //     await updatePost({post: {...data, userId, description: newDescription}})
+  //     // router.push(`/posts/${post?.id}`)
+  //     alert("Mise à jour avec succès")
+  //     router.refresh()
+  //   } else {
+  //     alert("Error")
+  //   }
+  // }
 
   const generateDescription = async (title: string) => {
     if (!post || !title) {
@@ -238,6 +239,7 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
     .then((d) => {
       const descriptionHTML = d.message.content.replaceAll("<body>", "").replaceAll("</body>", "");
       setter(descriptionHTML)
+      setDesc(descriptionHTML)
     })
     .catch((error) => {
       console.error(error);
@@ -252,17 +254,17 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
       <hr/>
       <Stack direction="row" spacing={2} justifyContent="center">
         <IconButton sx={{gap: 1, p: 1}} variant="outlined"  onClick={handlePostCancelChangeButtonClick}>
-          Ignorer les modifications
+          Ignore changements
         </IconButton>
         <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => {
           if (post) {
             generateDescription(post.title)
           }
         }}>
-          { isLoading ? <CircularProgress sx={{color: "#fff"}}/> : <RobotIcon/> }  Générer la description
+          { isLoading ? <CircularProgress sx={{color: "#fff"}}/> : <RobotIcon/> }  Suggest description
         </IconButton>
-        <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => isNewPost ? handlePostAddButtonClick() : handlePostSaveButtonClick()}>
-          <Save/> {isNewPost ? "Créer" : "Enregistrer"}
+        <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => isNewPost ? addPost({description: desc}) : editPost({descriptionUpdate: desc})}>
+          <Save/> {isNewPost ? "Create" : "Save"}
         </IconButton>
       </Stack>
     </Stack>
@@ -270,7 +272,7 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
 }
 
 
-const PostEditor = ({data, isNew}: {data: GetPostType, isNew: boolean}) => {
+const PostEditor = ({data, isNew, addPost, editPost}: {data: GetPostType, isNew: boolean, addPost: ({ description }: { description: string }) => Promise<void>, editPost: ({ descriptionUpdate }: { descriptionUpdate: string }) => Promise<void>}) => {
   const defaultContent = "<p>Hello World! 🌎️</p>"
   const [desc, setDesc] = useState<string>(defaultContent)
   const [editorKey, setEditorKey] = useState<number>(0)
@@ -287,8 +289,8 @@ const PostEditor = ({data, isNew}: {data: GetPostType, isNew: boolean}) => {
   },[data])
 
   return (
-    <Stack sx={{p:1, }}>
-      <EditorProvider immediatelyRender={false} key={editorKey} slotBefore={<MenuBar />} extensions={extensions} content={desc} children={<PostEditorActions post={data} newDescription={desc} isNewPost={isNew} setter={handleDescriptionChange}/>} onUpdate={({editor})=>{
+    <Stack key={"post_editor"}>
+      <EditorProvider immediatelyRender={false} key={editorKey} slotBefore={<MenuBar />} extensions={extensions} content={desc} children={<PostEditorActions post={data} editPost={editPost} addPost={addPost} newDescription={desc} isNewPost={isNew} setter={handleDescriptionChange}/>} onUpdate={({editor})=>{
         handleDescriptionChange(editor.getHTML())
       }}
       />
