@@ -48,12 +48,12 @@ export default function AccountProfileCard ({userDetails} : {userDetails: Accout
                             <Link href={userDetails.socialLink?.youtube ?? DEFAULT_YOUTUBE} target="_blank"><Typography level="body-md">{"youtube/me"}</Typography></Link>
                         </ListItem>
                         <Divider />
-                        <ListItem key="profil_card_content_list_2" sx={{ justifyContent: "space-between", alignItems: 'center' }}>
+                        <ListItem key="profil_card_content_list_3" sx={{ justifyContent: "space-between", alignItems: 'center' }}>
                             <Typography level="body-md" noWrap textAlign={"left"} startDecorator={<GitHub />}>GitHub</Typography>
                             <Link href={userDetails.socialLink?.github ?? DEFAULT_GITHUB} target="_blank">{"github/me"}</Link>
                         </ListItem>
                         <Divider />
-                        <ListItem key="profil_card_content_list_2" sx={{ justifyContent: "space-between", alignItems: 'center' }}>
+                        <ListItem key="profil_card_content_list_4" sx={{ justifyContent: "space-between", alignItems: 'center' }}>
                             <Typography level="body-md" noWrap textAlign={"left"} startDecorator={<MapPin />}>Location</Typography>
                             <Typography level="body-md" noWrap textAlign={"left"}>{userDetails.location ?? DEFAULT_LOCATION}</Typography>
                         </ListItem>

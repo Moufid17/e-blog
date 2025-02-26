@@ -63,7 +63,7 @@ export default async function AccountPage () {
             <Grid key="account_lists_drafts" xs={12} lg={3}>
                 <AccountDraftListArticleCard data={{title: "Draft(s)", articlesDraft: allPostOwn.isNotPublished}}/>
             </Grid>
-            <Grid key="account_stats" xs={12} lg={9}>
+            <Grid key="account_stats" xs={12} lg={7} xl={9}>
                     <Card title="stats_card" sx={{ height: "100%", width: "100%" }}>
                         <Typography level="h4">Analytics Summary</Typography>
                         <Divider inset="context" />
@@ -88,7 +88,7 @@ export default async function AccountPage () {
                         </CardContent>
                     </Card>
             </Grid>
-            <Grid key="account_lists_articles" xs={12} lg={3}>
+            <Grid key="account_lists_articles" xs={12} lg={5} xl={3}>
                 <AccountMyListArticleCard data={{title: "My Articles", articles: allPostOwn.isPublished}}/>
             </Grid>
         </Grid>
