@@ -21,7 +21,7 @@ export type GetPostType = {
     id: string,
     title: string;
     description: string,
-    userId: string,
+    userId?: string,
     owner: {
       name: string | null,
       email: string | null,
@@ -29,12 +29,13 @@ export type GetPostType = {
     createdAt: Date,
     updatedAt: Date,
     categoryId: string,
+    isPublished: boolean,
 } | null
 
 export type AddPostType = {
   title: string;
   description: string,
-  userId: string,
+  userId?: string | null,
   createdAt?: Date,
   updatedAt?: Date,
   categoryId: string,

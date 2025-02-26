@@ -82,23 +82,29 @@ export const fetchPost = async ({postId}: {postId: string}) => {
       updatedAt: true,
       createdAt: true,
       categoryId: true,
+      isPublished: true,
     }
   })
 }
 
 export const addPost = async ({post}: {post: AddPostType}) => {
+  if (!post) return
+  if (!post.userId) {
+    console.log("User id is required")
+    return;
+  }
   await prismaClientDB.post.create({
     data: {
       title: post.title,
       description: post.description,
       category: {
         connect: {
-          id: post.categoryId, // Remplacez ceci par l'ID de la catégorie
+          id: post.categoryId, 
         },
       },
       owner: {
         connect: {
-          id: post.userId, // Remplacez ceci par l'ID de l'utilisateur
+          id: post.userId,
         },
       },
     }
@@ -111,12 +117,16 @@ export const addPost = async ({post}: {post: AddPostType}) => {
  * @param post
  */
 export const updatePost = async ({post}: {post: Post}) => {
+  if (!post) return
+  if (!post.id || post.userId === undefined) return
   await prismaClientDB.post.update({
     where: {id: post.id},
     data: {
       title: post.title,
       description: post.description,
       userId: post.userId,
+      categoryId: post.categoryId,
+      isPublished: post.isPublished,
     }
   })
 }

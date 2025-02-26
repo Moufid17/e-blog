@@ -65,11 +65,22 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                             <Typography level="body-sm" alignSelf="flex-end">{toUppercaseFirstChar(convertDateToString(post.updatedAt ?? (new Date())))}</Typography>
                         </Stack>
                         <Stack direction={{xs: "column", md: "row"}} spacing={2} width="100%" sx={{justifyContent: "space-between", alignItems: "end"}}>
-                            <FormControl sx={{width: {xs: "100%", md: "80%"}}}>
+                            <FormControl required sx={{width: {xs: "100%", md: "80%"}}}>
                                 <FormLabel>Title</FormLabel>
-                                <Input required disabled={!isOwner(post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } color="neutral" defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title" sx={{p: 2}}/>
+                                <Input required disabled={!isOwner(post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title" 
+                                    sx={{   p: 2, 
+                                        '&::before': {
+                                        display: 'none',
+                                    },
+                                    '&:focus-within': {
+                                      borderColor: 'primary.solid',
+                                      outline: '2px solid #0D0D0D',
+                                      outlineOffset: '2px',
+                                    },
+                                    }}
+                                />
                             </FormControl>
-                            <FormControl sx={{width: {xs: "100%", md: "20%"}}}>
+                            <FormControl required sx={{width: {xs: "100%", md: "20%"}}}>
                                 <Select required defaultValue={post.categoryId} onChange={handleChange} color="neutral" placeholder="Select your category" sx={{p: 2.2}}>
                                     <>
                                         {categories.map((c) => (

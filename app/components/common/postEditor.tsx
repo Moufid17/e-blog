@@ -9,7 +9,7 @@ import { EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 import { useEffect, useState } from 'react'
-import { SessionContextValue, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation";
 import { Button, CircularProgress, IconButton, Stack } from "@mui/joy"
 import { Save } from "react-feather"
@@ -230,8 +230,12 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
 
   const handlePostSaveButtonClick = async () => {
     if (post != null) {
-      const { owner, description, ...data } = post     
-      await updatePost({post: {...data, description: newDescription}}).then((res) => {  })
+      const { owner, description, userId, ...data } = post
+      if (userId === undefined) {
+        alert("User ID is missing")
+        return
+      }
+      await updatePost({post: {...data, userId, description: newDescription}})
       // router.push(`/posts/${post?.id}`)
       alert("Mise à jour avec succès")
       router.refresh()
