@@ -34,8 +34,8 @@ const MenuBar = () => {
   }
 
   return (
-    <Stack spacing={1} sx={{mb:3}}>
-      <Stack direction="row"  sx={{bgcolor:"#000", justifyContent:"space-around", p: 1, borderRadius:5}}>
+    <>
+      <Stack key={"post_editor_menu_bar"} direction={{sx:"column", md:"row"}}  sx={{bgcolor:"#000", justifyContent:"space-around", p: 1, borderRadius:5, gap: 1}}>
         <Button
           color={editor.isActive('bold') ? "warning" : "neutral"}
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -63,19 +63,6 @@ const MenuBar = () => {
           italic
         </Button>
         <Button
-          color={editor.isActive('strike') ? "warning" : "neutral"}
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          disabled={
-            !editor.can()
-              .chain()
-              .focus()
-              .toggleStrike()
-              .run()
-          }
-        >
-          strike
-        </Button>
-        <Button
           color={editor.isActive('code') ? "warning" : "neutral"}
           onClick={() => editor.chain().focus().toggleCode().run()}
           disabled={
@@ -88,35 +75,23 @@ const MenuBar = () => {
         >
           code
         </Button>
-        <Button color={editor.isActive('unsetAllMarks') ? "warning" : "neutral"} onClick={() => editor.chain().focus().unsetAllMarks().run()}>
-          clear marks
-        </Button>
-        <Button color={editor.isActive('clearNodes') ? "warning" : "neutral"} onClick={() => editor.chain().focus().clearNodes().run()}>
-          clear nodes
-        </Button>
-        <Button
-          color={editor.isActive('paragraph') ? "warning" : "neutral"}
-          onClick={() => editor.chain().focus().setParagraph().run()}
-        >
-          paragraph
-        </Button>
         <Button
           color={editor.isActive('heading', { level: 1 }) ? "warning" : "neutral"}
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         >
-          Title 1
+          H1
         </Button>
         <Button
           color={editor.isActive('heading', { level: 2 }) ? "warning" : "neutral"}
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         >
-          Title 2
+          H2
         </Button>
         <Button
           color={editor.isActive('heading', { level: 3 }) ? "warning" : "neutral"}
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         >
-          Title 3
+          H3
         </Button>
         
         <Button
@@ -145,12 +120,7 @@ const MenuBar = () => {
         >
           blockquote
         </Button>
-        <Button color={editor.isActive('bold') ? "warning" : "neutral"} onClick={() => editor.chain().focus().setHorizontalRule().run()}>
-          horizontal rule
-        </Button>
-        <Button color={editor.isActive('bold') ? "warning" : "neutral"} onClick={() => editor.chain().focus().setHardBreak().run()}>
-          hard break
-        </Button>
+        
         <Button
           color={editor.isActive('undo') ? "warning" : "neutral"}
           onClick={() => editor.chain().focus().undo().run()}
@@ -179,7 +149,7 @@ const MenuBar = () => {
         </Button>
       </Stack>
       <hr/>
-    </Stack>
+    </>
   )
 }
 

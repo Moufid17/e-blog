@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { Box, Divider, FormControl, FormLabel, Input, Option, Select, Stack, Typography } from "@mui/joy";
+import { Box, Divider, FormControl, FormLabel, Grid, Input, Option, Select, Stack, Switch, Typography } from "@mui/joy";
 import PostEditor from "@/app/components/common/postEditor";
 import PostViewer from "@/app/components/common/postViewer";
 
@@ -21,6 +21,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     const [post, setPost] = useState<GetPostType>(null)
     const [description, setDescription] = useState<string>("")
     const [categories, setCategories] = useState<GetCategoriesType>([])
+    const [checked, setChecked] = useState<boolean>(false);
 
     const isOwner = (postEmail: string | null): boolean => {
         if (postEmail == null || session == null) return false
@@ -29,7 +30,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     
     const getPost = async (id: string) => {
         const data : GetPostType = await fetchPost({postId: id})
-        if (!data) notFound()
+        if (!data) notFound() 
         setPost(data)
         if (data?.description) setDescription(data?.description) 
     }
@@ -52,63 +53,98 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
 
     useEffect(() => {
         getCategories()
+        
     },[])
+
+    if (postId != "new" && post == null) notFound()
     
     return (
         <Stack spacing={2} sx={{bgcolor: "background.body"}}>
-            {post ? 
+            {post &&
                 <Stack key={post.id} alignItems="center" sx={{pt: "1.5rem"}} spacing={1}>
-                    <Stack key={"post_title"} width="100%" sx={{p:1}}>
-                        <Stack direction={"row"} spacing={2} width="100%" sx={{pr: 4, justifyContent: "end"}}>
-                            <Typography level="body-md" alignSelf="flex-end">by {toUppercaseFirstChar(post?.owner?.name ?? "") ?? "Esgi"}</Typography>
-                            <Divider orientation="vertical"/>
-                            <Typography level="body-sm" alignSelf="flex-end">{toUppercaseFirstChar(convertDateToString(post.updatedAt ?? (new Date())))}</Typography>
-                        </Stack>
-                        <Stack direction={{xs: "column", md: "row"}} spacing={2} width="100%" sx={{justifyContent: "space-between", alignItems: "end"}}>
-                            <FormControl required sx={{width: {xs: "100%", md: "80%"}}}>
-                                <FormLabel>Title</FormLabel>
-                                <Input required disabled={!isOwner(post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title" 
-                                    sx={{   p: 2, 
-                                        '&::before': {
-                                        display: 'none',
-                                    },
-                                    '&:focus-within': {
-                                      borderColor: 'primary.solid',
-                                      outline: '2px solid #0D0D0D',
-                                      outlineOffset: '2px',
-                                    },
-                                    }}
-                                />
-                            </FormControl>
-                            <FormControl required sx={{width: {xs: "100%", md: "20%"}}}>
-                                <Select required defaultValue={post.categoryId} onChange={handleChange} color="neutral" placeholder="Select your category" sx={{p: 2.2}}>
+                    <Grid key={"post_title"} width="100%" container spacing={3} direction={{xs: "column", lg: "row"}} sx={{ flexGrow: 1 }}>
+                        <Grid xs={12}>
+                            <Stack direction={"row"} spacing={2} width="100%" sx={{justifyContent: "end"}}>
+                                {isOwner(post?.owner?.email) ?
                                     <>
-                                        {categories.map((c) => (
-                                            <Option key={c.id} value={c.id}>
-                                                <Box sx={{ borderRadius: "50%", height: "40px", width: "40px", bgcolor: c.color, }}/>
-                                                <Typography>{c.name}</Typography>
-                                            </Option>
-                                        ))}
+                                        <Switch size="lg"
+                                            checked={checked}
+                                            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                                setChecked(event.target.checked)
+                                            }
+                                            color={checked ? 'primary' : 'neutral'}
+                                            variant={checked ? 'solid' : 'outlined'}
+                                            endDecorator={checked ? 'Published' : 'Draft'}
+                                            slotProps={{
+                                                endDecorator: {
+                                                    sx: {
+                                                        minWidth: 35,
+                                                    },
+                                                },
+                                            }}
+                                        />
+                                        
                                     </>
-                                </Select>
-                            </FormControl>
-                        </Stack>
-                    </Stack>
-                    <Stack key={"post_descritption_editor_or_viewer"} width="100%" spacing={3} sx={{bgcolor: "#fff", p: 1, m: 10}}>
-                        <Box>
-                            <Typography level="body-md"  sx={{mb:"-8px"}}>{postId != "new" ? "Edit" : ""} Description :</Typography>
-                        </Box>
-                        <Box sx={{p:0.5}}>
-                            {/* Check logged user is owner */}
-                            {isOwner(post?.owner?.email) ? 
-                                <PostEditor data={post} isNew={postId == "new"}/>
-                                : 
-                                <PostViewer content={description} />
-                            }
-                        </Box>
+                                    : 
+                                    <>
+                                        <Divider orientation="vertical"/>
+                                        <Typography level="body-md">by {toUppercaseFirstChar(post?.owner?.name ?? "") ?? "Esgi"}</Typography>
+                                        <Divider orientation="vertical"/>
+                                        <Typography level="body-sm" alignSelf="flex-end">{toUppercaseFirstChar(convertDateToString(post.updatedAt ?? (new Date())))}</Typography>
+                                    </>
+                                }
+                            </Stack>
+                        </Grid>
+                        <Grid xs={12} >
+                            <Stack direction={{xs: "column", md: "row"}} spacing={2} width="100%" sx={{justifyContent: "space-between", alignItems: "end"}}>
+                                <FormControl required sx={{width: {xs: "100%", md: "80%"}}}>
+                                    <FormLabel>Title</FormLabel>
+                                    <Input required disabled={!isOwner(post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title" 
+                                        sx={{   p: 2, 
+                                            '&::before': {
+                                            display: 'none',
+                                        },
+                                        '&:focus-within': {
+                                        borderColor: 'primary.solid',
+                                        outline: '2px solid #0D0D0D',
+                                        outlineOffset: '2px',
+                                        },
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormControl required sx={{width: {xs: "100%", md: "20%"}}}>
+                                    <Select required defaultValue={post.categoryId} onChange={handleChange} color="neutral" placeholder="Select your category" sx={{p: 2.2}}>
+                                        <>
+                                            {categories.map((c) => (
+                                                <Option key={c.id} value={c.id}>
+                                                    <Box sx={{ borderRadius: "50%", height: "40px", width: "40px", bgcolor: c.color, }}/>
+                                                    <Typography>{c.name}</Typography>
+                                                </Option>
+                                            ))}
+                                        </>
+                                    </Select>
+                                </FormControl>
+                            </Stack>
+                        </Grid>
+                    </Grid>
+                    <Stack key={"post_descritption_editor_or_viewer"} width="100%">
+                        <Grid key={"post_title"} container direction="column" spacing={2} sx={{ flexGrow: 1 , p: 2}}>
+                            <Grid>
+                                <Box>
+                                    <Typography level="body-md"  sx={{mb:"-8px"}}>{postId != "new" ? "Edit" : ""} Description :</Typography>
+                                </Box>
+                            </Grid>
+                            <Grid>
+                                    {/* Check logged user is owner */}
+                                    {isOwner(post?.owner?.email) ? 
+                                        <PostEditor data={post} isNew={postId == "new"}/>
+                                        : 
+                                        <PostViewer content={description} />
+                                    }
+                            </Grid>
+                        </Grid>
                     </Stack>
                 </Stack>
-            : <></>
             }
         </Stack>
     )
