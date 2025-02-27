@@ -14,6 +14,7 @@ import { GetPostType } from "@/app/common/types/posts";
 
 import { convertDateToString, toUppercaseFirstChar } from "@/app/lib/utils";
 import { notFound, useRouter } from "next/navigation";
+import CustomSnackbar from "../global/Snackbar";
 
 
 export default function PostItem({ postId = "new" }: { postId?: string }) {
@@ -33,6 +34,17 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
         description: false,
         category: false
     });
+    
+    const [openNotification, setOpenNotification] = useState<{
+        message: string,
+        isOpen: boolean, 
+        isDanger?: boolean
+    }>({
+        message: "",
+        isOpen: false,
+        isDanger: false
+    });
+
 
 
     const isOwner = (postEmail: string | null): boolean => {
@@ -68,37 +80,37 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                 if (post.categoryId == undefined) newIsError.category = true
                 if (description.length <= 0 || description === "<p></p>") newIsError.description = true
                 setIsError(newIsError)
+                setOpenNotification({message: "Erreur lors de la création du post", isOpen: true, isDanger: true})
             } else {
                 await addPost({post: {...data, description, userId: session?.user?.id}}).then((res) => {
-                    alert("Créer avec succès")
+                    setOpenNotification({message: "Post créé avec succès", isOpen: true})
                     router.push(`/`)
                     router.refresh()
                 })
             }
         } else {
-          alert("Erreur lors de la création du post")
+          setOpenNotification({message: "Impossible to create this post. checking error and retr", isOpen: true, isDanger: true})
         }
     }
    
     const handlePostSaveButtonClick = async ({descriptionUpdate} :{descriptionUpdate: string}) => {
         if (post != null) {
-          const { owner, description, userId, ...data } = post
+            const { owner, description, userId, ...data } = post
           
-        if (userId === undefined || post.title.length <= 0 || post.categoryId == undefined || descriptionUpdate.length === 0 || descriptionUpdate === "<p></p>") {
-            const newIsError = {...isError}
-                
-            if (post.title.length <= 0) newIsError.title = true
-            if (post.categoryId == undefined) newIsError.category = true
-            if (description.length <= 0 || description === "<p></p>") newIsError.description = true
-            setIsError(newIsError)
+            if (userId === undefined || post.title.length <= 0 || post.categoryId == undefined || descriptionUpdate.length === 0 || descriptionUpdate === "<p></p>") {
+                const newIsError = {...isError}
+                    
+                if (post.title.length <= 0) newIsError.title = true
+                if (post.categoryId == undefined) newIsError.category = true
+                if (description.length <= 0 || description === "<p></p>") newIsError.description = true
+                setIsError(newIsError)
+            } else {
+                await updatePost({post: {...data, userId, description: descriptionUpdate}})
+                setOpenNotification({message: "Mise à jour avec succès.", isOpen: true})
+                router.refresh()
+            }
         } else {
-                
-              await updatePost({post: {...data, userId, description: descriptionUpdate}})
-              alert("Mise à jour avec succès")
-              router.refresh()
-          }
-        } else {
-          alert("Error")
+            setOpenNotification({message: "Erreur lors de la modification du post.", isOpen: true, isDanger: true})
         }
     }
     
@@ -200,8 +212,10 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                             </Grid>
                         </Grid>
                     </Stack>
+                   
                 </Stack>
             }
+            {openNotification.isOpen &&  <CustomSnackbar isOpen={openNotification.isOpen} message={openNotification.message} isDanger={openNotification.isDanger}/>}
         </Stack>
     )
 }
