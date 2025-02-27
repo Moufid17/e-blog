@@ -2,10 +2,12 @@
 "use client"
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { notFound, useRouter } from "next/navigation";
 
-import { Box, Divider, FormControl, FormLabel, Grid, Input, Option, Select, Stack, Switch, Typography } from "@mui/joy";
+import { Box, Chip, Divider, FormControl, FormLabel, Grid, Input, Option, Select, Stack, Switch, Typography } from "@mui/joy";
 import PostEditor from "@/app/components/common/postEditor";
 import PostViewer from "@/app/components/common/postViewer";
+import CustomSnackbar from "../global/Snackbar";
 
 import { addPost, fetchPost, updatePost } from "@/app/actions/post";
 import { getAllCategories } from "@/app/actions/category";
@@ -13,8 +15,7 @@ import { GetCategoriesType } from "@/app/common/types/category";
 import { GetPostType } from "@/app/common/types/posts";
 
 import { convertDateToString, toUppercaseFirstChar } from "@/app/lib/utils";
-import { notFound, useRouter } from "next/navigation";
-import CustomSnackbar from "../global/Snackbar";
+import { CATEGORY_DEFAULT_COLOR } from "@/app/help/constants";
 
 
 export default function PostItem({ postId = "new" }: { postId?: string }) {
@@ -24,6 +25,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     const [post, setPost] = useState<GetPostType>(null)
     const [allCategories, setAllCategories] = useState<GetCategoriesType>([])
     const [isPublished, setIsPublished] = useState<boolean>(false);
+
     const [isError, setIsError] = useState<{
         title: boolean,
         description: boolean,
@@ -54,7 +56,6 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
         const data : GetPostType = await fetchPost({postId: id})
         if (!data) notFound() 
         setPost(data)
-        // if (data?.description) setPostDescription(data?.description)
         setIsPublished(data?.isPublished)
     }
 
@@ -131,6 +132,11 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
         getCategories()
     },[])
 
+    const getCategoryBgColorAndColor = (color?: string) => {
+        const categoryBgColorAndColor = (color == undefined) ? CATEGORY_DEFAULT_COLOR.split(".") : color.split(".") 
+        return {bgcolor: categoryBgColorAndColor[0] + "." + categoryBgColorAndColor[1], color: categoryBgColorAndColor[0]+ "." + categoryBgColorAndColor[2]}
+    }
+
     
     return (
         <Stack spacing={2} sx={{bgcolor: "background.body"}}>
@@ -163,6 +169,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                                     </>
                                     : 
                                     <>
+                                        <Chip  sx={{fontSize: "12px", bgcolor: getCategoryBgColorAndColor(allCategories.find((c) => c.id == post.categoryId)?.color).bgcolor, color: getCategoryBgColorAndColor(allCategories.find((c) => c.id == post.categoryId)?.color).color }}>{allCategories.find((c) => c.id == post.categoryId)?.name}</Chip>
                                         <Divider orientation="vertical"/>
                                         <Typography level="body-md">by {toUppercaseFirstChar(post?.owner?.name ?? "") ?? "Esgi"}</Typography>
                                         <Divider orientation="vertical"/>
@@ -173,7 +180,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                         </Grid>
                         <Grid key={"post_title"} xs={12}>
                             <Stack key={"post_title_stack"} direction={{xs: "column", md: "row"}} spacing={2} width="100%" sx={{justifyContent: "space-between", alignItems: "end"}}>
-                                <FormControl required error={isError.title} sx={{width: {xs: "100%", md: "80%"}}}>
+                                <FormControl required error={isError.title} sx={{width: isOwner(post?.owner?.email) ? {xs: "100%", md: "80%"} : "100%"}}>
                                     <FormLabel>Title</FormLabel>
                                     <Input required disabled={!isOwner(post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title" 
                                         sx={{   p: 2, 
@@ -188,25 +195,26 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                                         }}
                                     />
                                 </FormControl>
-                                <FormControl required sx={{width: {xs: "100%", md: "20%"}}}>
+                                {isOwner(post?.owner?.email) && <FormControl required sx={{width: {xs: "100%", md: "20%"}}}>
                                     <Select defaultValue={postId != "new" ? post.categoryId : undefined} onChange={handleCategoryChange} color={isError.category ? "danger" : "neutral"} placeholder="Select your category" sx={{p: 2.2}}>
                                         <>
                                             {allCategories.map((c) => (
                                                 <Option key={c.id} value={c.id}>
-                                                    <Box sx={{ borderRadius: "50%", height: "40px", width: "40px", bgcolor: c.color, }}/>
+                                                    <Box sx={{ borderRadius: "50%", height: "40px", width: "40px", bgcolor: getCategoryBgColorAndColor(c.color).bgcolor, }}/>
                                                     <Typography>{c.name}</Typography>
                                                 </Option>
                                             ))}
                                         </>
                                     </Select>
                                 </FormControl>
+                                }
                             </Stack>
                         </Grid>
                     </Grid>
                     <Stack key={"post_descritption_editor_or_viewer"} width="100%">
                         <Grid key={"post_title"} container direction="column" spacing={2} sx={{ flexGrow: 1, m: {xs: 0, md: 2}}}>
                             <Grid>
-                                <Typography>{postId != "new" ? "Edit" : ""} Description :</Typography>
+                                <Typography>Description :</Typography>
                             </Grid>
                             <Grid>
                                     {/* Check logged user is owner */}

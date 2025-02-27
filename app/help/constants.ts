@@ -2,6 +2,8 @@ import { AcccountPrivilegeType } from "../common/types/account"
 
 export const MAX_ARTICLE_CARD : number = 5
 
+export const CATEGORY_DEFAULT_COLOR = "neutral.solidBg.solidColor"
+
 // Account details
 export const DEFAULT_AVATAR_IMAGE : string = "https://cdn.jsdelivr.net/gh/alohe/memojis/png/memo_32.png" 
 export const DEFAULT_PSEUDO : string = "John Deo" 
