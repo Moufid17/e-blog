@@ -9,14 +9,11 @@ import { EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 import { useEffect, useState } from 'react'
-import { SessionContextValue, useSession } from "next-auth/react"
-import { useRouter } from "next/navigation";
 import { Button, CircularProgress, IconButton, Stack } from "@mui/joy"
 import { Save } from "react-feather"
 import { z } from "zod";
 
 import { RobotIcon } from "@/app/components/common/icons/RobotIcon"
-import { addPost, updatePost } from "@/app/actions/post"
 import { GetPostType } from "@/app/common/types/posts"
 
 const schema = z.object({
@@ -34,8 +31,8 @@ const MenuBar = () => {
   }
 
   return (
-    <Stack spacing={1} sx={{mb:3}}>
-      <Stack direction="row"  sx={{bgcolor:"#000", justifyContent:"space-around", p: 1, borderRadius:5}}>
+    <>
+      <Stack key={"post_editor_menu_bar"} direction={{sx:"column", md:"row"}}  sx={{bgcolor:"#000", justifyContent:"space-around", p: 1, borderRadius:5, gap: 1}}>
         <Button
           color={editor.isActive('bold') ? "warning" : "neutral"}
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -63,19 +60,6 @@ const MenuBar = () => {
           italic
         </Button>
         <Button
-          color={editor.isActive('strike') ? "warning" : "neutral"}
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          disabled={
-            !editor.can()
-              .chain()
-              .focus()
-              .toggleStrike()
-              .run()
-          }
-        >
-          strike
-        </Button>
-        <Button
           color={editor.isActive('code') ? "warning" : "neutral"}
           onClick={() => editor.chain().focus().toggleCode().run()}
           disabled={
@@ -88,35 +72,23 @@ const MenuBar = () => {
         >
           code
         </Button>
-        <Button color={editor.isActive('unsetAllMarks') ? "warning" : "neutral"} onClick={() => editor.chain().focus().unsetAllMarks().run()}>
-          clear marks
-        </Button>
-        <Button color={editor.isActive('clearNodes') ? "warning" : "neutral"} onClick={() => editor.chain().focus().clearNodes().run()}>
-          clear nodes
-        </Button>
-        <Button
-          color={editor.isActive('paragraph') ? "warning" : "neutral"}
-          onClick={() => editor.chain().focus().setParagraph().run()}
-        >
-          paragraph
-        </Button>
         <Button
           color={editor.isActive('heading', { level: 1 }) ? "warning" : "neutral"}
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         >
-          Title 1
+          H1
         </Button>
         <Button
           color={editor.isActive('heading', { level: 2 }) ? "warning" : "neutral"}
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         >
-          Title 2
+          H2
         </Button>
         <Button
           color={editor.isActive('heading', { level: 3 }) ? "warning" : "neutral"}
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         >
-          Title 3
+          H3
         </Button>
         
         <Button
@@ -145,12 +117,7 @@ const MenuBar = () => {
         >
           blockquote
         </Button>
-        <Button color={editor.isActive('bold') ? "warning" : "neutral"} onClick={() => editor.chain().focus().setHorizontalRule().run()}>
-          horizontal rule
-        </Button>
-        <Button color={editor.isActive('bold') ? "warning" : "neutral"} onClick={() => editor.chain().focus().setHardBreak().run()}>
-          hard break
-        </Button>
+        
         <Button
           color={editor.isActive('undo') ? "warning" : "neutral"}
           onClick={() => editor.chain().focus().undo().run()}
@@ -179,7 +146,7 @@ const MenuBar = () => {
         </Button>
       </Stack>
       <hr/>
-    </Stack>
+    </>
   )
 }
 
@@ -198,26 +165,9 @@ const extensions = [
   }),
 ]
 
-const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: GetPostType, newDescription: string, isNewPost: boolean, setter: (value: string) => void}) => {
-  const router = useRouter()
-
-  const { data: session } = useSession()
+const PostEditorActions = ({post, newDescription, addPost, editPost, isNewPost, setter}: {post: GetPostType, newDescription: string, addPost: ({ description }: { description: string }) => Promise<void>, editPost: ({ descriptionUpdate }: { descriptionUpdate: string }) => Promise<void>, isNewPost: boolean, setter: (value: string) => void, }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-
-
-  const handlePostAddButtonClick = async () => {
-    if (post != null) {
-      const { id, owner, ...data } = post 
-      await addPost({post: {...data, description: newDescription, userId: session?.user?.id}}).then((res) => {
-        alert("Créer avec succès")
-        router.push(`/`)
-        router.refresh()
-      })
-      
-    } else {
-      alert("Erreur lors de la création du post")
-    }
-  }
+  const [desc, setDesc] = useState<string>(newDescription)
 
   const handlePostCancelChangeButtonClick = async () => {
     if (post != null) {
@@ -225,18 +175,6 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
       alert("Modifications ignorés avec succès") 
     } else {
       alert("Erreur du serveur")
-    }
-  }
-
-  const handlePostSaveButtonClick = async () => {
-    if (post != null) {
-      const { owner, description, ...data } = post     
-      await updatePost({post: {...data, description: newDescription}}).then((res) => {  })
-      // router.push(`/posts/${post?.id}`)
-      alert("Mise à jour avec succès")
-      router.refresh()
-    } else {
-      alert("Error")
     }
   }
 
@@ -263,7 +201,8 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
     })
     .then((d) => {
       const descriptionHTML = d.message.content.replaceAll("<body>", "").replaceAll("</body>", "");
-      setter(descriptionHTML)
+      setter(descriptionHTML) // Update the editor content
+      setDesc(descriptionHTML) // Update the state
     })
     .catch((error) => {
       console.error(error);
@@ -278,17 +217,17 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
       <hr/>
       <Stack direction="row" spacing={2} justifyContent="center">
         <IconButton sx={{gap: 1, p: 1}} variant="outlined"  onClick={handlePostCancelChangeButtonClick}>
-          Ignorer les modifications
+          Ignore changements
         </IconButton>
         <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => {
           if (post) {
             generateDescription(post.title)
           }
         }}>
-          { isLoading ? <CircularProgress sx={{color: "#fff"}}/> : <RobotIcon/> }  Générer la description
+          { isLoading ? <CircularProgress sx={{color: "#fff"}}/> : <RobotIcon/> }  Suggest description
         </IconButton>
-        <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => isNewPost ? handlePostAddButtonClick() : handlePostSaveButtonClick()}>
-          <Save/> {isNewPost ? "Créer" : "Enregistrer"}
+        <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => isNewPost ? addPost({description: desc}) : editPost({descriptionUpdate: desc})}>
+          <Save/> {isNewPost ? "Create" : "Save"}
         </IconButton>
       </Stack>
     </Stack>
@@ -296,30 +235,53 @@ const PostEditorActions = ({post, newDescription, isNewPost, setter}: {post: Get
 }
 
 
-const PostEditor = ({data, isNew}: {data: GetPostType, isNew: boolean}) => {
-  const defaultContent = "<p>Hello World! 🌎️</p>"
-  const [desc, setDesc] = useState<string>(defaultContent)
-  const [editorKey, setEditorKey] = useState<number>(0)
+interface PostEditorProps {
+  data: GetPostType;
+  isNew: boolean;
+  addPost: ({ description }: { description: string }) => Promise<void>;
+  editPost: ({ descriptionUpdate }: { descriptionUpdate: string }) => Promise<void>;
+}
+
+const PostEditor = ({ data, isNew, addPost, editPost,  }: PostEditorProps) => {
+  
+  const [desc, setDesc] = useState<string>(data?.description ?? "");
+  const [editorKey, setEditorKey] = useState<number>(0);
 
   const handleDescriptionChange = (value: string) => {
-    setDesc(value)
-    setEditorKey((prev:number) => { return prev + 1 })
-  }
+    setDesc(value);
+    setEditorKey((prev: number) => prev + 1);
+  };
 
   useEffect(() => {
     if (data && data.description.length > 0) {
-      handleDescriptionChange(data.description) 
+      handleDescriptionChange(data.description);
     }
-  },[data])
+  }, [data]);
 
   return (
-    <Stack sx={{p:1, }}>
-      <EditorProvider immediatelyRender={false} key={editorKey} slotBefore={<MenuBar />} extensions={extensions} content={desc} children={<PostEditorActions post={data} newDescription={desc} isNewPost={isNew} setter={handleDescriptionChange}/>} onUpdate={({editor})=>{
-        handleDescriptionChange(editor.getHTML())
-      }}
+    <Stack key={"post_editor"}>
+      <EditorProvider
+        immediatelyRender={false}
+        key={editorKey}
+        slotBefore={<MenuBar />}
+        extensions={extensions}
+        content={desc}
+        children={
+          <PostEditorActions
+            post={data}
+            editPost={editPost}
+            addPost={addPost}
+            newDescription={desc}
+            isNewPost={isNew}
+            setter={handleDescriptionChange}
+          />
+        }
+        onUpdate={({ editor }) => {
+          handleDescriptionChange(editor.getHTML());
+        }}
       />
     </Stack>
-  )
-}
+  );
+};
 
 export default PostEditor

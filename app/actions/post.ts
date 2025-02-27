@@ -82,23 +82,29 @@ export const fetchPost = async ({postId}: {postId: string}) => {
       updatedAt: true,
       createdAt: true,
       categoryId: true,
+      isPublished: true,
     }
   })
 }
 
 export const addPost = async ({post}: {post: AddPostType}) => {
+  if (!post) return
+  if (!post.userId) {
+    console.log("User id is required")
+    return;
+  }
   await prismaClientDB.post.create({
     data: {
       title: post.title,
       description: post.description,
       category: {
         connect: {
-          id: post.categoryId, // Remplacez ceci par l'ID de la catégorie
+          id: post.categoryId, 
         },
       },
       owner: {
         connect: {
-          id: post.userId, // Remplacez ceci par l'ID de l'utilisateur
+          id: post.userId,
         },
       },
     }
@@ -111,18 +117,71 @@ export const addPost = async ({post}: {post: AddPostType}) => {
  * @param post
  */
 export const updatePost = async ({post}: {post: Post}) => {
+  if (!post) return
+  if (!post.id || post.userId === undefined) return
   await prismaClientDB.post.update({
     where: {id: post.id},
     data: {
       title: post.title,
       description: post.description,
       userId: post.userId,
+      categoryId: post.categoryId,
+      isPublished: post.isPublished,
     }
   })
 }
 
-export const deletePost = async ({id}: {id: string}) => {
-  await prismaClientDB.post.delete({
-    where: {id: id}
+export const deletePost = async ({postId}: {postId: string}) => {
+  if (!postId) return
+  const post = await prismaClientDB.post.findUnique({
+    where: {id: postId}
+  })
+  if (!post) return
+
+  await prismaClientDB.$transaction([
+    prismaClientDB.postLikes.deleteMany({
+      where: {postId: postId}
+    }),
+    prismaClientDB.post.delete({
+      where: {id: postId}
+    })
+  ])
+}
+
+export const draftPost = async ({postId}: {postId: string}) => {
+  if (!postId) return 
+  const post = await prismaClientDB.post.findUnique({
+    where: {
+      id: postId,
+    },
+    select: {
+      isPublished: true
+    }
+  })
+  if (!post) return
+  if (!post.isPublished) return
+  await prismaClientDB.post.update({
+    where: {id: postId},
+    data: {
+      isPublished: false
+    }
+  })
+}
+
+export const publishPost = async ({postId}: {postId: string}) => {
+  if (!postId) return 
+  const post = await prismaClientDB.post.findUnique({
+    where: {id: postId},
+    select: {
+      isPublished: true
+    }
+  })
+  if (!post) return
+  if (post.isPublished) return
+  await prismaClientDB.post.update({
+    where: {id: postId},
+    data: {
+      isPublished: true
+    }
   })
 }
