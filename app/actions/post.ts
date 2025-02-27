@@ -97,6 +97,7 @@ export const addPost = async ({post}: {post: AddPostType}) => {
     data: {
       title: post.title,
       description: post.description,
+      isPublished: post.isPublished,
       category: {
         connect: {
           id: post.categoryId, 

@@ -75,16 +75,15 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
             setOpenNotification({message: "La description ne peut pas être vide.", isOpen: true, isDanger: true})
         }
         if (post != null) {
-            
-          const { id, owner, ...data } = post 
-            if (data.userId === undefined || post.title.length <= 0 || post.categoryId == undefined) {
+            if (post.userId === undefined || post.title.length <= 0 || post.categoryId == undefined) {
                 const newIsError = {...isError}
                 
                 if (post.title.length <= 0) newIsError.title = true
                 if (post.categoryId == undefined) newIsError.category = true
                 setIsError(newIsError)
             } else {
-                await addPost({post: {...data, description, userId: session?.user?.id}}).then((res) => {
+                console.log("post => ", post);
+                await addPost({post: {...post, description, userId: session?.user?.id}}).then((res) => {
                     setOpenNotification({message: "Post créé avec succès", isOpen: true})
                     router.push(`/`)
                     router.refresh()
@@ -102,16 +101,15 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
             setOpenNotification({message: "La description ne peut pas être vide.", isOpen: true, isDanger: true})
         }
         if (post != null) {
-            const { owner, description, userId, ...data } = post
           
-            if (userId === undefined || post.title.length <= 0 || post.categoryId == undefined) {
+            if (post.userId === undefined || post.title.length <= 0 || post.categoryId == undefined) {
                 const newIsError = {...isError}
                 
                 if (post.title.length <= 0) newIsError.title = true
                 if (post.categoryId == undefined) newIsError.category = true
                 setIsError(newIsError)
             } else {
-                await updatePost({post: {...data, userId, description: descriptionUpdate}})
+                await updatePost({post: {...post, userId: post.userId, description: descriptionUpdate}})
                 setOpenNotification({message: "Mise à jour avec succès.", isOpen: true})
                 router.refresh()
             }
@@ -150,7 +148,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                                         <Switch size="lg"
                                             checked={isPublished}
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                    setPost({...post, isPublished: event.target.checked})
+                                                    setPost(prev => ({...prev, isPublished: event.target.checked}) as GetPostType)
                                                     setIsPublished(event.target.checked)
                                                 }
                                             }
@@ -219,7 +217,9 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                             <Grid>
                                     {/* Check logged user is owner */}
                                     {isOwner(post?.owner?.email) ? 
-                                        <PostEditor data={post} isNew={postId == "new"} addPost={handlePostCreateButtonClick} editPost={handlePostSaveButtonClick}/>
+                                        <PostEditor data={post} setDescription={(desc: string) => setPost((prev) => {
+                                            return {...prev, description: desc} as GetPostType
+                                        })} isNew={postId == "new"} addPost={handlePostCreateButtonClick} editPost={handlePostSaveButtonClick}/>
                                         : 
                                         <PostViewer content={post.description} />
                                     }

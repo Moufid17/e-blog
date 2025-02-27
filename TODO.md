@@ -25,7 +25,7 @@
     - [x] Mobile first UI
     - [x] Category and isPublished Components
     - [x] Handle invalid title, category and description with error message.
-    - [*] fix : Description reset when (category and may be title) changed
+    - [x] fix : Description reset when (category and may be title) changed
     - [x] fix : Disable category for acticle displaying when i am not the author.
     - [x] Category : display for post owner or not. 
     - [4bis] archive, unarchive and share link

@@ -39,6 +39,7 @@ export type AddPostType = {
   createdAt?: Date,
   updatedAt?: Date,
   categoryId: string,
+  isPublished: boolean,
 } 
 
 export type Posts = PostCardType[]

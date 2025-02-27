@@ -165,18 +165,9 @@ const extensions = [
   }),
 ]
 
-const PostEditorActions = ({post, newDescription, addPost, editPost, isNewPost, setter}: {post: GetPostType, newDescription: string, addPost: ({ description }: { description: string }) => Promise<void>, editPost: ({ descriptionUpdate }: { descriptionUpdate: string }) => Promise<void>, isNewPost: boolean, setter: (value: string) => void, }) => {
+const PostEditorActions = ({post, description, addPost, editPost, isNewPost, setter, discardChanges}: {post: GetPostType, description: string, addPost: ({ description }: { description: string }) => Promise<void>, editPost: ({ descriptionUpdate }: { descriptionUpdate: string }) => Promise<void>, isNewPost: boolean, setter: (value: string) => void, discardChanges: () => void}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [desc, setDesc] = useState<string>(newDescription)
-
-  const handlePostCancelChangeButtonClick = async () => {
-    if (post != null) {
-      setter(post.description)
-      alert("Modifications ignorés avec succès") 
-    } else {
-      alert("Erreur du serveur")
-    }
-  }
+  const [desc, setDesc] = useState<string>(description)
 
   const generateDescription = async (title: string) => {
     if (!post || !title) {
@@ -216,7 +207,7 @@ const PostEditorActions = ({post, newDescription, addPost, editPost, isNewPost, 
     <Stack spacing={2} sx={{mt:3}}>
       <hr/>
       <Stack direction="row" spacing={2} justifyContent="center">
-        <IconButton sx={{gap: 1, p: 1}} variant="outlined"  onClick={handlePostCancelChangeButtonClick}>
+        <IconButton sx={{gap: 1, p: 1}} variant="outlined"  onClick={discardChanges}>
           Ignore changements
         </IconButton>
         <IconButton sx={{bgcolor: "#0D0D0D", p: 1, gap: 1}} variant="solid" onClick={() => {
@@ -237,18 +228,29 @@ const PostEditorActions = ({post, newDescription, addPost, editPost, isNewPost, 
 
 interface PostEditorProps {
   data: GetPostType;
+  setDescription: (description: string) => void;
   isNew: boolean;
   addPost: ({ description }: { description: string }) => Promise<void>;
   editPost: ({ descriptionUpdate }: { descriptionUpdate: string }) => Promise<void>;
 }
 
-const PostEditor = ({ data, isNew, addPost, editPost,  }: PostEditorProps) => {
+const PostEditor = ({ data, setDescription, isNew, addPost, editPost,  }: PostEditorProps) => {
   
   const [desc, setDesc] = useState<string>(data?.description ?? "");
+  const [oldDesc, _] = useState<string>(data?.description ?? "old description");
   const [editorKey, setEditorKey] = useState<number>(0);
 
+  const handleCancelChange = () => {
+    if (desc === oldDesc) return
+    setDesc(oldDesc);
+    setDescription(oldDesc);
+    setEditorKey((prev: number) => prev + 1);
+  }
+
   const handleDescriptionChange = (value: string) => {
+    if (value === desc) return
     setDesc(value);
+    setDescription(value);
     setEditorKey((prev: number) => prev + 1);
   };
 
@@ -271,9 +273,10 @@ const PostEditor = ({ data, isNew, addPost, editPost,  }: PostEditorProps) => {
             post={data}
             editPost={editPost}
             addPost={addPost}
-            newDescription={desc}
+            description={desc}
             isNewPost={isNew}
             setter={handleDescriptionChange}
+            discardChanges={handleCancelChange}
           />
         }
         onUpdate={({ editor }) => {
