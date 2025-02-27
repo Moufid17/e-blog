@@ -22,7 +22,6 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     const router = useRouter()
 
     const [post, setPost] = useState<GetPostType>(null)
-    // const [postDescription, setPostDescription] = useState<string>("")
     const [allCategories, setAllCategories] = useState<GetCategoriesType>([])
     const [isPublished, setIsPublished] = useState<boolean>(false);
     const [isError, setIsError] = useState<{
@@ -71,8 +70,6 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
 
     const handlePostCreateButtonClick = async ({description} :{description: string}) => {
         if (description.length <= 0 || description === "<p></p>") {
-            console.log("description => ", description);
-            
             setIsError({...isError, description: true})
             setOpenNotification({message: "La description ne peut pas être vide.", isOpen: true, isDanger: true})
         }
@@ -85,8 +82,6 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                 if (post.title.length <= 0) newIsError.title = true
                 if (post.categoryId == undefined) newIsError.category = true
                 setIsError(newIsError)
-                // const message = post.title.length <= 0 ? "Le titre ne peut pas être vide." : "La catégorie ne peut pas être vide."
-                // setOpenNotification({message: message, isOpen: true, isDanger: true})
             } else {
                 await addPost({post: {...data, description, userId: session?.user?.id}}).then((res) => {
                     setOpenNotification({message: "Post créé avec succès", isOpen: true})
@@ -102,7 +97,6 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     const handlePostSaveButtonClick = async ({descriptionUpdate} :{descriptionUpdate: string}) => {
         if (descriptionUpdate.length <= 0 || descriptionUpdate === "<p></p>") {
             setIsError({...isError, description: true})
-            console.log("description => ", descriptionUpdate);
 
             setOpenNotification({message: "La description ne peut pas être vide.", isOpen: true, isDanger: true})
         }
@@ -114,10 +108,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                 
                 if (post.title.length <= 0) newIsError.title = true
                 if (post.categoryId == undefined) newIsError.category = true
-                // if (description.length <= 0 || description === "<p></p>") newIsError.description = true
                 setIsError(newIsError)
-                // const message = post.title.length <= 0 ? "Le titre ne peut pas être vide." : "La catégorie ne peut pas être vide."
-                // setOpenNotification({message: message, isOpen: true, isDanger: true})
             } else {
                 await updatePost({post: {...data, userId, description: descriptionUpdate}})
                 setOpenNotification({message: "Mise à jour avec succès.", isOpen: true})
@@ -130,7 +121,6 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     
     useEffect(() => {
         if (postId == "new") {
-            // setPostDescription("<p>Hello World! 🌎️</p>")
             setPost({id: "", title: "", description: "<p>Hello World! 🌎️</p>", isPublished: isPublished, userId: session?.user.id, owner: {email: session?.user?.email, name: session?.user?.name}} as GetPostType)
         } else {
             getPost(postId as string)
