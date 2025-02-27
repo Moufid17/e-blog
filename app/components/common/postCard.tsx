@@ -56,8 +56,8 @@ export default function PostCard({data}: {data: PostCardType}) {
   }, [session?.user?.email]);
   
   return (
-    <Card key={`postCard_${id}`} variant="outlined" sx={{ width: 390 }}>
-      <Box key={`postCard_head${id}`} sx={{display:"flex", alignItems: "flex-start", justifyContent: "space-between", wordWrap: "break-word"}}>
+    <Card key={`postCard_${id}`} variant="outlined">
+      <Box key={`post_card_title_${id}`} sx={{display:"flex", alignItems: "flex-start", justifyContent: "space-between", wordWrap: "break-word"}}>
         <Box key={`postCard_head_title${id}`}  width={'85%'}>
           <Link href={`/posts/${ id }`}>
             <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 31)) + (title.length > 31 ? "...": "")}</Typography>
