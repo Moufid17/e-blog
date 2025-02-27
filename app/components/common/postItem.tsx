@@ -4,18 +4,18 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { notFound, useRouter } from "next/navigation";
 
-import { Box, Chip, Divider, FormControl, FormLabel, Grid, Input, Option, Select, Stack, Switch, Typography } from "@mui/joy";
+import { Box, Divider, FormControl, FormLabel, Grid, Input, Option, Select, Stack, Switch, Typography } from "@mui/joy";
 import PostEditor from "@/app/components/common/postEditor";
 import PostViewer from "@/app/components/common/postViewer";
 import CustomSnackbar from "../global/Snackbar";
+import CategoryTag from "../category/categoryTag";
 
 import { addPost, fetchPost, updatePost } from "@/app/actions/post";
 import { getAllCategories } from "@/app/actions/category";
 import { GetCategoriesType } from "@/app/common/types/category";
 import { GetPostType } from "@/app/common/types/posts";
 
-import { convertDateToString, toUppercaseFirstChar } from "@/app/lib/utils";
-import { CATEGORY_DEFAULT_COLOR } from "@/app/help/constants";
+import { convertDateToString, getCategoryBgColorAndColor, toUppercaseFirstChar } from "@/app/lib/utils";
 
 
 export default function PostItem({ postId = "new" }: { postId?: string }) {
@@ -129,12 +129,6 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     useEffect(() => {
         getCategories()
     },[])
-
-    const getCategoryBgColorAndColor = (color?: string) => {
-        const categoryBgColorAndColor = (color == undefined) ? CATEGORY_DEFAULT_COLOR.split(".") : color.split(".") 
-        return {bgcolor: categoryBgColorAndColor[0] + "." + categoryBgColorAndColor[1], color: categoryBgColorAndColor[0]+ "." + categoryBgColorAndColor[2]}
-    }
-
     
     return (
         <Stack spacing={2} sx={{bgcolor: "background.body"}}>
@@ -167,7 +161,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                                     </>
                                     : 
                                     <>
-                                        <Chip  sx={{fontSize: "12px", bgcolor: getCategoryBgColorAndColor(allCategories.find((c) => c.id == post.categoryId)?.color).bgcolor, color: getCategoryBgColorAndColor(allCategories.find((c) => c.id == post.categoryId)?.color).color }}>{allCategories.find((c) => c.id == post.categoryId)?.name}</Chip>
+                                        <CategoryTag name={allCategories.find((c) => c.id == post.categoryId)?.name} color={allCategories.find((c) => c.id == post.categoryId)?.color}/>
                                         <Divider orientation="vertical"/>
                                         <Typography level="body-md">by {toUppercaseFirstChar(post?.owner?.name ?? "") ?? "Esgi"}</Typography>
                                         <Divider orientation="vertical"/>

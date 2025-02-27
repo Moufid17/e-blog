@@ -18,6 +18,12 @@ export const getAllPosts = async () => {
                     name: true,
                 }
             },
+            category: {
+                select: {
+                    name: true,
+                    color: true,
+                }
+            },
             likes: {
                 select: {
                     userId: true,

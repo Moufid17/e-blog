@@ -3,8 +3,8 @@
 - [x] Category seed
 - [ ] Home page : 
     - [x] Grid mobile first
-    - [3bis] Article Card : Catgeory flag
-    - [ ] filter by category
+    - [x] Article Card : Catgeory flag
+    - [ ] filter by category : create hook useSearchPagination()
 - [ ] Author public page (/about-me)
 - [ ] Delete post with confirmation
 - [*] Account page : // This page will split into PROFILE (https://berrydashboard.io/apps/blog/general-settings) and dashboard (https://berrydashboard.io/dashboard/blog)

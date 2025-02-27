@@ -6,6 +6,10 @@ export type PostCardType = {
       id: string,
       name: string | null,
     };
+    category: {
+      name: string,
+      color: string,
+    };
     likes: {
       user: {
         email: string | null;

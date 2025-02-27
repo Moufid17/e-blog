@@ -1,8 +1,9 @@
 // [ ] color (and variant) management : can be set by using hook like useColor
 import Link from "next/link";
 
-import { Box, Button, Card, CardContent, CardOverflow, Chip, IconButton, Stack, Typography } from "@mui/joy";
+import { Box, Card, CardContent, CardOverflow, Chip, IconButton, Stack, Typography } from "@mui/joy";
 import { Circle, Edit2, } from "react-feather";
+import CategoryTag from "../category/categoryTag";
 
 import { dateTimeToLastTimeAgo, toUppercaseFirstChar } from "@/app/lib/utils";
 import { AccountPostOwnType } from "@/app/common/types/account";
@@ -17,7 +18,7 @@ export default function AccountDraftCard({data}: {data: AccountPostOwnType}) {
     return (
         <Card key={`account_article_card_${id}`} sx={{ p: 0, height: "100%", gap: 2, border: "none", boxShadow: "none",}}>
             <Box key={`account_article_card_title_${id}`} sx={{display:"flex", flexDirection:"row", alignItems: "center", justifyContent: "space-between"}}>
-                <Chip sx={{fontSize: "12px", bgcolor: `${color}`  }}>{name}</Chip>
+                <CategoryTag name={name} color={color}/>
                 <Link href="/posts/[id]" as={`/posts/${id}`}>
                     <IconButton sx={{m: 1}}><Edit2 size={"12px"}/></IconButton>
                 </Link>

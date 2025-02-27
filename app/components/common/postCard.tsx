@@ -17,10 +17,11 @@ import Link from "next/link";
 import { addLike, removeLike } from "@/app/actions/post";
 import { PostCardType } from "@/app/common/types/posts";
 import { convertDateToString, toUppercaseFirstChar } from "@/app/lib/utils";
+import CategoryTag from "../category/categoryTag";
 
 
 export default function PostCard({data}: {data: PostCardType}) {
-  const { id, title, createdAt, owner, likes, _count } = data
+  const { id, title, createdAt, owner, category, likes, _count } = data
   const { data : session } = useSession()
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
   const [countLike, setCountLike] = useState<number>(0)
@@ -58,12 +59,12 @@ export default function PostCard({data}: {data: PostCardType}) {
   return (
     <Card key={`postCard_${id}`} variant="outlined">
       <Box key={`post_card_title_${id}`} sx={{display:"flex", alignItems: "flex-start", justifyContent: "space-between", wordWrap: "break-word"}}>
-        <Box key={`postCard_head_title${id}`}  width={'85%'}>
+        <Box key={`postCard_head_title${id}`} width={'85%'}>
           <Link href={`/posts/${ id }`}>
             <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 31)) + (title.length > 31 ? "...": "")}</Typography>
           </Link>
         </Box>
-        <IconButton aria-label="Like minimal photography" variant="plain" onClick={handleSetFavorite} sx={{mt: "-0.5rem", "&:hover:":{color: "red"}}}>
+        <IconButton aria-label="Like minimal photography" variant="plain" onClick={handleSetFavorite} sx={{mt: "-0.5rem",}}>
           <Heart color={ isFavorite ? "#000" : 'grey'}/>
         </IconButton>
       </Box>
@@ -74,6 +75,7 @@ export default function PostCard({data}: {data: PostCardType}) {
           loading="lazy"
           alt=""
         />
+        <CategoryTag name={category.name} color={category.color}/>
       </AspectRatio>
       <CardContent>
         <Typography>Owner : {owner.name?.toLocaleUpperCase()}</Typography>
