@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth/next"
 
 import { prismaClientDB } from '@/app/lib/prismaClient'
 import authOptions from "@/app/lib/authOptions";
+import { MAX_ARTICLE_CARD } from "../help/constants";
 
 // La liste des posts publiés dans l'ordre décroissant.
 export const getAllPosts = async () => {
@@ -36,7 +37,7 @@ export const getAllPosts = async () => {
 }
 
 const NB_LAST_POSTS = 5
-// La liste des NB_LAST_POSTS derniers posts publiés par les autres auteurs, dans l'ordre décroissant.
+// La liste des MAX_ARTICLE_CARD derniers posts publiés par les autres auteurs, dans l'ordre décroissant.
 export const getAllNbLastPostsNotOwned = async ({userId} : {userId: string | null}) => {
     const session = await getServerSession(authOptions);
 
@@ -67,5 +68,6 @@ export const getAllNbLastPostsNotOwned = async ({userId} : {userId: string | nul
             },
         },
         orderBy: [{ updatedAt: 'desc', }],
+        take: MAX_ARTICLE_CARD,
     })
 }

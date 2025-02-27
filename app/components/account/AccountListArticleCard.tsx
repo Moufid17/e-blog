@@ -5,7 +5,7 @@ import { Button, Card, CardOverflow, Chip, Divider, Stack, Typography } from "@m
 import AccountArticleCard from "./AccountArticleCard";
 import AccountDraftCard from "./AccountDraftCard";
 import { AccountPostOwnType, AccountRecentPostType } from "@/app/common/types/account";
-import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from "@/app/help/constants";
+import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO, MAX_ARTICLE_CARD } from "@/app/help/constants";
 
 const recentArticleList: AccountRecentPostType[] = [
     {
@@ -24,6 +24,7 @@ const recentArticleList: AccountRecentPostType[] = [
 ]
 export function AccountRecentListArticleCard({data}: {data: {title?: string, articles?: AccountRecentPostType[]}}) {
     const { title = "Recent Blog List",  articles = recentArticleList} = data
+    
     return (
         <Card key={`account_recent_articles_card`}>
             <Typography level="h4">{title}</Typography>
@@ -33,7 +34,7 @@ export function AccountRecentListArticleCard({data}: {data: {title?: string, art
                     <AccountArticleCard key={`account_recent_articles_card_${index}`} data={recentArticle} />
                 ))}
             </Stack>
-            {articles.length > 5 && <CardOverflow sx={{px: 0}}>
+            {articles.length > MAX_ARTICLE_CARD && <CardOverflow sx={{px: 0}}>
                 <Link href="/">
                     <Button fullWidth sx={{borderRadius: `0 0 6px 6px`}}>View all</Button>
                 </Link>
