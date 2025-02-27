@@ -1,7 +1,7 @@
 import { use, useEffect, useState } from "react";
 import Snackbar, { SnackbarProps } from '@mui/joy/Snackbar';
 
-export default function CustomSnackbar({isOpen=false, message, isDanger= false}: {isOpen: boolean, message: string, isDanger?: boolean}) {
+export default function CustomSnackbar({isOpen=false, message, isDanger= false, onClose}: {isOpen: boolean, message: string, isDanger?: boolean, onClose: () => void}) {
     const [open, setOpen] = useState(isOpen);
     const [color, setColor] = useState<SnackbarProps["color"]>('neutral');
 
@@ -12,9 +12,7 @@ export default function CustomSnackbar({isOpen=false, message, isDanger= false}:
     useEffect(() => {
         if (isDanger) {
             setColor('danger');
-        } else {
-            setColor('neutral');
-        }
+        } 
     }, [isDanger]);
 
     return (
@@ -29,6 +27,7 @@ export default function CustomSnackbar({isOpen=false, message, isDanger= false}:
                     return;
                 }
                 setOpen(false);
+                onClose();
             }}
         >
             {message}

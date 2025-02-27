@@ -22,7 +22,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     const router = useRouter()
 
     const [post, setPost] = useState<GetPostType>(null)
-    const [description, setDescription] = useState<string>("")
+    // const [postDescription, setPostDescription] = useState<string>("")
     const [allCategories, setAllCategories] = useState<GetCategoriesType>([])
     const [isPublished, setIsPublished] = useState<boolean>(false);
     const [isError, setIsError] = useState<{
@@ -46,7 +46,6 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     });
 
 
-
     const isOwner = (postEmail: string | null): boolean => {
         if (postEmail == null || session == null) return false
         return  session?.user?.email == postEmail
@@ -56,7 +55,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
         const data : GetPostType = await fetchPost({postId: id})
         if (!data) notFound() 
         setPost(data)
-        if (data?.description) setDescription(data?.description)
+        // if (data?.description) setPostDescription(data?.description)
         setIsPublished(data?.isPublished)
     }
 
@@ -71,16 +70,23 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     };
 
     const handlePostCreateButtonClick = async ({description} :{description: string}) => {
+        if (description.length <= 0 || description === "<p></p>") {
+            console.log("description => ", description);
+            
+            setIsError({...isError, description: true})
+            setOpenNotification({message: "La description ne peut pas être vide.", isOpen: true, isDanger: true})
+        }
         if (post != null) {
+            
           const { id, owner, ...data } = post 
-            if (data.userId === undefined || post.title.length <= 0 || post.categoryId == undefined || description.length === 0 || description === "<p></p>") {
+            if (data.userId === undefined || post.title.length <= 0 || post.categoryId == undefined) {
                 const newIsError = {...isError}
                 
                 if (post.title.length <= 0) newIsError.title = true
                 if (post.categoryId == undefined) newIsError.category = true
-                if (description.length <= 0 || description === "<p></p>") newIsError.description = true
                 setIsError(newIsError)
-                setOpenNotification({message: "Erreur lors de la création du post", isOpen: true, isDanger: true})
+                // const message = post.title.length <= 0 ? "Le titre ne peut pas être vide." : "La catégorie ne peut pas être vide."
+                // setOpenNotification({message: message, isOpen: true, isDanger: true})
             } else {
                 await addPost({post: {...data, description, userId: session?.user?.id}}).then((res) => {
                     setOpenNotification({message: "Post créé avec succès", isOpen: true})
@@ -89,21 +95,29 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                 })
             }
         } else {
-          setOpenNotification({message: "Impossible to create this post. checking error and retr", isOpen: true, isDanger: true})
+            setOpenNotification({message: "Impossible to create this post. checking error and retr", isOpen: true, isDanger: true})
         }
     }
-   
+    
     const handlePostSaveButtonClick = async ({descriptionUpdate} :{descriptionUpdate: string}) => {
+        if (descriptionUpdate.length <= 0 || descriptionUpdate === "<p></p>") {
+            setIsError({...isError, description: true})
+            console.log("description => ", descriptionUpdate);
+
+            setOpenNotification({message: "La description ne peut pas être vide.", isOpen: true, isDanger: true})
+        }
         if (post != null) {
             const { owner, description, userId, ...data } = post
           
-            if (userId === undefined || post.title.length <= 0 || post.categoryId == undefined || descriptionUpdate.length === 0 || descriptionUpdate === "<p></p>") {
+            if (userId === undefined || post.title.length <= 0 || post.categoryId == undefined) {
                 const newIsError = {...isError}
-                    
+                
                 if (post.title.length <= 0) newIsError.title = true
                 if (post.categoryId == undefined) newIsError.category = true
-                if (description.length <= 0 || description === "<p></p>") newIsError.description = true
+                // if (description.length <= 0 || description === "<p></p>") newIsError.description = true
                 setIsError(newIsError)
+                // const message = post.title.length <= 0 ? "Le titre ne peut pas être vide." : "La catégorie ne peut pas être vide."
+                // setOpenNotification({message: message, isOpen: true, isDanger: true})
             } else {
                 await updatePost({post: {...data, userId, description: descriptionUpdate}})
                 setOpenNotification({message: "Mise à jour avec succès.", isOpen: true})
@@ -116,7 +130,8 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     
     useEffect(() => {
         if (postId == "new") {
-            setPost({id: "", title: "", description: "", isPublished: isPublished, userId: session?.user.id, owner: {email: session?.user?.email, name: session?.user?.name}} as GetPostType)
+            // setPostDescription("<p>Hello World! 🌎️</p>")
+            setPost({id: "", title: "", description: "<p>Hello World! 🌎️</p>", isPublished: isPublished, userId: session?.user.id, owner: {email: session?.user?.email, name: session?.user?.name}} as GetPostType)
         } else {
             getPost(postId as string)
         }
@@ -125,6 +140,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     useEffect(() => {
         getCategories()
     },[])
+
     
     return (
         <Stack spacing={2} sx={{bgcolor: "background.body"}}>
@@ -207,7 +223,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                                     {isOwner(post?.owner?.email) ? 
                                         <PostEditor data={post} isNew={postId == "new"} addPost={handlePostCreateButtonClick} editPost={handlePostSaveButtonClick}/>
                                         : 
-                                        <PostViewer content={description} />
+                                        <PostViewer content={post.description} />
                                     }
                             </Grid>
                         </Grid>
@@ -215,7 +231,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                    
                 </Stack>
             }
-            {openNotification.isOpen &&  <CustomSnackbar isOpen={openNotification.isOpen} message={openNotification.message} isDanger={openNotification.isDanger}/>}
+            <CustomSnackbar isOpen={openNotification.isOpen} message={openNotification.message} isDanger={openNotification.isDanger} onClose={() => setOpenNotification({...openNotification, isOpen: false})}/>
         </Stack>
     )
 }

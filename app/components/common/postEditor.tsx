@@ -243,8 +243,8 @@ interface PostEditorProps {
 }
 
 const PostEditor = ({ data, isNew, addPost, editPost,  }: PostEditorProps) => {
-  const defaultContent = "<p>Hello World! 🌎️</p>";
-  const [desc, setDesc] = useState<string>(defaultContent);
+  
+  const [desc, setDesc] = useState<string>(data?.description ?? "");
   const [editorKey, setEditorKey] = useState<number>(0);
 
   const handleDescriptionChange = (value: string) => {

@@ -20,7 +20,8 @@
     - [5] Global state (test on allLikesReceived from home page to account : synchro without refresh page (use zustand))
     - [ ] Stat : view
 - [*] Post add/edit :
-    - [*2bis] Category and isPublished UI  
+    - [x] Category and isPublished UI
+    - [x] Handle invalid title, category and description with error message.
     - [4] archive, unarchive and share link
 - [ ] Wysiwig Editor: create one (mui/joy: Toggle Button Group)
 
