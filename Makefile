@@ -13,7 +13,7 @@ install:
 dev:
 	docker compose exec nodejs npm run dev
 
-next_secret:
+secret:
 	openssl rand -base64 32
 
 bash:

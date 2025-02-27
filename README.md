@@ -1,15 +1,12 @@
 # Requirement :
-- Create `.env`
-- Create `.env.local`
-- [Google sso configuration](https://shorturl.at/mpCV6)
-    - Authorized URL            : `http://localhost:3000`
-    - Authorized redirect URL   : `http://localhost:3000/api/auth/callback/google`
+- Create `.env` file and fill the parameters missing.
 
 # Lancement projet
 
 ```bash
 make up
-make dpm // Create migration (optional if db already exist)
+make dpm  // Create migration (optional if db already exist)
+make seed
 make dev
 ```
 
@@ -19,7 +16,7 @@ make down
 ```
 # Generate Next auth secret
 ```bash
-make next_secret
+make secret
 ```
 
 # Run Command in server
@@ -27,10 +24,16 @@ make next_secret
 make bash
 ```
 
-# Generate Prisma Migration
-```bash
-make dpm
-```
+# Prisma Migration
+- First migration
+    ```bash
+    make dpm
+    ```
+- Create migration after update
+    ```bash
+    make dbupdate
+    make dpm
+    ```
 
 ## Ressources
 ### Prisma
