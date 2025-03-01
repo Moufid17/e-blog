@@ -10,7 +10,7 @@ import { dateTimeToLastTimeAgo, toUppercaseFirstChar } from "@/app/lib/utils";
 import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from "@/app/help/constants";
 
 
-export default function AccountArticleCard({data, isOwner = false}: {data: any, isOwner?: boolean}) {
+export default function AccountArticleCard({data, isOwner = false, isCreateDateTime =false}: {data: any, isOwner?: boolean, isCreateDateTime?: boolean}) {
     const router = useRouter()
     const { id ="0", title="Title", createdAt= new Date(), updatedAt = new Date(), _count: {likes = 20}, comments = 50, views = 100,
             owner: {
@@ -62,7 +62,7 @@ export default function AccountArticleCard({data, isOwner = false}: {data: any, 
             <CardOverflow>
                 <Box key={`account_article_card_${id}`} sx={{display: 'flex', flexDirection:"row", justifyContent: 'space-between', alignItems: "center", gap: 1.5}}>
                     <Stack key={`account_article_card_${id}_time`} direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
-                        <Circle size={"6px"}/><Typography level="body-xs">{dateTimeToLastTimeAgo(isOwner ? updatedAt : createdAt)}</Typography>
+                        <Circle size={"6px"}/><Typography level="body-xs">{dateTimeToLastTimeAgo(isCreateDateTime ? createdAt : updatedAt)}</Typography>
                     </Stack>
                     {!isOwner && <Box key={`account_article_card_author_${id}`}>
                         <List key={`account_article_card_author_list_${id}`} sx={{flexDirection: "row",}}>

@@ -5,13 +5,13 @@ import { getServerSession, Session } from "next-auth";
 
 import { Card, CardContent, Divider, Grid, Stack, Typography } from "@mui/joy";
 import StackedBarChart from "@/app/components/common/StackedBarChart";
-import {AccountDraftListArticleCard, AccountMyListArticleCard, AccountRecentListArticleCard} from '@/app/components/account/AccountListArticleCard';
+import {AccountDraftListArticleCard, AccountFavoriteListArticleCard, AccountMyListArticleCard, AccountRecentListArticleCard} from '@/app/components/account/AccountListArticleCard';
 
 import authOptions from "@/app/lib/authOptions";
-import { getAllNbLastPostsNotOwned } from '@/app/actions/postList';
+import { getAllFavoritesPosts, getAllNbLastPostsNotOwned } from '@/app/actions/postList';
 import { getAccountDetails, getAllOwnPost, getStatsByMonth, likeReceived } from '@/app/actions/account';
 import AccountProfileCard from '@/app/components/account/AccountProfileCard';
-import { AcccountPrivilegeType, AccountRecentPostType, AccoutProfilType, OwnPostGroupByType } from '@/app/common/types/account';
+import { AccountRecentPostType, AccoutProfilType, OwnPostGroupByType } from '@/app/common/types/account';
 
 import { DEFAULT_ACCOUNT_PRIVILEGE, DEFAULT_AVATAR_IMAGE, DEFAULT_EMAIL, DEFAULT_GITHUB, DEFAULT_JOB_NAME, DEFAULT_LINKEDIN, DEFAULT_LOCATION, DEFAULT_PSEUDO, DEFAULT_WEBSITE, DEFAULT_YOUTUBE } from '@/app/help/constants';
 
@@ -53,6 +53,8 @@ export default async function AccountPage () {
     }) ?? null 
 
     const statsPerMonth = await getStatsByMonth({userId: session?.user?.id}) ?? []
+
+    const allFavoritePost = await getAllFavoritesPosts({userId: session?.user?.id})
     
     return (
         <Grid key="account_main" component={'main'} container spacing={2} sx={{ flexGrow: 1, p: 2, bgcolor: "background.body", }}>
@@ -64,6 +66,12 @@ export default async function AccountPage () {
             </Grid>
             <Grid key="account_lists_drafts" xs={12} lg={3}>
                 <AccountDraftListArticleCard data={{title: "Draft(s)", articlesDraft: allPostOwn.isNotPublished}}/>
+            </Grid>
+            <Grid key="account_lists_articles" xs={12} lg={6}>
+                <AccountMyListArticleCard data={{title: "My Articles", articles: allPostOwn.isPublished}}/>
+            </Grid>
+            <Grid key="account_favorites_lists_articles" xs={12} lg={6}>
+                <AccountFavoriteListArticleCard data={allFavoritePost} />
             </Grid>
             <Grid key="account_stats" xs={12} lg={7} xl={9}>
                     <Card title="stats_card" sx={{ height: "100%", width: "100%" }}>
@@ -89,9 +97,6 @@ export default async function AccountPage () {
                             </Stack>
                         </CardContent>
                     </Card>
-            </Grid>
-            <Grid key="account_lists_articles" xs={12} lg={5} xl={3}>
-                <AccountMyListArticleCard data={{title: "My Articles", articles: allPostOwn.isPublished}}/>
             </Grid>
         </Grid>
     );

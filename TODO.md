@@ -7,7 +7,7 @@
     - [6] filter by category : create hook useSearchPagination()
 - [ ] Author public page (/about-me)
 - [ ] Delete post with confirmation
-- [*] Account page : // This page will split into PROFILE (https://berrydashboard.io/apps/blog/general-settings) and dashboard (https://berrydashboard.io/dashboard/blog)
+- [*] Account page : This page will split into [PROFILE](https://berrydashboard.io/apps/blog/general-settings) and [dashboard](https://berrydashboard.io/dashboard/blog) templates.
     - [x] Post list (draft, published, others)
     - [0] account details (linkedin, social media links, location)
         - [x] Display
@@ -18,8 +18,9 @@
         - [x] fix: like re-render && article (drafted or published) re-render
         - [x?] My Article card "More vertical menu (edit, archive, delete) : Faut il supprimer les likes reçu par un post si il est mit en draft ?
     - [x] Edit account details : Modal Card (pseudo and social links)
-    - [4*] create the favorite list card
+    - [x] create the favorite list card
     - [x] Global state (test on allLikesReceived from home page to account : synchro without refresh page)
+    - [ ] create the archive list card
     - [7] Stat : view
 - [ ] Post add/edit :
     - [x] Mobile first UI
@@ -28,9 +29,10 @@
     - [x] fix : Description reset when (category and may be title) changed
     - [x] fix : Disable category for acticle displaying when i am not the author.
     - [x] Category : display for post owner or not.
-    - [4bis] archive, unarchive and share link
-- [5] Wysiwig Editor: create one (mui/joy: Toggle Button Group)
+    - [5] archive, unarchive and share link
+- [4bis] Wysiwig Editor: create one (mui/joy: Toggle Button Group)
 - [6] About-me Page (public page)
+- [ ] [zod + infer](https://www.julienrollin.com/posts/typescript-zod-validation/#zod--ts--la-combinaison-id%C3%A9ale-) : implementation zod typage through the app.
 
 
 

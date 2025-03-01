@@ -77,3 +77,42 @@ export const getAllNbLastPostsNotOwned = async ({userId} : {userId: string | nul
         take: MAX_ARTICLE_CARD,
     })
 }
+
+export const getAllFavoritesPosts = async ({userId} : {userId: string | null}) => {
+    if (userId == null) return []
+    const data = await prismaClientDB.post.findMany({
+        where: {
+            isPublished: true,
+            likes: {
+                some: {
+                    userId: userId
+                }
+            }
+        },
+        select: {
+            id: true,
+            title: true,
+            updatedAt: true,
+            owner: {
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                    jobName: true,
+                }
+            },
+            category: {
+                select: {
+                    name: true,
+                    color: true,
+                }
+            },
+            _count: {
+                select: { likes: true },
+            },
+        },
+        orderBy: [{ updatedAt: 'desc', }],
+    })
+    
+    return data
+}
