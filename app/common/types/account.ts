@@ -7,6 +7,7 @@ type AnalyticType = {
 } 
 
 type SocialType = {
+  pseudo?: string,
   linkedin?: string,
   github?: string,
   twitter?: string,
@@ -17,7 +18,8 @@ type SocialType = {
   twitch?: string,
   discord?: string,
   tiktok?: string,
-} 
+}
+
 
 type OwnerType = {
   name?: string | null,
@@ -29,11 +31,12 @@ export type AccoutProfilType = {
   name?: string | null,
   image?: string | null,
   email?: string | null,
-  jobName?: String | null,
+  jobName?: string | null,
   accountPrivilege?: AcccountPrivilegeType,
   socialLink?: SocialType,
   location?: string | null,
-  stats?: AnalyticType
+  stats?: AnalyticType,
+  privilege?: AcccountPrivilegeType,
 }
 
 export type AccountPostType = {
@@ -84,3 +87,10 @@ export type AccountStatsMonthType = {
   stats: AnalyticType  
 }
 export type StatsByMonthType = AccountStatsMonthType[]
+
+export type AccountEditProfileType = {
+  pseudo: string;
+  job: string;
+  linkedin: string;
+  github: string
+}

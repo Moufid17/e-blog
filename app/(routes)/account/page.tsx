@@ -38,12 +38,13 @@ export default async function AccountPage () {
             email: session.user?.email ?? DEFAULT_EMAIL,
             jobName: data?.jobName ?? DEFAULT_JOB_NAME,
             location: data?.location ?? DEFAULT_LOCATION,
-            accountPrivilege: data?.type as AcccountPrivilegeType ?? DEFAULT_ACCOUNT_PRIVILEGE,
+            accountPrivilege: data?.privilege ?? DEFAULT_ACCOUNT_PRIVILEGE,
             socialLink: {
-                linkedin: data?.socialLinkedin ?? DEFAULT_LINKEDIN,
-                github: data?.socialGithub ?? DEFAULT_GITHUB,
-                youtube: data?.socialYoutube ?? DEFAULT_YOUTUBE,
-                website: data?.socialWebsite ?? DEFAULT_WEBSITE,
+                pseudo: data?.socialLink.pseudo ?? DEFAULT_PSEUDO,
+                linkedin: data?.socialLink.linkedin ?? DEFAULT_LINKEDIN,
+                github: data?.socialLink.github ?? DEFAULT_GITHUB,
+                youtube: data?.socialLink.youtube ?? DEFAULT_YOUTUBE,
+                website: data?.socialLink.website ?? DEFAULT_WEBSITE,
             },
             stats: {
                 likes: allLikeReceived,
