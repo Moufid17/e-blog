@@ -206,7 +206,7 @@ const PostEditorActions = ({post, description, addPost, editPost, isNewPost, set
   return (
     <Stack spacing={2} sx={{mt:3}}>
       <hr/>
-      <Stack direction="row" spacing={2} justifyContent="center">
+      <Stack key={"post_actions_btn"} direction="row" spacing={2} justifyContent="center">
         <IconButton sx={{gap: 1, p: 1}} variant="outlined"  onClick={discardChanges}>
           Ignore changements
         </IconButton>

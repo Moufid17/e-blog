@@ -27,7 +27,7 @@ export default function AccountDraftCard({data}: {data: AccountPostOwnType}) {
                 <Typography level="title-md" >{toUppercaseFirstChar(title.slice(0, 45)) + (title.length > 45 ? "...": "")}</Typography>
             </CardContent>
             <CardOverflow>
-                <Stack direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
+                <Stack key={`account_article_card_${id}_time`} direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
                     <Circle size={"6px"}/><Typography level="body-xs">Last update: {dateTimeToLastTimeAgo(new Date(updatedAt))}</Typography>
                 </Stack>
             </CardOverflow>

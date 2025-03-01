@@ -82,7 +82,6 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                 if (post.categoryId == undefined) newIsError.category = true
                 setIsError(newIsError)
             } else {
-                console.log("post => ", post);
                 await addPost({post: {...post, description, userId: session?.user?.id}}).then((res) => {
                     setOpenNotification({message: "Post créé avec succès", isOpen: true})
                     router.push(`/`)
@@ -131,7 +130,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     },[])
     
     return (
-        <Stack spacing={2} sx={{bgcolor: "background.body"}}>
+        <Stack key={"post_item_main"} spacing={2} sx={{bgcolor: "background.body"}}>
             {post &&
                 <Stack key={post.id} alignItems="center" sx={{pt: "1.5rem"}} spacing={1}>
                     <Grid key={"post_header"} width="100%" container spacing={3} direction={{xs: "column", lg: "row"}} sx={{ flexGrow: 1 }}>

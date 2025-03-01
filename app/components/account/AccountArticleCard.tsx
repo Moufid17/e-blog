@@ -61,7 +61,7 @@ export default function AccountArticleCard({data, isOwner = false}: {data: any, 
             </CardContent>
             <CardOverflow>
                 <Box key={`account_article_card_${id}`} sx={{display: 'flex', flexDirection:"row", justifyContent: 'space-between', alignItems: "center", gap: 1.5}}>
-                    <Stack direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
+                    <Stack key={`account_article_card_${id}_time`} direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
                         <Circle size={"6px"}/><Typography level="body-xs">{dateTimeToLastTimeAgo(isOwner ? updatedAt : createdAt)}</Typography>
                     </Stack>
                     {!isOwner && <Box key={`account_article_card_author_${id}`}>

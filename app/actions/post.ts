@@ -89,10 +89,8 @@ export const fetchPost = async ({postId}: {postId: string}) => {
 
 export const addPost = async ({post}: {post: AddPostType}) => {
   if (!post) return
-  if (!post.userId) {
-    console.log("User id is required")
-    return;
-  }
+  if (!post.userId)  return
+  
   await prismaClientDB.post.create({
     data: {
       title: post.title,

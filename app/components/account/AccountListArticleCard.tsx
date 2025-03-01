@@ -60,7 +60,7 @@ export function AccountMyListArticleCard({data}: {data: {title?: string, article
     const { title = "My Articles", articles = myArticleList} = data
     return (
         <Card title="account_lists_articles_card" sx={{ maxHeight: "950px" }}>
-            <Stack direction={"row"} gap={1.5}><Typography level="h4">{title}</Typography><Chip color="primary" variant="solid">{articles.length}</Chip></Stack>
+            <Stack key={"account_lists_articles_card_header"} direction={"row"} gap={1.5}><Typography level="h4">{title}</Typography><Chip color="primary" variant="solid">{articles.length}</Chip></Stack>
             <Divider inset="context"/>
                 <Stack key={`account_articles_cards`} gap={1} sx={{overflow: "auto",}}>
                     {articles.map((myArticle: AccountPostOwnType, index: number) => (
@@ -90,7 +90,7 @@ export function AccountDraftListArticleCard({data}: {data: {title?: string, arti
     const { title = "Draft(s)",  articlesDraft = draftArticleList} = data
     return (
         <Card title="account_lists_drafts_card" sx={{ maxHeight: "950px" }}>
-            <Stack direction={"row"} gap={1.5}><Typography level="h4">{title}</Typography><Chip color="success" variant="solid">{articlesDraft.length}</Chip></Stack>
+            <Stack key={`account_lists_drafts_card_header`}  direction={"row"} gap={1.5}><Typography level="h4">{title}</Typography><Chip color="success" variant="solid">{articlesDraft.length}</Chip></Stack>
             <Divider inset="context"/>
                 <Stack key={`account_drafts_cards`} gap={1} sx={{overflow: "auto",}}>
                     {articlesDraft.map((articleDraft: AccountPostOwnType, index: number) => (
