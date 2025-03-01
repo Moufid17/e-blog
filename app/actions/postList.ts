@@ -16,6 +16,7 @@ export const getAllPosts = async () => {
                 select: {
                     id: true,
                     name: true,
+                    socialBio: true,
                 }
             },
             category: {

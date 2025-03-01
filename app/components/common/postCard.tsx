@@ -78,7 +78,7 @@ export default function PostCard({data}: {data: PostCardType}) {
         <CategoryTag name={category.name} color={category.color}/>
       </AspectRatio>
       <CardContent>
-        <Typography>Owner : {owner.name?.toLocaleUpperCase()}</Typography>
+        <Typography>Owner : {owner.socialBio ?? owner.name?.toLocaleUpperCase() }</Typography>
       </CardContent>
       <CardOverflow variant="soft">
         <Divider inset="context" />

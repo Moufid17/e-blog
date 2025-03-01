@@ -5,6 +5,7 @@ export type PostCardType = {
     owner: {
       id: string,
       name: string | null,
+      socialBio: string | null,
     };
     category: {
       name: string,
