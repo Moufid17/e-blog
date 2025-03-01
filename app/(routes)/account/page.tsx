@@ -30,32 +30,33 @@ export default async function AccountPage () {
     const allPostOwn : OwnPostGroupByType = await getAllOwnPost({userId: session?.user?.id}) ?? []
     const allRecentPost: AccountRecentPostType[] = await getAllNbLastPostsNotOwned({userId: session?.user?.id}) ?? []
     
-    const allLikeReceived : number = await likeReceived({userId: session?.user?.id}) ?? 0
-    const accountProfileDetails = await getAccountDetails({userId: session?.user?.id}) ?? null
-    const acountProfilData : AccoutProfilType = {
-        name: session.user?.name ?? DEFAULT_PSEUDO,
-        image: session.user?.image ?? DEFAULT_AVATAR_IMAGE,
-        email: session.user?.email ?? DEFAULT_EMAIL,
-        jobName: accountProfileDetails?.jobName ?? DEFAULT_JOB_NAME,
-        location: accountProfileDetails?.location ?? DEFAULT_LOCATION,
-        accountPrivilege: accountProfileDetails?.type as AcccountPrivilegeType ?? DEFAULT_ACCOUNT_PRIVILEGE,
-        socialLink: {
-            linkedin: accountProfileDetails?.socialLinkedin ?? DEFAULT_LINKEDIN,
-            github: accountProfileDetails?.socialGithub ?? DEFAULT_GITHUB,
-            youtube: accountProfileDetails?.socialYoutube ?? DEFAULT_YOUTUBE,
-            website: accountProfileDetails?.socialWebsite ?? DEFAULT_WEBSITE,
-        },
-        stats: {
-            likes: allLikeReceived,
+    const accountProfileDetails : AccoutProfilType = await getAccountDetails({userId: session?.user?.id}).then(async (data) => {
+        const allLikeReceived : number = await likeReceived({userId: session?.user?.id}) ?? 0
+        return {
+            name: session.user?.name ?? DEFAULT_PSEUDO,
+            image: session.user?.image ?? DEFAULT_AVATAR_IMAGE,
+            email: session.user?.email ?? DEFAULT_EMAIL,
+            jobName: data?.jobName ?? DEFAULT_JOB_NAME,
+            location: data?.location ?? DEFAULT_LOCATION,
+            accountPrivilege: data?.type as AcccountPrivilegeType ?? DEFAULT_ACCOUNT_PRIVILEGE,
+            socialLink: {
+                linkedin: data?.socialLinkedin ?? DEFAULT_LINKEDIN,
+                github: data?.socialGithub ?? DEFAULT_GITHUB,
+                youtube: data?.socialYoutube ?? DEFAULT_YOUTUBE,
+                website: data?.socialWebsite ?? DEFAULT_WEBSITE,
+            },
+            stats: {
+                likes: allLikeReceived,
+            }
         }
-    }
+    }) ?? null 
 
     const statsPerMonth = await getStatsByMonth({userId: session?.user?.id}) ?? []
     
     return (
         <Grid key="account_main" component={'main'} container spacing={2} sx={{ flexGrow: 1, p: 2, bgcolor: "background.body", }}>
             <Grid key="account_profil" xs={12} lg={4}>
-                <AccountProfileCard userDetails={{...session?.user, ...acountProfilData}} />
+                <AccountProfileCard userDetails={accountProfileDetails} />
             </Grid>
             <Grid key="account_recent_articles" xs={12} lg={5}>
                 <AccountRecentListArticleCard data={{title: "Recent Blog List", articles: allRecentPost}}/>
