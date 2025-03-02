@@ -1,3 +1,4 @@
+import { redirect, RedirectType } from "next/navigation";
 export default function AboutPage() {
-    return <>Hello</>
+    redirect('/', "replace" as RedirectType);
 }

@@ -1,3 +1,5 @@
+import { CATEGORY_DEFAULT_COLOR } from "../help/constants";
+
 export const convertDateToString = (value: Date) : string => {
   const language = navigator.language
   
@@ -56,4 +58,9 @@ export const dateTimeToLastTimeAgo = (value: Date, lang: string="en") : string =
         return `${years} years ago`
       }
   }
+}
+
+export const getCategoryBgColorAndColor = (color?: string) => {
+  const categoryBgColorAndColor = (color == undefined) ? CATEGORY_DEFAULT_COLOR.split(".") : color.split(".") 
+  return {bgcolor: categoryBgColorAndColor[0] + "." + categoryBgColorAndColor[1], color: categoryBgColorAndColor[0]+ "." + categoryBgColorAndColor[2]}
 }

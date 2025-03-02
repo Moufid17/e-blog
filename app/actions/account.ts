@@ -1,11 +1,10 @@
 import { prismaClientDB } from "@/app/lib/prismaClient";
-import { AccountStatsMonthType, MonthType, OwnPostGroupByType, } from "../common/types/account";
-import { MONTHS } from "../help/constants";
+import { AcccountPrivilegeType, AccountEditProfileType, AccountStatsMonthType, OwnPostGroupByType, } from "../common/types/account";
 
 // Get account details
 export const getAccountDetails = async ({userId}: {userId: string | null}) => {
   if (!userId) return null;
-  return await prismaClientDB.user.findUnique({
+  const result = await prismaClientDB.user.findUnique({
     where: {
       id: userId,
     },
@@ -20,6 +19,41 @@ export const getAccountDetails = async ({userId}: {userId: string | null}) => {
       type: true,
     },
   });
+  return {
+    jobName: result?.jobName,
+    socialLink : {
+      pseudo: result?.socialBio,
+      linkedin: result?.socialLinkedin,
+      github: result?.socialGithub,
+      youtube: result?.socialYoutube,
+      website: result?.socialWebsite,
+    },
+    location: result?.location,
+    privilege: result?.type as AcccountPrivilegeType,
+  }
+}
+
+export const updateAccountDetails = async ({userId, data}: {userId: string | null, data: AccountEditProfileType}) => {
+  if (!userId) return;
+
+  await prismaClientDB.$transaction([
+    prismaClientDB.user.findUnique({
+      where: {
+        id: userId,
+      },
+    }),
+    prismaClientDB.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        jobName: data.job,
+        socialBio: data.pseudo,
+        socialLinkedin: data.linkedin,
+        socialGithub: data.github,
+      }, 
+    }),
+  ])
 }
 
 // All likes received
