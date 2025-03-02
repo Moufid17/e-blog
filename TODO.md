@@ -30,7 +30,21 @@
     - [x] fix : Disable category for acticle displaying when i am not the author.
     - [x] Category : display for post owner or not.
     - [5] archive, unarchive and share link
-- [4bis] Wysiwig Editor: create one (mui/joy: Toggle Button Group)
+- [4bis*] Wysiwig Editor: create one (mui/joy: Toggle Button Group) | [btw Wysiwig](https://github.com/btw-so/btw)
+    - [x] Menu updated
+    - [x] Cancel modification, save and generate by ia (PostItemExperimental and PostEditorExperimental : `have to merge to edit`)
+    - [*] [Update Editor container](https://tiptap.dev/docs/editor/extensions/custom-extensions/create-new)
+        - [Node view examples](https://tiptap.dev/docs/editor/extensions/custom-extensions/node-views/examples)
+    - [ ] [Insert highlighting](https://tiptap.dev/docs/examples/advanced/syntax-highlighting)
+    - [ ] [Insert link](https://tiptap.dev/docs/editor/extensions/marks/link)
+    - [ ] [Insert image](https://tiptap.dev/docs/editor/extensions/nodes/image)
+    - [ ] [Insert code block](https://tiptap.dev/docs/editor/extensions/nodes/code-block-lowlight)
+    - [ ] [Insert mention pseudo](https://tiptap.dev/docs/examples/advanced/mentions)
+
+    - https://tiptap.dev/docs/examples/advanced/interactive-react-and-vue-views
+    - https://tiptap.dev/docs/comments/getting-started/overview
+    
+
 - [6] About-me Page (public page)
 - [ ] [zod + infer](https://www.julienrollin.com/posts/typescript-zod-validation/#zod--ts--la-combinaison-id%C3%A9ale-) : implementation zod typage through the app.
 

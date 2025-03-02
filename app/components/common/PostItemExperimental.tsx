@@ -1,11 +1,11 @@
 // [ ] Check if postId different of "new" or an existing, otherwise retun notfound page (use zustand to keep all posts needed datas in memory)
 "use client"
-import { useEffect, useState } from "react";
+import { set, z } from "zod";
+import { use, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { notFound, useRouter } from "next/navigation";
 
-import { Box, Divider, FormControl, FormLabel, Grid, Input, Option, Select, Stack, Switch, Typography } from "@mui/joy";
-import PostEditor from "@/app/components/common/postEditor";
+import { Box, CircularProgress, Divider, FormControl, FormLabel, Grid, IconButton, Input, Option, Select, Stack, Switch, Typography } from "@mui/joy";
 import PostViewer from "@/app/components/common/postViewer";
 import CustomSnackbar from "../global/Snackbar";
 import CategoryTag from "../category/categoryTag";
@@ -17,15 +17,26 @@ import { GetPostType } from "@/app/common/types/posts";
 
 import { convertDateToString, getCategoryBgColorAndColor, toUppercaseFirstChar } from "@/app/lib/utils";
 import PostEditorExperimental from "./postEditorExperimental";
+import { RobotIcon } from "./icons/RobotIcon";
+import { Save } from "react-feather";
 
+const schema = z.object({
+  message: z.object({
+    role: z.string(),
+    content: z.string(),
+  })
+});
 
-export default function PostItem({ postId = "new" }: { postId?: string }) {
+export default function PostItemExperimental({ postId = "new" }: { postId?: string }) {
     const { data: session } = useSession()
     const router = useRouter()
 
     const [post, setPost] = useState<GetPostType>(null)
+    const [oldDesc, setOlDesc] = useState<string | null>(null);
+    const [description, setDescription] = useState<string | null>(null);
     const [allCategories, setAllCategories] = useState<GetCategoriesType>([])
     const [isPublished, setIsPublished] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const [isError, setIsError] = useState<{
         title: boolean,
@@ -47,7 +58,6 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
         isDanger: false
     });
 
-
     const isOwner = (postEmail: string | null): boolean => {
         if (postEmail == null || session == null) return false
         return  session?.user?.email == postEmail
@@ -57,12 +67,55 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
         const data : GetPostType = await fetchPost({postId: id})
         if (!data) notFound() 
         setPost(data)
+        setOlDesc(data?.description)
+        setDescription(data?.description)
         setIsPublished(data?.isPublished)
     }
 
     const getCategories = async () => {
         const d = await getAllCategories()
         setAllCategories([...d])
+    }
+
+    const generateDescription = async (title: string) => {
+        if (!title) {
+          alert("Error : Impossible de générer la description")
+          return
+        }
+        setIsLoading(true)
+        fetch("/api/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: title,
+          }),
+        })
+          .then((response) => {
+            return response.json();
+        })
+          .then((json) => {
+            return schema.parse(json);
+        })
+          .then((d) => {
+            const descriptionHTML = d.message.content.replaceAll("<body>", "").replaceAll("</body>", "");
+            setDescription(descriptionHTML)
+            setPost((prev) => { return {...prev, description: descriptionHTML} as GetPostType})
+        })
+          .catch((error) => {
+            console.error(error);
+        }).finally
+          (() => {
+            setIsLoading(false)
+        });
+    }
+
+    const handleCancelDescriptionChange = () => {
+        if (!post) return
+        if (description === oldDesc) return
+        setDescription(oldDesc)
+        setPost((prev) => { return {...prev, description: oldDesc} as GetPostType})
     }
 
     const handleCategoryChange = (event: React.SyntheticEvent | null, newValue: string | null,) => {
@@ -125,6 +178,12 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
             getPost(postId as string)
         }
     },[postId, session])
+
+    useEffect(() => {
+        if (description) {
+            setPost((prev) => { return {...prev, description: description} as GetPostType})
+        }
+    },[description])
 
     useEffect(() => {
         getCategories()
@@ -211,9 +270,35 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                             <Grid>
                                 {/* Check logged user is owner */}
                                 {isOwner(post?.owner?.email) ? 
-                                    <PostEditor data={post} setDescription={(desc: string) => setPost((prev) => {
-                                        return {...prev, description: desc} as GetPostType
-                                    })} isNew={postId == "new"} addPost={handlePostCreateButtonClick} editPost={handlePostSaveButtonClick}/>
+                                    <>
+                                        <PostEditorExperimental description={description ?? "data"}
+                                            // setDescription={(desc: string) => setPost((prev) => { return {...prev, description: desc} as GetPostType})}
+                                            setDescription={(desc: string) => setDescription(desc)}
+                                        />
+                                        <Stack spacing={2} sx={{ mt: 3 }}>
+                                            <hr />
+                                            <Stack key={"post_actions_btn"} direction="row" spacing={2} justifyContent="center">
+                                                <IconButton sx={{ gap: 1, p: 1 }} variant="outlined" onClick={handleCancelDescriptionChange}>
+                                                    Ignore changements
+                                                </IconButton>
+                                                <IconButton sx={{ bgcolor: "#0D0D0D", p: 1, gap: 1 }} variant="solid" onClick={() => {
+                                                    if (post) generateDescription(post.title)
+                                                }}>
+                                                {isLoading ? <CircularProgress sx={{ color: "#fff" }} /> : <RobotIcon />}  Suggest description
+                                                </IconButton>
+                                                <IconButton sx={{ bgcolor: "#0D0D0D", p: 1, gap: 1 }} variant="solid" onClick={() => {
+                                                    if (postId == "new") {
+                                                        handlePostCreateButtonClick({ description : description ?? "" })
+                                                    } else {
+                                                        handlePostSaveButtonClick({ descriptionUpdate: description ?? "" })
+                                                    }
+                                                    }}
+                                                >
+                                                <Save /> {postId == "new" ? "Create" : "Save"}
+                                                </IconButton>
+                                            </Stack>
+                                        </Stack>
+                                    </>
                                     : 
                                     <PostViewer content={post.description} />
                                 }
