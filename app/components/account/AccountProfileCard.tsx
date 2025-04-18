@@ -33,7 +33,7 @@ export default function AccountProfileCard ({userDetails} : {userDetails: Accout
         <>
             <Card key="account_profil_card" sx={{ height: "auto" }}>
                 <Stack key="account_profil_card_stack" direction={{ xs: "column", xl: "row" }} sx={{ gap: 2, alignItems: 'center', justifyContent: "space-between" }}>
-                    <Box key="account_profil_card_stack_box">
+                    <Box key="account_profil_card_stack_box" >
                         <List key="profil_list" sx={{ alignItems: 'center', flexDirection: { xs: "column", lg: "row" } }}>
                             <ListItem key="profil_list_item_0" >
                                 <ListItemContent>
@@ -47,10 +47,12 @@ export default function AccountProfileCard ({userDetails} : {userDetails: Accout
                                     <Typography level="body-md" noWrap>{userDetails?.jobName}</Typography>
                                 </ListItemContent>
                             </ListItem>
+                            <ListItem key="profil_tag" >
+                                <ListItemContent>
+                                    <Chip key="profil_tag_chip" color="primary" variant="solid" sx={{ fontSize: { xs: "lg", lg: "md" } }}>{toUppercaseFirstChar(userDetails?.accountPrivilege as string) ?? DEFAULT_ACCOUNT_PRIVILEGE}</Chip>
+                                </ListItemContent>
+                            </ListItem>
                         </List>
-                        <Box key="profil_tag">
-                            <Chip key="profil_tag_chip" color="primary" variant="solid" sx={{ fontSize: { xs: "lg", lg: "md" } }}>{toUppercaseFirstChar(userDetails?.accountPrivilege as string) ?? DEFAULT_ACCOUNT_PRIVILEGE}</Chip>
-                        </Box>
                     </Box>
                     <Button variant="plain" color="neutral" startDecorator={<Edit3 />} onClick={() => setIsOpenEditModal(true)}/>
                 </Stack>
