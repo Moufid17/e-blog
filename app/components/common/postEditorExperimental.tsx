@@ -186,7 +186,7 @@ const PostEditor = ({ description, setDescription }: PostEditorProps) => {
   useEffect(() => {
     if (!editor) return;
     editor.commands.setContent(description);
-  }, [description]);
+  }, [editor, description]);
 
   return (
     <Stack key={"post_editor"}>

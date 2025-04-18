@@ -165,8 +165,8 @@ export default function PostItemExperimental({ postId = "new" }: { postId?: stri
     
     useEffect(() => {
         const fetchPost = async () => {
-            if (session == null) return
             if (postId == "new") {
+                if (session == null) return
                 setPost({id: "", title: "", description: "<p>Hello World! 🌎️</p>", isPublished: false, userId: session?.user.id, 
                     owner: {email: session?.user?.email ?? null, name: session?.user?.name ?? null} , createdAt: null, updatedAt: null, categoryId: null,})
             } else {
@@ -298,7 +298,7 @@ export default function PostItemExperimental({ postId = "new" }: { postId?: stri
                                         </Stack>
                                     </>
                                     : 
-                                    <PostViewer content={post.description} />
+                                    <PostViewer content={post.description ?? "cc"} />
                                 }
                             </Grid>
                         </Grid>
