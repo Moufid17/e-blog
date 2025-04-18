@@ -5,6 +5,11 @@ export type PostCardType = {
     owner: {
       id: string,
       name: string | null,
+      socialBio: string | null,
+    };
+    category: {
+      name: string,
+      color: string,
     };
     likes: {
       user: {
@@ -19,16 +24,16 @@ export type PostCardType = {
 
 export type GetPostType = {
     id: string,
-    title: string;
+    title: string,
     description: string,
-    userId?: string,
+    userId: string | null,
     owner: {
       name: string | null,
       email: string | null,
     }
-    createdAt: Date,
-    updatedAt: Date,
-    categoryId: string,
+    createdAt: Date | null,
+    updatedAt: Date | null,
+    categoryId: string | null,
     isPublished: boolean,
 } | null
 
@@ -36,9 +41,20 @@ export type AddPostType = {
   title: string;
   description: string,
   userId?: string | null,
-  createdAt?: Date,
-  updatedAt?: Date,
-  categoryId: string,
+  createdAt: Date | null,
+  updatedAt: Date | null,
+  categoryId: string | null,
+  isPublished: boolean,
+} 
+
+export type UpdatePostType = {
+  id: string,
+  title: string;
+  description: string,
+  userId: string | null,
+  updatedAt: Date | null,
+  categoryId: string | null,
+  isPublished: boolean,
 } 
 
 export type Posts = PostCardType[]

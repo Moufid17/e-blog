@@ -4,7 +4,7 @@ import { Post } from "@prisma/client";
 
 import authOptions from "@/app/lib/authOptions";
 import { prismaClientDB } from "@/app/lib/prismaClient";
-import { AddPostType } from "../common/types/posts";
+import { AddPostType, UpdatePostType } from "../common/types/posts";
 
 export const addLike = async ({postId}: {postId: string}) => {
   const session = await getServerSession(authOptions);
@@ -89,14 +89,14 @@ export const fetchPost = async ({postId}: {postId: string}) => {
 
 export const addPost = async ({post}: {post: AddPostType}) => {
   if (!post) return
-  if (!post.userId) {
-    console.log("User id is required")
-    return;
-  }
+  if (!post.userId)  return
+  if (!post.categoryId) return
+  
   await prismaClientDB.post.create({
     data: {
       title: post.title,
       description: post.description,
+      isPublished: post.isPublished,
       category: {
         connect: {
           id: post.categoryId, 
@@ -116,9 +116,14 @@ export const addPost = async ({post}: {post: AddPostType}) => {
  * Si vous voulez seulement mettre à jour certains champs, vous devriez spécifier ces champs dans l'objet data. Par exemple, si vous voulez seulement mettre à jour le title et le description,
  * @param post
  */
-export const updatePost = async ({post}: {post: Post}) => {
+export const updatePost = async ({post}: {post: UpdatePostType}) => {
   if (!post) return
-  if (!post.id || post.userId === undefined) return
+  if (!post.id || !post.userId || !post.categoryId) return
+  const existingPost = await prismaClientDB.post.findUnique({
+    where: {id: post.id}
+  })
+  if (!existingPost) return
+
   await prismaClientDB.post.update({
     where: {id: post.id},
     data: {

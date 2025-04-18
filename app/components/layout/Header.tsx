@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/joy"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import UserMenu from "./UserMenu"
+import Image from "next/image"
 
 export default function Header () {
     const router = useRouter()
@@ -30,12 +31,8 @@ export default function Header () {
                 <Typography
                     onClick={() => pathname != "/" && router.push("/")}
                     startDecorator={
-                        <img
-                            src="/appIcon.png"
-                            loading="lazy"
-                            width="62"
-                            height="42"
-                            alt=""
+                        <Image src="/appIcon.png" alt="e-blog logo"
+                            loading="lazy" width="62" height="42"
                         />
                     }
                     level="h4" 

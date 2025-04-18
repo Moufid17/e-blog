@@ -17,10 +17,12 @@ import Link from "next/link";
 import { addLike, removeLike } from "@/app/actions/post";
 import { PostCardType } from "@/app/common/types/posts";
 import { convertDateToString, toUppercaseFirstChar } from "@/app/lib/utils";
+import CategoryTag from "../category/categoryTag";
+import Image from "next/image";
 
 
 export default function PostCard({data}: {data: PostCardType}) {
-  const { id, title, createdAt, owner, likes, _count } = data
+  const { id, title, createdAt, owner, category, likes, _count } = data
   const { data : session } = useSession()
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
   const [countLike, setCountLike] = useState<number>(0)
@@ -53,30 +55,33 @@ export default function PostCard({data}: {data: PostCardType}) {
     }
 
     fetchData();
-  }, [session?.user?.email]);
+  }, [session?.user?.id, _count.likes, likes]);
   
   return (
-    <Card key={`postCard_${id}`} variant="outlined" sx={{ width: 390 }}>
-      <Box key={`postCard_head${id}`} sx={{display:"flex", alignItems: "flex-start", justifyContent: "space-between", wordWrap: "break-word"}}>
-        <Box key={`postCard_head_title${id}`}  width={'85%'}>
+    <Card key={`postCard_${id}`} variant="outlined">
+      <Box key={`post_card_title_${id}`} sx={{display:"flex", alignItems: "flex-start", justifyContent: "space-between", wordWrap: "break-word"}}>
+        <Box key={`postCard_head_title${id}`} width={'85%'}>
           <Link href={`/posts/${ id }`}>
             <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 31)) + (title.length > 31 ? "...": "")}</Typography>
           </Link>
         </Box>
-        <IconButton aria-label="Like minimal photography" variant="plain" onClick={handleSetFavorite} sx={{mt: "-0.5rem", "&:hover:":{color: "red"}}}>
+        <IconButton aria-label="Like minimal photography" variant="plain" onClick={handleSetFavorite} sx={{mt: "-0.5rem",}}>
           <Heart color={ isFavorite ? "#000" : 'grey'}/>
         </IconButton>
       </Box>
       <AspectRatio minHeight="120px" maxHeight="200px">
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-          srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+          blurDataURL="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
           loading="lazy"
           alt=""
+          width={286}
+          height={200}
         />
+        <CategoryTag name={category.name} color={category.color}/>
       </AspectRatio>
       <CardContent>
-        <Typography>Owner : {owner.name?.toLocaleUpperCase()}</Typography>
+        <Typography>Owner : {owner.socialBio ?? owner.name?.toLocaleUpperCase() }</Typography>
       </CardContent>
       <CardOverflow variant="soft">
         <Divider inset="context" />

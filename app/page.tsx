@@ -1,16 +1,12 @@
-/**
- * Rendering : server component
- * Data Fetching : Server (server action)
- */
 import Link from 'next/link';
 import { getServerSession } from 'next-auth/next';
-import { Box, Grid, IconButton, Stack, Typography } from '@mui/joy'
 
-import authOptions from './lib/authOptions';
-import { prismaClientDB } from '@/app/lib/prismaClient'
-import { Posts } from "@/app/common/types/posts";
+import { Box, Grid, IconButton, Stack, Typography } from '@mui/joy'
 import PostCard from '@/app/components/common/postCard'
+
 import { getAllPosts } from './actions/postList';
+import { Posts } from "@/app/common/types/posts";
+import authOptions from './lib/authOptions';
 
 
 export default async function Home() {
@@ -19,30 +15,26 @@ export default async function Home() {
   const allPosts: Posts = await getAllPosts()
   
   return (
-    <Box key={"main_app"} sx={{p: "12px", bgcolor: "#fff",}}>
-      <Stack direction={"row"} key="home_title" sx={{mb: "12px", justifyContent: "space-between"}} >
+    <Box key={"home_page_main"} sx={{p: "12px",}}>
+      <Stack key={"home_page_main_title"} direction={"row"} sx={{mb: "12px", justifyContent: "space-between"}} >
         <Typography level="title-lg" lineHeight="2rem" fontSize="25px" textTransform="uppercase" sx={{ letterSpacing: '0.2rem', }}>Articles</Typography>
         <Link href={session ? "/posts/new" : "/api/auth/signin"}>
-          <IconButton sx={{bgcolor: "#000", p: 2, gap: 1, }} variant="solid">
+          <IconButton sx={{p: 2,}} variant="solid" color='primary'>
             New article
           </IconButton>
         </Link>
       </Stack>
       
       {allPosts.length > 0 ?
-        <Grid container 
-          spacing={{ xs: 2, sm: 3, md: 4 }}
-          columns={{ xs: 4, sm: 12, md: 12 }}
-          sx={{ flexGrow: 1 , }}
-        >
+        <Grid key={`home_posts_grid`} spacing={2} container sx={{ flexGrow: 1 , }}>
           {[...allPosts].map(
-              (post, index: number) => 
-                <Grid key={index} xs={9} sm={6} md={3}>
-                  <PostCard key={"home_post_"+index} data={post}/>
-                </Grid>
+            (post, index: number) => 
+              <Grid key={`home_post_grid_${index}`} xs={12} md={6} lg={4} xl={3}>
+                <PostCard key={"home_post_"+index} data={post}/>
+              </Grid>
           )} 
         </Grid>
-       : <Box sx={{textAlign:"center"}}>No articles found</Box>
+       : <Box sx={{textAlign:"center"}}>No articles yet.</Box>
       }
     </Box>
   )

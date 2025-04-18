@@ -1,5 +1,7 @@
 export type AcccountPrivilegeType = "Basic" | "Argent" | "Or" | "Platine" | "Diamant" | "Pro" | "Admin" | "SuperAdmin"
 
+export const enum MonthType {  January = 0,  February = 1,  March = 2,  April = 3,  May = 4,  June = 5,  July = 6,  August = 7,  September = 8,  October = 9,  November = 10,  December = 11,}
+
 type AnalyticType = {
   likes?: number,
   comments?: number,
@@ -7,6 +9,7 @@ type AnalyticType = {
 } 
 
 type SocialType = {
+  pseudo?: string,
   linkedin?: string,
   github?: string,
   twitter?: string,
@@ -17,7 +20,7 @@ type SocialType = {
   twitch?: string,
   discord?: string,
   tiktok?: string,
-} 
+}
 
 type OwnerType = {
   name?: string | null,
@@ -29,11 +32,34 @@ export type AccoutProfilType = {
   name?: string | null,
   image?: string | null,
   email?: string | null,
-  jobName?: String | null,
+  jobName?: string | null,
   accountPrivilege?: AcccountPrivilegeType,
   socialLink?: SocialType,
   location?: string | null,
-  stats?: AnalyticType
+  stats?: AnalyticType,
+  privilege?: AcccountPrivilegeType,
+}
+
+export type AccountAnalyticsType = {
+  month? : AnalyticType,
+  year? : AnalyticType,
+  all? : AnalyticType,
+}
+
+export type OwnPostGroupByType = {isPublished: AccountPostOwnType[], isNotPublished: AccountPostOwnType[]};
+
+
+export type AccountStatsMonthType = {
+  month: MonthType
+  stats: AnalyticType  
+}
+export type StatsByMonthType = AccountStatsMonthType[]
+
+export type AccountEditProfileType = {
+  pseudo: string;
+  job: string;
+  linkedin: string;
+  github: string
 }
 
 export type AccountPostType = {
@@ -54,33 +80,7 @@ export type AccountPostType = {
 } | null
 
 export type AccountRecentPostType = Readonly<Omit<AccountPostType, "updatedAt">> | null
+export type AccountFavoritePostType = Readonly<Omit<AccountPostType, "createdAt" | "isPublished">> | null
 export type AccountPostOwnType = Readonly<Omit<NonNullable<AccountPostType>, "createdAt" | "stats" | "owner">>
 export type AccountDraftPostOwnType = Readonly<Omit<NonNullable<AccountPostType>, "createdAt" | "_count" | "stats" | "owner">>
 
-export type AccountAnalyticsType = {
-  month? : AnalyticType,
-  year? : AnalyticType,
-  all? : AnalyticType,
-}
-
-export type OwnPostGroupByType = {isPublished: AccountPostOwnType[], isNotPublished: AccountPostOwnType[]};
-
-export const enum MonthType {
-  January = 0,
-  February = 1,
-  March = 2,
-  April = 3,
-  May = 4,
-  June = 5,
-  July = 6,
-  August = 7,
-  September = 8,
-  October = 9,
-  November = 10,
-  December = 11,
-}
-export type AccountStatsMonthType = {
-  month: MonthType
-  stats: AnalyticType  
-}
-export type StatsByMonthType = AccountStatsMonthType[]

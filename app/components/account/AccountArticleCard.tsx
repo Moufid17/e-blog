@@ -1,24 +1,25 @@
 "use client"
-// [ ] MoreVertical to menu with edit and delete
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Avatar, Box, Card, CardContent, CardOverflow, Dropdown, IconButton, List, ListDivider, ListItem, ListItemContent, Menu, MenuButton, MenuItem, Stack, Tooltip, Typography } from "@mui/joy";
 import { Circle, Delete, Edit2, Eye, Heart, MessageSquare, MoreVertical, Trash2, } from "react-feather";
 
+import { deletePost, draftPost } from "@/app/actions/post";
 import { dateTimeToLastTimeAgo, toUppercaseFirstChar } from "@/app/lib/utils";
 import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from "@/app/help/constants";
-import { deletePost, draftPost } from "@/app/actions/post";
 
 
-export default function AccountArticleCard({data, isOwner = false}: {data: any, isOwner?: boolean}) {
+export default function AccountArticleCard({data, isOwner = false, isCreateDateTime =false}: {data: any, isOwner?: boolean, isCreateDateTime?: boolean}) {
+    const router = useRouter()
     const { id ="0", title="Title", createdAt= new Date(), updatedAt = new Date(), _count: {likes = 20}, comments = 50, views = 100,
             owner: {
                 name = DEFAULT_PSEUDO, image = DEFAULT_AVATAR_IMAGE, jobName = DEFAULT_JOB_NAME
             } = {}
     } = data
 
-    const unPublished = async () => await draftPost({postId: id})
-    const deleteArticle = async () => await deletePost({postId: id})
+    const unPublished = async () => await draftPost({postId: id}).then(() => router.refresh())
+    const deleteArticle = async () => await deletePost({postId: id}).then(() => router.refresh())
     
     return (
         <Card key={`account_article_card_${id}`} sx={{height: "100%", gap: 2,}}>
@@ -60,8 +61,8 @@ export default function AccountArticleCard({data, isOwner = false}: {data: any, 
             </CardContent>
             <CardOverflow>
                 <Box key={`account_article_card_${id}`} sx={{display: 'flex', flexDirection:"row", justifyContent: 'space-between', alignItems: "center", gap: 1.5}}>
-                    <Stack direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
-                        <Circle size={"6px"}/><Typography level="body-xs">{dateTimeToLastTimeAgo(isOwner ? updatedAt : createdAt)}</Typography>
+                    <Stack key={`account_article_card_${id}_time`} direction={"row"} gap={0.5} sx={{alignItems: "center"}}>
+                        <Circle size={"6px"}/><Typography level="body-xs">{dateTimeToLastTimeAgo(isCreateDateTime ? createdAt : updatedAt)}</Typography>
                     </Stack>
                     {!isOwner && <Box key={`account_article_card_author_${id}`}>
                         <List key={`account_article_card_author_list_${id}`} sx={{flexDirection: "row",}}>
