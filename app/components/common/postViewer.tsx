@@ -10,9 +10,10 @@ import { useEffect, useState } from 'react'
 
 
 
-const PostViewer = ({content= "<p>Hello World! 🌎️</p>"}: {content?: string}) => {
-  const [data, setData] = useState<string>("")
+const PostViewer = ({content= "Hello World! 🌎️"}: {content?: string}) => {
+  const [data, setData] = useState<string>(content)
   const [editord, setEDitord] = useState<Editor | null>(null)
+  
   
   const extensions = [
     Color.configure({ types: [TextStyle.name, ListItem.name] }),
@@ -28,30 +29,36 @@ const PostViewer = ({content= "<p>Hello World! 🌎️</p>"}: {content?: string}
       },
     }),
   ]
+  const editor = new Editor({
+    extensions,
+    content: content,
+    autofocus: true,
+    editable: false,
+  })
 
-  useEffect(() => {
-    editord?.setOptions({
-      extensions,
-      content: data,
-      autofocus: true,
-      editable: false,
-    })
-  },[data, editord])
+  // useEffect(() => {
+  //   editor.setOptions({
+  //     extensions,
+  //     content: data,
+  //     autofocus: true,
+  //     editable: false,
+  //   })
+  // },[data])
 
-  useEffect(() => {
-    setData(content)
-    const editor = new Editor({
-      extensions,
-      content: content,
-      autofocus: true,
-      editable: false,
-    })
-    setEDitord(editor)
-  },[])
+  // useEffect(() => {
+  //   setData(content)
+  //   const editor = new Editor({
+  //     extensions,
+  //     content: content,
+  //     autofocus: true,
+  //     editable: false,
+  //   })
+  //   setEDitord(editor)
+  // },[])
 
 
   return (
-      <EditorContent editor={editord} />
+      <EditorContent editor={editor} />
   )
 }
 

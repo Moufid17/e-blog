@@ -18,6 +18,7 @@ import { addLike, removeLike } from "@/app/actions/post";
 import { PostCardType } from "@/app/common/types/posts";
 import { convertDateToString, toUppercaseFirstChar } from "@/app/lib/utils";
 import CategoryTag from "../category/categoryTag";
+import Image from "next/image";
 
 
 export default function PostCard({data}: {data: PostCardType}) {
@@ -54,7 +55,7 @@ export default function PostCard({data}: {data: PostCardType}) {
     }
 
     fetchData();
-  }, [session?.user?.email]);
+  }, [session?.user?.id, _count.likes, likes]);
   
   return (
     <Card key={`postCard_${id}`} variant="outlined">
@@ -69,11 +70,13 @@ export default function PostCard({data}: {data: PostCardType}) {
         </IconButton>
       </Box>
       <AspectRatio minHeight="120px" maxHeight="200px">
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-          srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+          blurDataURL="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
           loading="lazy"
           alt=""
+          width={286}
+          height={200}
         />
         <CategoryTag name={category.name} color={category.color}/>
       </AspectRatio>

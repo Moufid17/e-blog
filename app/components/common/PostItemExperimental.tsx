@@ -38,21 +38,13 @@ export default function PostItemExperimental({ postId = "new" }: { postId?: stri
     const [isPublished, setIsPublished] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const [isError, setIsError] = useState<{
-        title: boolean,
-        description: boolean,
-        category: boolean
-    }>({
+    const [isError, setIsError] = useState<{ title: boolean, description: boolean, category: boolean}>({
         title: false,
         description: false,
         category: false
     });
     
-    const [openNotification, setOpenNotification] = useState<{
-        message: string,
-        isOpen: boolean, 
-        isDanger?: boolean
-    }>({
+    const [openNotification, setOpenNotification] = useState<{ message: string, isOpen: boolean, isDanger?: boolean }>({
         message: "",
         isOpen: false,
         isDanger: false
@@ -155,7 +147,7 @@ export default function PostItemExperimental({ postId = "new" }: { postId?: stri
         }
         if (post != null) {
           
-            if (post.userId === undefined || post.title.length <= 0 || post.categoryId == undefined) {
+            if (post.userId === null || post.title.length <= 0 || post.categoryId == undefined) {
                 const newIsError = {...isError}
                 
                 if (post.title.length <= 0) newIsError.title = true
@@ -172,11 +164,17 @@ export default function PostItemExperimental({ postId = "new" }: { postId?: stri
     }
     
     useEffect(() => {
-        if (postId == "new") {
-            setPost({id: "", title: "", description: "<p>Hello World! 🌎️</p>", isPublished: isPublished, userId: session?.user.id, owner: {email: session?.user?.email, name: session?.user?.name}} as GetPostType)
-        } else {
-            getPost(postId as string)
+        const fetchPost = async () => {
+            if (session == null) return
+            if (postId == "new") {
+                setPost({id: "", title: "", description: "<p>Hello World! 🌎️</p>", isPublished: false, userId: session?.user.id, 
+                    owner: {email: session?.user?.email ?? null, name: session?.user?.name ?? null} , createdAt: null, updatedAt: null, categoryId: null,})
+            } else {
+                getPost(postId)
+            }
         }
+        
+        fetchPost()
     },[postId, session])
 
     useEffect(() => {
@@ -271,7 +269,7 @@ export default function PostItemExperimental({ postId = "new" }: { postId?: stri
                                 {/* Check logged user is owner */}
                                 {isOwner(post?.owner?.email) ? 
                                     <>
-                                        <PostEditorExperimental description={description ?? "data"}
+                                        <PostEditorExperimental description={description ?? "Hello World! 🌎️"}
                                             // setDescription={(desc: string) => setPost((prev) => { return {...prev, description: desc} as GetPostType})}
                                             setDescription={(desc: string) => setDescription(desc)}
                                         />

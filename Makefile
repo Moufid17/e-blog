@@ -13,6 +13,9 @@ install:
 dev:
 	docker compose exec nodejs npm run dev
 
+build:
+	docker compose exec nodejs npm run build
+
 secret:
 	openssl rand -base64 32
 
