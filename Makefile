@@ -5,6 +5,9 @@ up:
 	docker compose up -d
 
 down:
+	docker compose down
+
+remove:
 	docker compose down -v
 
 install:
