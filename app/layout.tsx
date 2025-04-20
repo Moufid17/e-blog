@@ -28,7 +28,7 @@ export default async function RootLayout({
             <AuthProvider>
               <nav><Header/></nav>
               <main>
-                <Box sx={{ bgcolor: 'background.body',  gridTemplateRows: '52px 0px 1fr', minHeight: '90dvh', p:1 }}>
+                <Box sx={{ bgcolor: 'background.body',  gridTemplateRows: '52px 0px 1fr', minHeight: '92dvh', p:1 }}>
                   <Sheet sx={{bgcolor: 'background.body', width: 'auto', height: '100%'}}>
                     {children}
                   </Sheet>
