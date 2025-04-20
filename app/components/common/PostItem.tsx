@@ -1,12 +1,13 @@
 // [ ] Check if postId different of "new" or an existing, otherwise retun notfound page (use zustand to keep all posts needed datas in memory)
 "use client"
-import { set, z } from "zod";
-import { use, useEffect, useState } from "react";
+import { z } from "zod";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { notFound, useRouter } from "next/navigation";
 
 import { Box, CircularProgress, Divider, FormControl, FormLabel, Grid, IconButton, Input, Option, Select, Stack, Switch, Typography } from "@mui/joy";
 import PostViewer from "@/app/components/common/postViewer";
+import PostEditor from "@/app/components/common/postEditor";
 import CustomSnackbar from "../global/Snackbar";
 import CategoryTag from "../category/categoryTag";
 
@@ -16,7 +17,6 @@ import { GetCategoriesType } from "@/app/common/types/category";
 import { GetPostType } from "@/app/common/types/posts";
 
 import { convertDateToString, getCategoryBgColorAndColor, toUppercaseFirstChar } from "@/app/lib/utils";
-import PostEditorExperimental from "./postEditorExperimental";
 import { RobotIcon } from "./icons/RobotIcon";
 import { Save } from "react-feather";
 
@@ -27,7 +27,7 @@ const schema = z.object({
   })
 });
 
-export default function PostItemExperimental({ postId = "new" }: { postId?: string }) {
+export default function PostItem({ postId = "new" }: { postId?: string }) {
     const { data: session } = useSession()
     const router = useRouter()
 
@@ -56,8 +56,8 @@ export default function PostItemExperimental({ postId = "new" }: { postId?: stri
     }
     
     const getPost = async (id: string) => {
-        const data : GetPostType = await fetchPost({postId: id})
-        if (!data) notFound() 
+        const data : GetPostType | null = await fetchPost({postId: id})
+        if (data == null) {notFound()} 
         setPost(data)
         setOlDesc(data?.description)
         setDescription(data?.description)
@@ -168,7 +168,7 @@ export default function PostItemExperimental({ postId = "new" }: { postId?: stri
             if (postId == "new") {
                 if (session == null) return
                 setPost({id: "", title: "", description: "<p>Hello World! 🌎️</p>", isPublished: false, userId: session?.user.id, 
-                    owner: {email: session?.user?.email ?? null, name: session?.user?.name ?? null} , createdAt: null, updatedAt: null, categoryId: null,})
+                    owner: {email: session?.user?.email ?? null, socialBio: null,name: session?.user?.name ?? null} , createdAt: null, updatedAt: null, categoryId: null,})
             } else {
                 getPost(postId)
             }
@@ -220,7 +220,7 @@ export default function PostItemExperimental({ postId = "new" }: { postId?: stri
                                     <>
                                         <CategoryTag name={allCategories.find((c) => c.id == post.categoryId)?.name} color={allCategories.find((c) => c.id == post.categoryId)?.color}/>
                                         <Divider orientation="vertical"/>
-                                        <Typography level="body-md">by {toUppercaseFirstChar(post?.owner?.name ?? "") ?? "Esgi"}</Typography>
+                                        <Typography level="body-md">by {toUppercaseFirstChar(post?.owner?.socialBio ?? "") ?? "@eblog"}</Typography>
                                         <Divider orientation="vertical"/>
                                         <Typography level="body-sm" alignSelf="flex-end">{toUppercaseFirstChar(convertDateToString(post.updatedAt ?? (new Date())))}</Typography>
                                     </>
@@ -269,8 +269,7 @@ export default function PostItemExperimental({ postId = "new" }: { postId?: stri
                                 {/* Check logged user is owner */}
                                 {isOwner(post?.owner?.email) ? 
                                     <>
-                                        <PostEditorExperimental description={description ?? "Hello World! 🌎️"}
-                                            // setDescription={(desc: string) => setPost((prev) => { return {...prev, description: desc} as GetPostType})}
+                                        <PostEditor description={description ?? "Hello World! 🌎️"}
                                             setDescription={(desc: string) => setDescription(desc)}
                                         />
                                         <Stack spacing={2} sx={{ mt: 3 }}>

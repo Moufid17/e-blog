@@ -1,5 +1,5 @@
 'use client'
-import "@/app/testStyle/style.scss"
+import "@/app/theme/style.scss"
 
 import StarterKit from '@tiptap/starter-kit'
 import ListItem from '@tiptap/extension-list-item'
@@ -8,20 +8,10 @@ import TextAlign from '@tiptap/extension-text-align'
 import { Color } from '@tiptap/extension-color'
 import { Editor, EditorContent, useEditor } from '@tiptap/react'
 
-import { useEffect, useState } from 'react'
-import { CircularProgress, Divider, IconButton, Stack, ToggleButtonGroup } from "@mui/joy"
-import { AlignCenter, AlignJustify, AlignLeft, AlignRight, Bold, Code, Italic, List, Save } from "react-feather"
-import { z } from "zod";
+import { useEffect } from 'react'
+import { Divider, IconButton, Stack, ToggleButtonGroup } from "@mui/joy"
+import { AlignCenter, AlignJustify, AlignLeft, AlignRight, Bold, Code, Italic, List } from "react-feather"
 
-import { RobotIcon } from "@/app/components/common/icons/RobotIcon"
-import { GetPostType } from "@/app/common/types/posts"
-
-const schema = z.object({
-  message: z.object({
-    role: z.string(),
-    content: z.string(),
-  })
-});
 
 const MenuBar = ({ editor } : {editor: Editor | null}) => {
   if (!editor) return null
