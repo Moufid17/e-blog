@@ -19,15 +19,17 @@ import { PostCardType } from "@/app/common/types/posts";
 import { convertDateToString, toUppercaseFirstChar } from "@/app/lib/utils";
 import CategoryTag from "../category/categoryTag";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 
 export default function PostCard({data}: {data: PostCardType}) {
+  const router = useRouter()
   const { id, title, createdAt, owner, category, likes, _count } = data
   const { data : session } = useSession()
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
   const [countLike, setCountLike] = useState<number>(0)
 
-  const addLikeToPost = async () => await addLike({postId:id})
+  const addLikeToPost = async () => await addLike({postId:id}).then(() => router.refresh())
   const removeLikeToPost = async () => await removeLike({postId:id})
 
   const handleSetFavorite = async () => {

@@ -1,5 +1,5 @@
 'use client'
-import "@/app/testStyle/style.scss"
+import "@/app/theme/style.scss"
 
 import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
