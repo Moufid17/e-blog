@@ -76,6 +76,7 @@ export const fetchPost = async ({postId}: {postId: string}) => {
       owner: {
         select: {
           name: true,
+          socialBio: true,
           email: true,
         }
       },

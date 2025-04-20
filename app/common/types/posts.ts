@@ -29,6 +29,7 @@ export type GetPostType = {
     userId: string | null,
     owner: {
       name: string | null,
+      socialBio: string | null,
       email: string | null,
     }
     createdAt: Date | null,

@@ -1,4 +1,3 @@
-// [ ] Check if postId different of "new" or an existing, otherwise retun notfound page (use zustand to keep all posts needed datas in memory)
 "use client"
 import { z } from "zod";
 import { useEffect, useState } from "react";
@@ -57,7 +56,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     
     const getPost = async (id: string) => {
         const data : GetPostType | null = await fetchPost({postId: id})
-        if (data == null) {notFound()} 
+        if (data == null) notFound()
         setPost(data)
         setOlDesc(data?.description)
         setDescription(data?.description)
@@ -220,7 +219,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                                     <>
                                         <CategoryTag name={allCategories.find((c) => c.id == post.categoryId)?.name} color={allCategories.find((c) => c.id == post.categoryId)?.color}/>
                                         <Divider orientation="vertical"/>
-                                        <Typography level="body-md">by {toUppercaseFirstChar(post?.owner?.socialBio ?? "") ?? "@eblog"}</Typography>
+                                        <Typography level="body-md">by {post?.owner?.socialBio ? toUppercaseFirstChar(post?.owner?.socialBio) : "@_author"}</Typography>
                                         <Divider orientation="vertical"/>
                                         <Typography level="body-sm" alignSelf="flex-end">{toUppercaseFirstChar(convertDateToString(post.updatedAt ?? (new Date())))}</Typography>
                                     </>
@@ -269,7 +268,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                                 {/* Check logged user is owner */}
                                 {isOwner(post?.owner?.email) ? 
                                     <>
-                                        <PostEditor description={description ?? "Hello World! 🌎️"}
+                                        <PostEditor description={description ?? "<p>Hello World! 🌎️</p>"}
                                             setDescription={(desc: string) => setDescription(desc)}
                                         />
                                         <Stack spacing={2} sx={{ mt: 3 }}>
@@ -297,7 +296,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                                         </Stack>
                                     </>
                                     : 
-                                    <PostViewer content={post.description ?? "cc"} />
+                                    <PostViewer content={post.description ?? "<p>Hello World! 🌎️</p>"} />
                                 }
                             </Grid>
                         </Grid>
