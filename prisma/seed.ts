@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client'
-const prismaClientDB = new PrismaClient()
+import { prismaClientDB } from "@/app/lib/prismaClient";
+
 async function main() {
   const CATEGORIES = [
     {
