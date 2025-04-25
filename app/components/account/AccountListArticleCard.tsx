@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Button, Card, CardOverflow, Chip, Divider, Stack, Typography } from "@mui/joy";
+import { Button, Card, CardOverflow, Chip, Divider, IconButton, Stack, Typography } from "@mui/joy";
 import AccountArticleCard from "./AccountArticleCard";
 import AccountDraftCard from "./AccountDraftCard";
 
@@ -35,7 +35,16 @@ export function AccountRecentListArticleCard({data}: {data: {title?: string, art
 export function AccountMyListArticleCard({data}: {data: {title?: string, articles?: AccountPostOwnType[] | null}}) {
     return (
         <Card title="account_lists_articles_card" sx={{ maxHeight: "950px" }}>
-            <Stack key={"account_lists_articles_card_header"} direction={"row"} gap={1.5}><Typography level="h4">{"My Articles"}</Typography><Chip color="primary" variant="solid">{data.articles ? data.articles.length : 0}</Chip></Stack>
+            <Stack key={"account_lists_articles_card_header_container"} direction={"row"} sx={{justifyContent: "space-between", alignItems: "center"}}>
+                <Stack key={"account_lists_articles_card_header"} direction={"row"} gap={1.5}>
+                    <Typography level="h4">{"My Articles"}</Typography>
+                    <Chip color="primary" variant="solid">{data.articles ? data.articles.length : 0}</Chip>
+                    
+                </Stack>
+                <Link href={"/posts/new"}>
+                    <IconButton variant="solid" color='primary'>Add</IconButton>
+                </Link>
+            </Stack>
             <Divider inset="context"/>
             {data.articles && data.articles.length > 0 ? 
                 <Stack key={`account_articles_cards`} gap={1} sx={{overflow: "auto",}}>
@@ -55,7 +64,15 @@ export function AccountMyListArticleCard({data}: {data: {title?: string, article
 export function AccountDraftListArticleCard({data}: {data: {title?: string, articlesDraft?: AccountDraftPostOwnType[] | null}}) {
     return (
         <Card title="account_lists_drafts_card" sx={{ maxHeight: "950px" }}>
-            <Stack key={`account_lists_drafts_card_header`}  direction={"row"} gap={1.5}><Typography level="h4">{"Draft(s)"}</Typography><Chip color="success" variant="solid">{data.articlesDraft ? data.articlesDraft.length : 0}</Chip></Stack>
+            <Stack key={`account_lists_drafts_card_header_container`}  direction={"row"} sx={{justifyContent: "space-between", alignItems: "center"}}>
+                <Stack key={`account_lists_drafts_card_header`}  direction={"row"} gap={1.5}>
+                    <Typography level="h4">{"Draft(s)"}</Typography>
+                    <Chip color="success" variant="solid">{data.articlesDraft ? data.articlesDraft.length : 0}</Chip>
+                </Stack>
+                <Link href={"/posts/new"}>
+                    <IconButton variant="outlined" color='success'>Add</IconButton>
+                </Link>
+            </Stack>
             <Divider inset="context"/>
             {data.articlesDraft && data.articlesDraft.length > 0 ? 
                 <Stack key={`account_drafts_cards`} gap={1} sx={{overflow: "auto",}}>
