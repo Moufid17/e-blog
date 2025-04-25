@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <div style={{ display: "flex", flexDirection:"column", alignItems: "center", justifyContent: "center", minHeight: "91vh", margin: 20}}>
         <div style={{ position: "relative", width: 150, height: 250, margin: -50, marginTop: -200}}>
-            <Image src="/appIcon-black.svg" alt="logo" loading="lazy" fill/>
+            <Image src="/appIcon-black.svg" alt="logo" priority fill/>
         </div>
         <div style={{display: "flex"}}>
             <div style={{display:"flex", flexDirection:"column", justifyContent:"center"}}><h1 style={{ fontSize: "2rem" }}>404</h1></div>
