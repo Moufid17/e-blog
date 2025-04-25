@@ -16,7 +16,7 @@ import { AlignCenter, AlignJustify, AlignLeft, AlignRight, Bold, Code, Italic, L
 const MenuBar = ({ editor } : {editor: Editor | null}) => {
   if (!editor) return null
   return (
-    <Stack >
+    <Stack key={"post_editor_menu_bar_container"}>
       <Stack key={"post_editor_menu_bar"} direction={{sx:"column", md:"row"}} sx={{bgcolor:"#fff", justifyContent:"flex-start", p: 1, borderRadius:0, border: "1px solid #ccc", borderBottom: "none", gap: 3}}>
         <ToggleButtonGroup spacing={0.5} aria-label="text formatting">
           <IconButton aria-label="bold" 
@@ -141,6 +141,11 @@ const MenuBar = ({ editor } : {editor: Editor | null}) => {
 }
 
 const extensions = [
+  Color.configure({ types: [TextStyle.name, ListItem.name] }),
+  TextAlign.configure({
+    types: ['heading', 'paragraph'],
+  }),
+  TextStyle,
   StarterKit.configure({
     bulletList: {
       keepMarks: true,
@@ -151,11 +156,6 @@ const extensions = [
       keepAttributes: false,
     },
   }),
-  Color.configure({ types: [TextStyle.name, ListItem.name] }),
-  TextAlign.configure({
-    types: ['heading', 'paragraph'],
-  }),
-  TextStyle,
 ]
 
 interface PostEditorProps {
@@ -168,6 +168,7 @@ const PostEditor = ({ description, setDescription }: PostEditorProps) => {
   const editor = useEditor({
     extensions: extensions,
     content: description,
+    immediatelyRender: false,
     onBlur: ({ editor }) => {
       setDescription(editor.getHTML());
     },

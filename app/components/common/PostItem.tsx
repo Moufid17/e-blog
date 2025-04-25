@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { notFound, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { Box, CircularProgress, Divider, FormControl, FormLabel, Grid, IconButton, Input, Option, Select, Stack, Switch, Typography } from "@mui/joy";
 import PostViewer from "@/app/components/common/postViewer";
@@ -10,12 +10,12 @@ import PostEditor from "@/app/components/common/postEditor";
 import CustomSnackbar from "../global/Snackbar";
 import CategoryTag from "../category/categoryTag";
 
-import { addPost, fetchPost, updatePost } from "@/app/actions/post";
+import { addPost, updatePost } from "@/app/actions/post";
 import { getAllCategories } from "@/app/actions/category";
 import { GetCategoriesType } from "@/app/common/types/category";
 import { GetPostType } from "@/app/common/types/posts";
 
-import { convertDateToString, getCategoryBgColorAndColor, toUppercaseFirstChar } from "@/app/lib/utils";
+import { convertDateToString, getCategoryBgColorAndColor, slugify, toUppercaseFirstChar } from "@/app/lib/utils";
 import { RobotIcon } from "./icons/RobotIcon";
 import { Save } from "react-feather";
 
@@ -26,11 +26,16 @@ const schema = z.object({
   })
 });
 
-export default function PostItem({ postId = "new" }: { postId?: string }) {
+export default function PostItem({ data }: { data: GetPostType }) {
     const { data: session } = useSession()
     const router = useRouter()
 
-    const [post, setPost] = useState<GetPostType>(null)
+    const [post, setPost] = useState<GetPostType | null>(null)
+    const [oldData, setOldData] = useState<{title: string | null,  category: string | null, isPublish: boolean}> ({
+        title: null,
+        category: null,
+        isPublish: false
+    });
     const [oldDesc, setOlDesc] = useState<string | null>(null);
     const [description, setDescription] = useState<string | null>(null);
     const [allCategories, setAllCategories] = useState<GetCategoriesType>([])
@@ -54,11 +59,14 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
         return  session?.user?.email == postEmail
     }
     
-    const getPost = async (id: string) => {
-        const data : GetPostType | null = await fetchPost({postId: id})
-        if (data == null) notFound()
+    const getPost = (data: GetPostType) => {
         setPost(data)
-        setOlDesc(data?.description)
+        setOldData({
+            title: data.title,
+            category: data.categoryId,
+            isPublish: data.isPublished
+        })
+        setOlDesc(data.description)
         setDescription(data?.description)
         setIsPublished(data?.isPublished)
     }
@@ -104,7 +112,10 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
 
     const handleCancelDescriptionChange = () => {
         if (!post) return
-        if (description === oldDesc) return
+        if (oldDesc === description) {
+            setOpenNotification({message: "Aucun changement détecté.", isOpen: true})
+            return
+        }
         setDescription(oldDesc)
         setPost((prev) => { return {...prev, description: oldDesc} as GetPostType})
     }
@@ -115,6 +126,11 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     };
 
     const handlePostCreateButtonClick = async ({description} :{description: string}) => {
+        if (post?.title == null || post?.title.length <= 0) {
+            setIsError({...isError, title: true})
+            setOpenNotification({message: "Le titre ne peut pas être vide.", isOpen: true, isDanger: true})
+        }
+
         if (description.length <= 0 || description === "<p></p>") {
             setIsError({...isError, description: true})
             setOpenNotification({message: "La description ne peut pas être vide.", isOpen: true, isDanger: true})
@@ -127,7 +143,8 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                 if (post.categoryId == undefined) newIsError.category = true
                 setIsError(newIsError)
             } else {
-                await addPost({post: {...post, description, userId: session?.user?.id}}).then((res) => {
+                const postSlug = slugify(post.title)
+                await addPost({post: {...post, slug: postSlug, description, userId: session?.user?.id}}).then((res) => {
                     setOpenNotification({message: "Post créé avec succès", isOpen: true})
                     router.push(`/`)
                     router.refresh()
@@ -139,13 +156,17 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     }
     
     const handlePostSaveButtonClick = async ({descriptionUpdate} :{descriptionUpdate: string}) => {
+        if (oldDesc === descriptionUpdate && oldData.title === post?.title && oldData.category === post?.categoryId && oldData.isPublish === post?.isPublished) {
+            setOpenNotification({message: "Aucun changement détecté.", isOpen: true})
+            return
+        }
+
         if (descriptionUpdate.length <= 0 || descriptionUpdate === "<p></p>") {
             setIsError({...isError, description: true})
 
             setOpenNotification({message: "La description ne peut pas être vide.", isOpen: true, isDanger: true})
         }
         if (post != null) {
-          
             if (post.userId === null || post.title.length <= 0 || post.categoryId == undefined) {
                 const newIsError = {...isError}
                 
@@ -153,9 +174,11 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                 if (post.categoryId == undefined) newIsError.category = true
                 setIsError(newIsError)
             } else {
-                await updatePost({post: {...post, userId: post.userId, description: descriptionUpdate}})
+                const postSlug = slugify(post.title)
+                await updatePost({post: {...post, slug: postSlug, userId: post.userId, description: descriptionUpdate}})
                 setOpenNotification({message: "Mise à jour avec succès.", isOpen: true})
-                router.refresh()
+                router.replace(`/posts/${postSlug}`)
+                router.prefetch(`/`)
             }
         } else {
             setOpenNotification({message: "Erreur lors de la modification du post.", isOpen: true, isDanger: true})
@@ -163,18 +186,8 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
     }
     
     useEffect(() => {
-        const fetchPost = async () => {
-            if (postId == "new") {
-                if (session == null) return
-                setPost({id: "", title: "", description: "<p>Hello World! 🌎️</p>", isPublished: false, userId: session?.user.id, 
-                    owner: {email: session?.user?.email ?? null, socialBio: null,name: session?.user?.name ?? null} , createdAt: null, updatedAt: null, categoryId: null,})
-            } else {
-                getPost(postId)
-            }
-        }
-        
-        fetchPost()
-    },[postId, session])
+        getPost(data)
+    },[data])
 
     useEffect(() => {
         if (description) {
@@ -230,7 +243,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                             <Stack key={"post_title_stack"} direction={{xs: "column", md: "row"}} spacing={2} width="100%" sx={{justifyContent: "space-between", alignItems: "end"}}>
                                 <FormControl required error={isError.title} sx={{width: isOwner(post?.owner?.email) ? {xs: "100%", md: "80%"} : "100%"}}>
                                     <FormLabel>Title</FormLabel>
-                                    <Input required disabled={!isOwner(post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title" 
+                                    <Input autoFocus required disabled={!isOwner(post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title" 
                                         sx={{   p: 2, 
                                             '&::before': {
                                             display: 'none',
@@ -244,7 +257,7 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                                     />
                                 </FormControl>
                                 {isOwner(post?.owner?.email) && <FormControl required sx={{width: {xs: "100%", md: "20%"}}}>
-                                    <Select defaultValue={postId != "new" ? post.categoryId : undefined} onChange={handleCategoryChange} color={isError.category ? "danger" : "neutral"} placeholder="Select your category" sx={{p: 2.2}}>
+                                    <Select defaultValue={post.id != "new" ? post.categoryId : undefined} onChange={handleCategoryChange} color={isError.category ? "danger" : "neutral"} placeholder="Select your category" sx={{p: 2.2}}>
                                         <>
                                             {allCategories.map((c) => (
                                                 <Option key={c.id} value={c.id}>
@@ -283,14 +296,14 @@ export default function PostItem({ postId = "new" }: { postId?: string }) {
                                                 {isLoading ? <CircularProgress sx={{ color: "#fff" }} /> : <RobotIcon />}  Suggest description
                                                 </IconButton>
                                                 <IconButton sx={{ bgcolor: "#0D0D0D", p: 1, gap: 1 }} variant="solid" onClick={() => {
-                                                    if (postId == "new") {
+                                                    if (post.id == "new") {
                                                         handlePostCreateButtonClick({ description : description ?? "" })
                                                     } else {
                                                         handlePostSaveButtonClick({ descriptionUpdate: description ?? "" })
                                                     }
                                                     }}
                                                 >
-                                                <Save /> {postId == "new" ? "Create" : "Save"}
+                                                <Save /> {post.id == "new" ? "Create" : "Save"}
                                                 </IconButton>
                                             </Stack>
                                         </Stack>

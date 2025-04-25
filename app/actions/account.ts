@@ -83,6 +83,7 @@ export const getAllOwnPost = async ({userId}: {userId: string | null}) => {
     select: {
       id: true,
       title: true,
+      slug: true,
       updatedAt: true,
       category: {
         select: {
@@ -99,6 +100,7 @@ export const getAllOwnPost = async ({userId}: {userId: string | null}) => {
   })
 
   if (!allOwn) return {isPublished: [], isNotPublished: []};
+
   return allOwn.reduce<OwnPostGroupByType>((acc, post) => {
     if (post.isPublished) {
       acc.isPublished.push(post);

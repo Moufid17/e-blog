@@ -5,6 +5,7 @@ import { Post } from "@prisma/client";
 import authOptions from "@/app/lib/authOptions";
 import { prismaClientDB } from "@/app/lib/prismaClient";
 import { AddPostType, UpdatePostType } from "../common/types/posts";
+import { slugify } from "../lib/utils";
 
 export const addLike = async ({postId}: {postId: string}) => {
   const session = await getServerSession(authOptions);
@@ -65,9 +66,9 @@ export const fetchLikeCount = async ({postId}: {postId: string}) => {
     return postLikesPosts?.likes.length
 }
 
-export const fetchPost = async ({postId}: {postId: string}) => {
+export const fetchPostBySlug = async ({slug}: {slug: string}) => {
   return await prismaClientDB.post.findUnique({
-    where: { id : postId },
+    where: { slug : slug },
     select: {
       id: true,
       title: true,
@@ -96,6 +97,7 @@ export const addPost = async ({post}: {post: AddPostType}) => {
   await prismaClientDB.post.create({
     data: {
       title: post.title,
+      slug: post.slug,
       description: post.description,
       isPublished: post.isPublished,
       category: {
@@ -109,7 +111,10 @@ export const addPost = async ({post}: {post: AddPostType}) => {
         },
       },
     }
-  })
+  }).catch((error) => {
+    console.error("Error creating post:", error.message);
+  }
+  )
 }
 
 /**
@@ -129,6 +134,7 @@ export const updatePost = async ({post}: {post: UpdatePostType}) => {
     where: {id: post.id},
     data: {
       title: post.title,
+      slug: post.slug,
       description: post.description,
       userId: post.userId,
       categoryId: post.categoryId,

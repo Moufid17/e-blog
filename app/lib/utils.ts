@@ -64,3 +64,14 @@ export const getCategoryBgColorAndColor = (color?: string) => {
   const categoryBgColorAndColor = (color == undefined) ? CATEGORY_DEFAULT_COLOR.split(".") : color.split(".") 
   return {bgcolor: categoryBgColorAndColor[0] + "." + categoryBgColorAndColor[1], color: categoryBgColorAndColor[0]+ "." + categoryBgColorAndColor[2]}
 }
+
+export const slugify = (str: string) =>
+  str
+    .normalize('NFD')                       // décompose les lettres accentuées
+    .replace(/[\u0300-\u036f]/g, '')        // supprime les diacritiques
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')               // supprime caractères non alphanumériques
+    .replace(/[\s_-]+/g, '-')               // remplace espaces/_/- par tiret unique
+    .replace(/^-+|-+$/g, '')                // supprime tirets en début/fin
+    .concat("-" + crypto.randomUUID())      // ajoute un UUID pour éviter les doublons

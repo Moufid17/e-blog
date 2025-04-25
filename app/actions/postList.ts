@@ -11,10 +11,10 @@ export const getAllPosts = async () => {
         select: {
             id: true,
             title: true,
+            slug: true,
             createdAt: true,
             owner: {
                 select: {
-                    id: true,
                     name: true,
                     socialBio: true,
                 }
@@ -61,6 +61,7 @@ export const getAllNbLastPostsNotOwned = async ({userId} : {userId: string | nul
         select: {
             id: true,
             title: true,
+            slug: true,
             createdAt: true,
             owner: {
                 select: {
@@ -93,6 +94,7 @@ export const getAllFavoritesPosts = async ({userId} : {userId: string | null}) =
         select: {
             id: true,
             title: true,
+            slug: true,
             updatedAt: true,
             owner: {
                 select: {

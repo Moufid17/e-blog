@@ -1,45 +1,46 @@
 export type PostCardType = {
-    id: string,
-    title: string,
-    createdAt: Date,
-    owner: {
-      id: string,
-      name: string | null,
-      socialBio: string | null,
+  id: string,
+  title: string,
+  slug: string,
+  createdAt: Date,
+  owner: {
+    name: string | null,
+    socialBio: string | null,
+  };
+  category: {
+    name: string,
+    color: string,
+  };
+  likes: {
+    user: {
+      email: string | null;
     };
-    category: {
-      name: string,
-      color: string,
-    };
-    likes: {
-      user: {
-        email: string | null;
-      };
-      userId: string;
-    }[],
-    _count: {
-      likes: number,
-    };
+    userId: string;
+  }[],
+  _count: {
+    likes: number,
+  };
 }
 
 export type GetPostType = {
-    id: string,
-    title: string,
-    description: string,
-    userId: string | null,
-    owner: {
-      name: string | null,
-      socialBio: string | null,
-      email: string | null,
-    }
-    createdAt: Date | null,
-    updatedAt: Date | null,
-    categoryId: string | null,
-    isPublished: boolean,
-} | null
+  id: string,
+  title: string,
+  description: string,
+  userId: string | null,
+  owner: {
+    name: string | null,
+    socialBio: string | null,
+    email: string | null,
+  }
+  createdAt: Date | null,
+  updatedAt: Date | null,
+  categoryId: string | null,
+  isPublished: boolean,
+}
 
 export type AddPostType = {
   title: string;
+  slug: string,
   description: string,
   userId?: string | null,
   createdAt: Date | null,
@@ -51,6 +52,7 @@ export type AddPostType = {
 export type UpdatePostType = {
   id: string,
   title: string;
+  slug: string,
   description: string,
   userId: string | null,
   updatedAt: Date | null,

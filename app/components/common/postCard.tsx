@@ -24,7 +24,7 @@ import { useRouter } from "next/navigation";
 
 export default function PostCard({data}: {data: PostCardType}) {
   const router = useRouter()
-  const { id, title, createdAt, owner, category, likes, _count } = data
+  const { id, title, slug, createdAt, owner, category, likes, _count } = data
   const { data : session } = useSession()
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
   const [countLike, setCountLike] = useState<number>(0)
@@ -63,7 +63,7 @@ export default function PostCard({data}: {data: PostCardType}) {
     <Card key={`postCard_${id}`} variant="outlined">
       <Box key={`post_card_title_${id}`} sx={{display:"flex", alignItems: "flex-start", justifyContent: "space-between", wordWrap: "break-word"}}>
         <Box key={`postCard_head_title${id}`} width={'85%'}>
-          <Link href={`/posts/${ id }`}>
+          <Link href={`/posts/${ slug }`}>
             <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 31)) + (title.length > 31 ? "...": "")}</Typography>
           </Link>
         </Box>

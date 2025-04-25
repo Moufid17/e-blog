@@ -4,138 +4,86 @@ import { Button, Card, CardOverflow, Chip, Divider, Stack, Typography } from "@m
 import AccountArticleCard from "./AccountArticleCard";
 import AccountDraftCard from "./AccountDraftCard";
 
-import { AccountFavoritePostType, AccountPostOwnType, AccountRecentPostType } from "@/app/common/types/account";
-import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO, MAX_ARTICLE_CARD } from "@/app/help/constants";
+import { AccountDraftPostOwnType, AccountFavoritePostType, AccountPostOwnType, AccountRecentPostType } from "@/app/common/types/account";
+import { MAX_ARTICLE_CARD } from "@/app/help/constants";
 
 
-const recentArticleList: AccountRecentPostType[] = [
-    {
-        id:"0",
-        title: "Responsive UI Design With Material-UI & React",
-        createdAt:  new Date(),
-        owner: {
-            name: DEFAULT_PSEUDO,
-            image: DEFAULT_AVATAR_IMAGE,
-            jobName: DEFAULT_JOB_NAME,
-        },
-        _count: {
-            likes: 20
-        },
-    }
-]
-export function AccountRecentListArticleCard({data}: {data: {title?: string, articles?: AccountRecentPostType[]}}) {
-    const { title = "Recent Blog List",  articles = recentArticleList} = data
+export function AccountRecentListArticleCard({data}: {data: {title?: string, articles?: AccountRecentPostType[] | null}}) {
     
     return (
         <Card key={`account_recent_articles_card`}>
-            <Typography level="h4">{title}</Typography>
+            <Typography level="h4">{"Recent Blog List"}</Typography>
             <Divider inset="context" />
-            <Stack key={`account_recent_articles_cards`} gap={1}>
-                {articles.map((recentArticle: AccountRecentPostType, index: number) => (
-                    <AccountArticleCard key={`account_recent_articles_card_${index}`} data={recentArticle} isCreateDateTime/>
-                ))}
-            </Stack>
-            {articles.length > MAX_ARTICLE_CARD && <CardOverflow sx={{px: 0}}>
-                <Link href="/">
-                    <Button fullWidth sx={{borderRadius: `0 0 6px 6px`}}>View all</Button>
-                </Link>
-            </CardOverflow>}
+            { data.articles && data.articles.length > 0 ?
+                <>
+                    <Stack key={`account_recent_articles_cards`} gap={1}>
+                    {data.articles.map((recentArticle: AccountRecentPostType, index: number) => (
+                        <AccountArticleCard key={`account_recent_articles_card_${index}`} data={recentArticle} isCreateDateTime/>
+                    ))}
+                    </Stack>
+                    {data.articles.length > MAX_ARTICLE_CARD && <CardOverflow sx={{px: 0}}>
+                        <Link href="/">
+                            <Button fullWidth sx={{borderRadius: `0 0 6px 6px`}}>View all</Button>
+                        </Link>
+                    </CardOverflow>}
+                </> : <></>
+            }
         </Card>
     )
 }
 
-const myArticleList: AccountPostOwnType[] = [
-    {
-        id:"0",
-        title: "Responsive UI Design With Material-UI & React",
-        updatedAt:  new Date(),
-        category: {
-            name: "John Doe",
-            color: "primary.solidDisabledBg"},
-        _count: {
-            likes: 20
-        },
-    }
-]
-export function AccountMyListArticleCard({data}: {data: {title?: string, articles?: AccountPostOwnType[]}}) {
-    const { title = "My Articles", articles = myArticleList} = data
+export function AccountMyListArticleCard({data}: {data: {title?: string, articles?: AccountPostOwnType[] | null}}) {
     return (
         <Card title="account_lists_articles_card" sx={{ maxHeight: "950px" }}>
-            <Stack key={"account_lists_articles_card_header"} direction={"row"} gap={1.5}><Typography level="h4">{title}</Typography><Chip color="primary" variant="solid">{articles.length}</Chip></Stack>
+            <Stack key={"account_lists_articles_card_header"} direction={"row"} gap={1.5}><Typography level="h4">{"My Articles"}</Typography><Chip color="primary" variant="solid">{data.articles ? data.articles.length : 0}</Chip></Stack>
             <Divider inset="context"/>
-            <Stack key={`account_articles_cards`} gap={1} sx={{overflow: "auto",}}>
-                {articles.map((myArticle: AccountPostOwnType, index: number) => (
-                    <>
-                        <AccountArticleCard key={`account_articles_cards_card_${index}`} data={myArticle} isOwner />
-                        <Divider />
-                    </>
-                ))}
-            </Stack>
+            {data.articles && data.articles.length > 0 ? 
+                <Stack key={`account_articles_cards`} gap={1} sx={{overflow: "auto",}}>
+                    {data.articles.map((myArticle: AccountPostOwnType, index: number) => (
+                        <>
+                            <AccountArticleCard key={`account_articles_cards_card_${index}`} data={myArticle} isOwner />
+                            <Divider />
+                        </>
+                    ))}
+                </Stack> : <></>
+            }
         </Card>
     )
 }
 
 
-const draftArticleList: AccountPostOwnType[] = [
-    {
-        id:"0",
-        title: "Responsive UI Design With Material-UI & React",
-        updatedAt:  new Date(),
-        category: {
-            name: "UI/UX",
-            color: "success.solidDisabledBg"
-        }
-    }
-]
-export function AccountDraftListArticleCard({data}: {data: {title?: string, articlesDraft?: AccountPostOwnType[]}}) {
-    const { title = "Draft(s)",  articlesDraft = draftArticleList} = data
+export function AccountDraftListArticleCard({data}: {data: {title?: string, articlesDraft?: AccountDraftPostOwnType[] | null}}) {
     return (
         <Card title="account_lists_drafts_card" sx={{ maxHeight: "950px" }}>
-            <Stack key={`account_lists_drafts_card_header`}  direction={"row"} gap={1.5}><Typography level="h4">{title}</Typography><Chip color="success" variant="solid">{articlesDraft.length}</Chip></Stack>
+            <Stack key={`account_lists_drafts_card_header`}  direction={"row"} gap={1.5}><Typography level="h4">{"Draft(s)"}</Typography><Chip color="success" variant="solid">{data.articlesDraft ? data.articlesDraft.length : 0}</Chip></Stack>
             <Divider inset="context"/>
-            <Stack key={`account_drafts_cards`} gap={1} sx={{overflow: "auto",}}>
-                {articlesDraft.map((articleDraft: AccountPostOwnType, index: number) => (
-                    <>
-                        <AccountDraftCard key={`account_drafts_cards_card_${index}`} data={articleDraft} />
-                        <Divider />
-                    </>
-                ))}
-            </Stack>
+            {data.articlesDraft && data.articlesDraft.length > 0 ? 
+                <Stack key={`account_drafts_cards`} gap={1} sx={{overflow: "auto",}}>
+                    {data.articlesDraft.map((articleDraft: AccountDraftPostOwnType, index: number) => (
+                        <>
+                            <AccountDraftCard key={`account_drafts_cards_card_${index}`} data={articleDraft} />
+                            <Divider />
+                        </>
+                    ))}
+                </Stack> : <></>
+            }
         </Card>
     )
 }
 
-const favoriteArticleList: AccountFavoritePostType[] = [
-    {
-        id:"0",
-        title: "Responsive UI Design With Material-UI & React",
-        updatedAt:  new Date(),
-        category: {
-            name: "UI/UX",
-            color: "success.solidDisabledBg.SolidColor"
-        }, 
-        owner: {
-            id: "0",
-            name: DEFAULT_PSEUDO,
-            image: DEFAULT_AVATAR_IMAGE,
-        },
-        _count: {
-            likes: 20
-        },
-    }
-]
 
-export function AccountFavoriteListArticleCard({data}: {data: AccountFavoritePostType[]}) {
-    const allFavoritesPosts = data ?? favoriteArticleList
+export function AccountFavoriteListArticleCard({data}: {data: AccountFavoritePostType[] | null}) {
     return (
         <Card title="account_lists_fav_card" sx={{ maxHeight: "950px" }}>
-            <Stack key={`account_lists_favs_card_header`}  direction={"row"} gap={1.5}><Typography level="h4">{"Favorites"}</Typography><Chip color="success" variant="solid">{allFavoritesPosts.length}</Chip></Stack>
+            <Stack key={`account_lists_favs_card_header`}  direction={"row"} gap={1.5}><Typography level="h4">{"Favorites"}</Typography><Chip color="success" variant="solid">{data ? data.length : 0}</Chip></Stack>
             <Divider inset="context"/>
-            <Stack key={`account_fav_articles_cards`} gap={1} sx={{overflow: "auto",}}>
-                {allFavoritesPosts.map((favArticle: AccountFavoritePostType, index: number) => (
-                    <AccountArticleCard key={`account_fav_articles_card_${index}`} data={favArticle} />
-                ))} 
-            </Stack>
+            {data && data.length > 0 ? 
+                <Stack key={`account_fav_articles_cards`} gap={1} sx={{overflow: "auto",}}>
+                    {data.map((favArticle: AccountFavoritePostType, index: number) => (
+                        <AccountArticleCard key={`account_fav_articles_card_${index}`} data={favArticle} />
+                    ))} 
+                </Stack> : <></>
+            }
         </Card>
     )
 }
