@@ -30,7 +30,7 @@ export default function Header () {
             <Link href="/">
                 <Typography
                     onClick={() => pathname != "/" && router.push("/")}
-                    startDecorator={ <Image src="/appIcon-white.svg" alt="logo" loading="lazy" width="62" height="42" /> }
+                    startDecorator={ <Image src="/appIcon-white.svg" alt="logo" priority width="62" height="42" /> }
                     level="h4" 
                     fontWeight="xl"
                     sx={{color: 'white', cursor:'pointer',}}
