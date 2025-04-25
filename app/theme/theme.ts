@@ -13,6 +13,12 @@ const lightPalette = {
         solidActiveBg: '#fffa',
         solidHoverBg: '#000a',
         solidDisabledBg: 'lightgrey',
+        outlinedBg: '#fff',
+        outlinedBorder: '#000',
+        outlinedColor: '#000',
+        outlinedActiveBg: '#fff',
+        outlinedHoverBg: '#fff',
+        outlinedDisabledBg: 'darkgrey',
     },
     success: {
         solidBg: 'rgb(234,179,8)',
