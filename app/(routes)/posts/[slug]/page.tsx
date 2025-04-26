@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 
 import PostItem from "@/app/components/common/PostItem";
 
-import { GetPostSlugType } from "@/app/common/types/posts";
+import { GetPostType } from "@/app/common/types/posts";
 import { fetchPostBySlug } from "@/app/actions/post";
 import authOptions from "@/app/lib/authOptions";
 
@@ -13,7 +13,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     const paramSlug = params.slug 
     if (paramSlug == undefined || paramSlug.length <= 0) notFound()
     
-    let data : GetPostSlugType | null = null
+    let data : GetPostType | null = null
 
     if (params.slug == "new") {
         if (session == null) {
