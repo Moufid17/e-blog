@@ -1,4 +1,4 @@
-// [ ] image, table,, task item, code, math, Link.
+// [ ] image, table, task item, code, math, Link.
 'use client'
 import "@/app/theme/style.scss"
 
@@ -9,6 +9,8 @@ import Underline from '@tiptap/extension-underline'
 import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
 import Highlight from "@tiptap/extension-highlight";
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
 import {  EditorContent, useEditor } from '@tiptap/react'
 import MenuBar from '@/app/components/global/PostEditorMenu'
 
@@ -41,6 +43,10 @@ const PostEditor = ({ description, setDescription }: PostEditorProps) => {
       Underline,
       Subscript,
       Superscript,
+      TaskList,
+      TaskItem.configure({
+        nested: false,
+      }),
     ],
     content: description,
     immediatelyRender: false,
