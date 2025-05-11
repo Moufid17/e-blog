@@ -71,7 +71,6 @@ export const fetchPostBySlug = async ({slug}: {slug: string}) => {
     select: {
       id: true,
       title: true,
-      slug: true,
       description: true,
       userId: true,
       owner: {

@@ -15,16 +15,19 @@ export default async function Page({ params }: { params: { slug: string } }) {
     
     let data : GetPostType | null = null
 
-    if (params.slug == "new") {
+    if (paramSlug == "new") {
         if (session == null) {
             redirect("/api/auth/signin")
         } else {
-            data = {id: paramSlug, title: "Hello World", slug: "", description: "", isPublished: false, userId: session?.user.id, 
-                owner: {email: session?.user?.email ?? null, socialBio: null,name: session?.user?.name ?? null} , createdAt: null, updatedAt: null, categoryId: null,}
+            data = {id: paramSlug, title: "Hello World", slug: paramSlug, description: "", isPublished: false, userId: session?.user.id, 
+                owner: {email: session?.user?.email ?? null, socialBio: null,name: session?.user?.name ?? null} , createdAt: null, updatedAt: null, categoryId: null,
+            }
         }
     } else {
-        data = await fetchPostBySlug({slug: paramSlug})
-        if (data == null) notFound()
+        const postData = await fetchPostBySlug({slug: paramSlug})
+        
+        if (postData == null) notFound()
+        data = { ...postData, slug: paramSlug, }
     }
 
     return (
