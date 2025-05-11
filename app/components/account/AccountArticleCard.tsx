@@ -12,7 +12,7 @@ import { DEFAULT_AVATAR_IMAGE, DEFAULT_JOB_NAME, DEFAULT_PSEUDO } from "@/app/he
 
 export default function AccountArticleCard({data, isOwner = false, isCreateDateTime =false}: {data: any, isOwner?: boolean, isCreateDateTime?: boolean}) {
     const router = useRouter()
-    const { id ="0", title="Title", createdAt= new Date(), updatedAt = new Date(), _count: {likes = 20}, comments = 50, views = 100,
+    const { id ="0", title="Title", slug, createdAt= new Date(), updatedAt = new Date(), _count: {likes = 20}, comments = 50, views = 100,
             owner: {
                 name = DEFAULT_PSEUDO, image = DEFAULT_AVATAR_IMAGE, jobName = DEFAULT_JOB_NAME
             } = {}
@@ -24,7 +24,7 @@ export default function AccountArticleCard({data, isOwner = false, isCreateDateT
     return (
         <Card key={`account_article_card_${id}`} sx={{height: "100%", gap: 2,}}>
             <Box key={`account_article_card_title_${id}`} sx={{display:"flex", flexDirection:"row", alignItems: "center", justifyContent: "space-between", wordWrap: "break-word"}}>
-                <Link href={`/posts/${ id }`}>
+                <Link href={`/posts/${ slug }`}>
                     <Typography level="title-lg" >{toUppercaseFirstChar(title.slice(0, 21).trim()) + (title.length > 21 ? "...": "")}</Typography>
                 </Link>
                 {isOwner && <Dropdown>
@@ -39,7 +39,7 @@ export default function AccountArticleCard({data, isOwner = false, isCreateDateT
                         slotProps={{ root: { variant: 'plain', color: 'neutral' } }} 
                     >
                         <MenuItem sx={{p:0,}}>
-                            <Link href={`/posts/${id}`}><Tooltip title={"Edit Post"}><IconButton><Edit2 size={"12px"}/></IconButton></Tooltip></Link> 
+                            <Link href={`/posts/${slug}`}><Tooltip title={"Edit Post"}><IconButton><Edit2 size={"12px"}/></IconButton></Tooltip></Link> 
                         </MenuItem>
                         <ListDivider />
                         <MenuItem  sx={{p:0}}>

@@ -73,7 +73,8 @@ model VerificationToken {
 
 model Post {
   id     String  @id @default(cuid()) @unique
-  title  String
+  title  String 
+  slug   String  @unique @default("")
   description String   
   userId String
   owner User @relation(fields: [userId], references: [id])

@@ -65,6 +65,7 @@ export type AccountEditProfileType = {
 export type AccountPostType = {
   id: string,
   title: string;
+  slug: string;
   createdAt?: Date,
   updatedAt?: Date,
   stats?: AnalyticType,

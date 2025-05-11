@@ -73,7 +73,7 @@ export default async function AccountPage () {
             <Grid key="account_favorites_lists_articles" xs={12} lg={6}>
                 <AccountFavoriteListArticleCard data={allFavoritePost} />
             </Grid>
-            <Grid key="account_stats" xs={12} lg={7} xl={9}>
+            <Grid key="account_stats" xs={12}>
                     <Card title="stats_card" sx={{ height: "100%", width: "100%" }}>
                         <Typography level="h4">Analytics Summary</Typography>
                         <Divider inset="context" />

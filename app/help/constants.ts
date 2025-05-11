@@ -6,7 +6,7 @@ export const CATEGORY_DEFAULT_COLOR = "neutral.solidBg.solidColor"
 
 // Account details
 export const DEFAULT_AVATAR_IMAGE : string = "https://cdn.jsdelivr.net/gh/alohe/memojis/png/memo_32.png" 
-export const DEFAULT_PSEUDO : string = "John Deo" 
+export const DEFAULT_PSEUDO : string = "@JohnD" 
 export const DEFAULT_JOB_NAME : string = "<Not mention />"
 export const DEFAULT_EMAIL : string = "john.deo@gmail.com"
 export const DEFAULT_LOCATION : string = "Paris, France"

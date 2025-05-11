@@ -13,6 +13,12 @@ const lightPalette = {
         solidActiveBg: '#fffa',
         solidHoverBg: '#000a',
         solidDisabledBg: 'lightgrey',
+        outlinedBg: '#fff',
+        outlinedBorder: '#000',
+        outlinedColor: '#000',
+        outlinedActiveBg: '#fff',
+        outlinedHoverBg: '#fff',
+        outlinedDisabledBg: 'darkgrey',
     },
     success: {
         solidBg: 'rgb(234,179,8)',
@@ -21,6 +27,12 @@ const lightPalette = {
         solidActiveBg: '#000',
         solidHoverBg: '#fff',
         solidDisabledBg: 'rgba(234,179,8, 0.5)',
+        outlinedBg: '#fff',
+        outlinedBorder: 'rgb(234,179,8)',
+        outlinedColor: '#000',
+        outlinedActiveBg: 'rgb(234,179,8)',
+        outlinedHoverBg: 'rgb(234,179,8)',
+        outlinedDisabledBg: 'rgba(234,179,8, 0.5)',
     },
 }
 

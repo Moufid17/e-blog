@@ -4,7 +4,7 @@ import { Post } from "@prisma/client";
 
 import authOptions from "@/app/lib/authOptions";
 import { prismaClientDB } from "@/app/lib/prismaClient";
-import { AddPostType } from "../common/types/posts";
+import { AddPostType, UpdatePostType } from "../common/types/posts";
 
 export const addLike = async ({postId}: {postId: string}) => {
   const session = await getServerSession(authOptions);
@@ -65,9 +65,9 @@ export const fetchLikeCount = async ({postId}: {postId: string}) => {
     return postLikesPosts?.likes.length
 }
 
-export const fetchPost = async ({postId}: {postId: string}) => {
+export const fetchPostBySlug = async ({slug}: {slug: string}) => {
   return await prismaClientDB.post.findUnique({
-    where: { id : postId },
+    where: { slug : slug, isPublished: true },
     select: {
       id: true,
       title: true,
@@ -76,6 +76,7 @@ export const fetchPost = async ({postId}: {postId: string}) => {
       owner: {
         select: {
           name: true,
+          socialBio: true,
           email: true,
         }
       },
@@ -90,10 +91,12 @@ export const fetchPost = async ({postId}: {postId: string}) => {
 export const addPost = async ({post}: {post: AddPostType}) => {
   if (!post) return
   if (!post.userId)  return
+  if (!post.categoryId) return
   
   await prismaClientDB.post.create({
     data: {
       title: post.title,
+      slug: post.slug,
       description: post.description,
       isPublished: post.isPublished,
       category: {
@@ -107,7 +110,10 @@ export const addPost = async ({post}: {post: AddPostType}) => {
         },
       },
     }
-  })
+  }).catch((error) => {
+    console.error("Error creating post:", error.message);
+  }
+  )
 }
 
 /**
@@ -115,13 +121,19 @@ export const addPost = async ({post}: {post: AddPostType}) => {
  * Si vous voulez seulement mettre à jour certains champs, vous devriez spécifier ces champs dans l'objet data. Par exemple, si vous voulez seulement mettre à jour le title et le description,
  * @param post
  */
-export const updatePost = async ({post}: {post: Post}) => {
+export const updatePost = async ({post}: {post: UpdatePostType}) => {
   if (!post) return
-  if (!post.id || post.userId === undefined) return
+  if (!post.id || !post.userId || !post.categoryId) return
+  const existingPost = await prismaClientDB.post.findUnique({
+    where: {id: post.id}
+  })
+  if (!existingPost) return
+
   await prismaClientDB.post.update({
     where: {id: post.id},
     data: {
       title: post.title,
+      slug: post.slug,
       description: post.description,
       userId: post.userId,
       categoryId: post.categoryId,

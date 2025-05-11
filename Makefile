@@ -5,6 +5,9 @@ up:
 	docker compose up -d
 
 down:
+	docker compose down
+
+remove:
 	docker compose down -v
 
 install:
@@ -12,6 +15,9 @@ install:
 
 dev:
 	docker compose exec nodejs npm run dev
+
+build:
+	docker compose exec nodejs npm run build
 
 secret:
 	openssl rand -base64 32
@@ -30,7 +36,7 @@ dbupdate:
 	docker compose exec nodejs npx prisma migrate dev --create-only  # To create a new migration based on the changes you made to your Prisma schema.
 
 dpm:
-	docker compose exec nodejs npx prisma migrate dev # To create a new migration based on the changes you made to your Prisma schema.
+	docker compose exec nodejs npx prisma migrate dev --skip-generate # To create a new migration based on the changes you made to your Prisma schema.
 
 seed:
 	docker compose exec nodejs npx prisma db seed # To seed the database with some initial data.

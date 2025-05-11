@@ -1,5 +1,6 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client"
 const prismaClientDB = new PrismaClient()
+
 async function main() {
   const CATEGORIES = [
     {
@@ -8,7 +9,7 @@ async function main() {
     },
     {
       name: 'Frontend Developer',
-      color: "	success.solidDisabledBg.solidColor",
+      color: "success.solidDisabledBg.solidColor",
     },
     {
       name: 'Backend Developer',
@@ -24,7 +25,7 @@ async function main() {
     },
     {
       name: 'SQL',
-      color: "neutral.solidDisabledBg.solidColor",
+      color: "outlined.solidDisabledBg.solidColor",
     },
   ]
 
