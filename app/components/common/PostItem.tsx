@@ -281,9 +281,7 @@ export default function PostItem({ data }: { data: GetPostType }) {
                                 {/* Check logged user is owner */}
                                 {isOwner(post?.owner?.email) ? 
                                     <>
-                                        <PostEditor description={description ?? "<p>Hello World! 🌎️</p>"}
-                                            setDescription={(desc: string) => setDescription(desc)}
-                                        />
+                                        <PostEditor description={description ?? ""} setDescription={(desc: string) => setDescription(desc)} />
                                         <Stack spacing={2} sx={{ mt: 3 }}>
                                             <hr />
                                             <Stack key={"post_actions_btn"} direction="row" spacing={2} justifyContent="center">

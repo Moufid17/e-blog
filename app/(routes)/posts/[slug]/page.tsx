@@ -19,7 +19,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         if (session == null) {
             redirect("/api/auth/signin")
         } else {
-            data = {id: paramSlug, title: "Hello World", description: "<p>Hello World! 🌎️</p>", isPublished: false, userId: session?.user.id, 
+            data = {id: paramSlug, title: "Hello World", description: "", isPublished: false, userId: session?.user.id, 
                 owner: {email: session?.user?.email ?? null, socialBio: null,name: session?.user?.name ?? null} , createdAt: null, updatedAt: null, categoryId: null,}
 
         }
