@@ -1,41 +1,19 @@
 'use client'
 import "@/app/theme/style.scss"
 
-import { Color } from '@tiptap/extension-color'
-import ListItem from '@tiptap/extension-list-item'
-import TextStyle from '@tiptap/extension-text-style'
 import { Editor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
+import { EditorExtensions } from "./postEditor"
 
 
-
-
-const PostViewer = ({content= "Hello World! 🌎️"}: {content?: string}) => {
-  
-  const extensions = [
-    Color.configure({ types: [TextStyle.name, ListItem.name] }),
-    StarterKit.configure({
-      bulletList: {
-        keepMarks: true,
-        keepAttributes: false,      
-      },
-      orderedList: {
-        keepMarks: true,
-        keepAttributes: false,
-      },
-    }),
-  ]
+const PostViewer = ({content}: {content?: string}) => {
 
   const editor = new Editor({
-    extensions,
+    extensions: EditorExtensions,
     content: content,
-    autofocus: true,
     editable: false,
   })
 
-  return (
-    <EditorContent editor={editor} />
-  )
+  return (<EditorContent editor={editor} />)
 }
 
 export default PostViewer
