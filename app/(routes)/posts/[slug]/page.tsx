@@ -1,12 +1,11 @@
 import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import PostItem from "@/app/components/common/PostItem";
 
 import { GetPostType } from "@/app/common/types/posts";
 import { fetchPostBySlug } from "@/app/actions/post";
 import authOptions from "@/app/lib/authOptions";
-import PostItemExp from "@/app/components/common/PostItemExp";
+import PostItem from "@/app/components/common/PostItem";
 
 export default async function Page({ params }: { params: { slug: string } }) {
     const session = await getServerSession(authOptions);
@@ -32,6 +31,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
     }
 
     return (
-        <PostItemExp data={data} />
+        <PostItem data={data} />
     )
 }
