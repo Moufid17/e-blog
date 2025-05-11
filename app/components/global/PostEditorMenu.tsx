@@ -1,9 +1,9 @@
 import React from 'react'
 import { Editor } from '@tiptap/react'
-import { AlignCenter, AlignJustify, AlignLeft, AlignRight, Bold, Code, CornerUpLeft, CornerUpRight, Italic, List, PenTool, RotateCcw, RotateCw, Underline } from 'react-feather'
+import { AlignCenter, AlignJustify, AlignLeft, AlignRight, Bold, Code, CornerUpLeft, CornerUpRight, Italic, Link, List, PenTool, RotateCcw, RotateCw, Underline } from 'react-feather'
 import { Divider, IconButton, Stack, ToggleButtonGroup } from '@mui/joy'
 
-function PostEditorMenu({ editor } : {editor: Editor | null}) {
+function PostEditorMenu({ editor, setLink } : {editor: Editor | null, setLink: () => void}) {
     if (!editor) return null
     return (
         <Stack key={"post_editor_menu_bar_container"} className="post-editor-menu-bar-container">
@@ -74,6 +74,13 @@ function PostEditorMenu({ editor } : {editor: Editor | null}) {
                         onClick={() => editor.chain().focus().toggleCode().run()}
                     >
                         <Code />
+                    </IconButton>
+                    <IconButton aria-label="code" 
+                        color={editor.isActive('link') ? "primary" : "neutral"}
+                        variant={editor.isActive('link') ? "solid" : "outlined"}
+                        onClick={setLink}
+                    >
+                        <Link />
                     </IconButton>
                 </ToggleButtonGroup>
                 <Divider orientation="vertical"/>
