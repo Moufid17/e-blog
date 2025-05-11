@@ -6,6 +6,7 @@ import PostItem from "@/app/components/common/PostItem";
 import { GetPostType } from "@/app/common/types/posts";
 import { fetchPostBySlug } from "@/app/actions/post";
 import authOptions from "@/app/lib/authOptions";
+import PostItemExp from "@/app/components/common/PostItemExp";
 
 export default async function Page({ params }: { params: { slug: string } }) {
     const session = await getServerSession(authOptions);
@@ -31,6 +32,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
     }
 
     return (
-        <PostItem data={data} />
+        <PostItemExp data={data} />
     )
 }

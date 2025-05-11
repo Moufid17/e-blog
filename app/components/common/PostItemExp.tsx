@@ -4,20 +4,19 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-import { Box, CircularProgress, Divider, FormControl, FormLabel, Grid, IconButton, Input, Option, Select, Stack, Switch, Typography } from "@mui/joy";
+import { CircularProgress, Grid, IconButton, Stack } from "@mui/joy";
 import PostViewer from "@/app/components/common/postViewer";
 import PostEditor from "@/app/components/common/postEditor";
 import CustomSnackbar from "../global/Snackbar";
-import CategoryTag from "../category/categoryTag";
 
 import { addPost, updatePost } from "@/app/actions/post";
-import { getAllCategories } from "@/app/actions/category";
-import { GetCategoriesType } from "@/app/common/types/category";
 import { GetPostType } from "@/app/common/types/posts";
 
-import { convertDateToString, getCategoryBgColorAndColor, slugify, toUppercaseFirstChar } from "@/app/lib/utils";
+import {slugify } from "@/app/lib/utils";
 import { RobotIcon } from "./icons/RobotIcon";
 import { Save } from "react-feather";
+import PostEditHeader from "./PostEditHeader";
+import { PostViewHeader } from "./postViewHeader";
 
 const schema = z.object({
   message: z.object({
@@ -26,7 +25,7 @@ const schema = z.object({
   })
 });
 
-export default function PostItem({ data }: { data: GetPostType }) {
+export default function PostItemExp({ data }: { data: GetPostType }) {
     const { data: session } = useSession()
     const router = useRouter()
 
@@ -38,8 +37,6 @@ export default function PostItem({ data }: { data: GetPostType }) {
     });
     const [oldDesc, setOlDesc] = useState<string | null>(null);
     const [description, setDescription] = useState<string | null>(null);
-    const [allCategories, setAllCategories] = useState<GetCategoriesType>([])
-    const [isPublished, setIsPublished] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const [isError, setIsError] = useState<{ title: boolean, description: boolean, category: boolean}>({
@@ -68,12 +65,6 @@ export default function PostItem({ data }: { data: GetPostType }) {
         })
         setOlDesc(data.description)
         setDescription(data?.description)
-        setIsPublished(data?.isPublished)
-    }
-
-    const getCategories = async () => {
-        const d = await getAllCategories()
-        setAllCategories([...d])
     }
 
     const generateDescription = async (title: string) => {
@@ -120,15 +111,15 @@ export default function PostItem({ data }: { data: GetPostType }) {
         setPost((prev) => { return {...prev, description: oldDesc} as GetPostType})
     }
 
-    const handleCategoryChange = (event: React.SyntheticEvent | null, newValue: string | null,) => {
-        if (newValue == null) return
-        setPost({...post, categoryId: newValue} as GetPostType)
-    };
-
     const handlePostCreateButtonClick = async ({description} :{description: string}) => {
         if (post?.title == null || post?.title.length <= 0) {
             setIsError({...isError, title: true})
             setOpenNotification({message: "Le titre ne peut pas être vide.", isOpen: true, isDanger: true})
+        }
+
+        if (post?.categoryId == null) {
+            setIsError({...isError, category: true})
+            setOpenNotification({message: "La catégorie ne peut pas être vide.", isOpen: true, isDanger: true})
         }
 
         if (description.length <= 0 || description === "<p></p>") {
@@ -159,6 +150,11 @@ export default function PostItem({ data }: { data: GetPostType }) {
         if (oldDesc === descriptionUpdate && oldData.title === post?.title && oldData.category === post?.categoryId && oldData.isPublish === post?.isPublished) {
             setOpenNotification({message: "Aucun changement détecté.", isOpen: true})
             return
+        }
+
+        if (post?.categoryId == null) {
+            setIsError({...isError, category: true})
+            setOpenNotification({message: "La catégorie ne peut pas être vide.", isOpen: true, isDanger: true})
         }
 
         if (descriptionUpdate.length <= 0 || descriptionUpdate === "<p></p>") {
@@ -193,99 +189,38 @@ export default function PostItem({ data }: { data: GetPostType }) {
         }
     },[description])
 
-    useEffect(() => {
-        getCategories()
-    },[])
-    
+    const HandleSetPost = (key: string, value: string | boolean) => {
+        switch (key) {
+            case "title":
+                setPost((prev) => { return {...prev, title: value} as GetPostType})
+                break;
+            case "categoryId":
+                setPost((prev) => { return {...prev, categoryId: value} as GetPostType})
+                break;
+            case "isPublished":
+                setPost((prev) => { return {...prev, isPublished: value} as GetPostType})
+                break;
+            default:
+                break;
+        }
+    }
+
     return (
         <Stack key={"post_item_main"} spacing={2} sx={{bgcolor: "background.body"}}>
             {post &&
                 <Stack key={post.id} alignItems="center" sx={{pt: "1.5rem"}} spacing={1}>
-                    <Grid key={"post_header"} width="100%" container spacing={3} direction={{xs: "column", lg: "row"}} sx={{ flexGrow: 1 }}>
-                        <Grid xs={12}>
-                            <Stack key={"post_header_stack"} direction={"row"} spacing={2} width="100%" sx={{justifyContent: "end"}}>
-                                {isOwner(post?.owner?.email) ?
-                                    <>
-                                        <Switch size="lg"
-                                            checked={isPublished}
-                                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                    setPost(prev => ({...prev, isPublished: event.target.checked}) as GetPostType)
-                                                    setIsPublished(event.target.checked)
-                                                }
-                                            }
-                                            color={isPublished ? 'primary' : 'neutral'}
-                                            variant={isPublished ? 'solid' : 'outlined'}
-                                            endDecorator={isPublished ? 'Published' : 'Draft'}
-                                            slotProps={{
-                                                endDecorator: {
-                                                    sx: {
-                                                        minWidth: 35,
-                                                    },
-                                                },
-                                            }}
-                                        />
-                                    </>
-                                    : 
-                                    <>
-                                        <CategoryTag name={allCategories.find((c) => c.id == post.categoryId)?.name} color={allCategories.find((c) => c.id == post.categoryId)?.color}/>
-                                        <Divider orientation="vertical"/>
-                                        <Typography level="body-md">by {post?.owner?.socialBio ? toUppercaseFirstChar(post?.owner?.socialBio) : "@_author"}</Typography>
-                                        <Divider orientation="vertical"/>
-                                        <Typography level="body-sm" alignSelf="flex-end">{toUppercaseFirstChar(convertDateToString(post.updatedAt ?? (new Date())))}</Typography>
-                                    </>
-                                }
-                            </Stack>
-                        </Grid>
-                        <Grid key={"post_title"} xs={12}>
-                            <Stack key={"post_title_stack"} direction={{xs: "column", md: "row"}} spacing={2} width="100%" sx={{justifyContent: "space-between", alignItems: "end"}}>
-                                <FormControl required error={isError.title} sx={{width: isOwner(post?.owner?.email) ? {xs: "100%", md: "80%"} : "100%"}}>
-                                    <FormLabel>Title</FormLabel>
-                                    <Input autoFocus required disabled={!isOwner(post?.owner?.email)} onChange={(e) => { setPost({...post, title: e.target.value})} } defaultValue={toUppercaseFirstChar(post?.title ?? "")} placeholder="Type your title" 
-                                        sx={{   p: 2, 
-                                            '&::before': {
-                                            display: 'none',
-                                        },
-                                        '&:focus-within': {
-                                            borderColor: 'primary.solid',
-                                            outline: '2px solid #0D0D0D',
-                                            outlineOffset: '2px',
-                                        },
-                                        }}
-                                    />
-                                </FormControl>
-                                {isOwner(post?.owner?.email) && <FormControl required sx={{width: {xs: "100%", md: "20%"}}}>
-                                    <Select defaultValue={post.id != "new" ? post.categoryId : undefined} onChange={handleCategoryChange} color={isError.category ? "danger" : "neutral"} placeholder="Select your category" sx={{p: 2.2}}>
-                                        <>
-                                            {allCategories.map((c) => (
-                                                <Option key={c.id} value={c.id}>
-                                                    <Box sx={{ borderRadius: "50%", height: "40px", width: "40px", bgcolor: getCategoryBgColorAndColor(c.color).bgcolor, }}/>
-                                                    <Typography>{c.name}</Typography>
-                                                </Option>
-                                            ))}
-                                        </>
-                                    </Select>
-                                </FormControl>
-                                }
-                            </Stack>
-                        </Grid>
-                    </Grid>
+                    {isOwner(post?.owner?.email) ?
+                        <PostEditHeader data={post} setPost={HandleSetPost} isTitleError={isError.title} isCategoryError={isError.category}/>
+                    :
+                        <PostViewHeader data={post}/>
+                    }
                     <Stack key={"post_descritption_editor_or_viewer"} width="100%">
                         <Grid key={"post_title"} container direction="column" spacing={2} sx={{ flexGrow: 1, m: {xs: 0, md: 2}}}>
-                            <Grid>
-                                <Typography>Description :</Typography>
-                            </Grid>
                             <Grid>
                                 {/* Check logged user is owner */}
                                 {isOwner(post?.owner?.email) ? 
                                     <>
-                                        <PostEditor description={description ?? ""} setDescription={(desc: string) => 
-                                            {
-                                                console.log("desc === description", desc === description);
-                                                console.log("description => ", description);
-                                                console.log("desc => ", desc);
-                                                setDescription(desc)
-                                            }
-                                        } />
+                                        <PostEditor description={description ?? ""} setDescription={(desc: string) => setDescription(desc) } />
                                         <Stack spacing={2} sx={{ mt: 3 }}>
                                             <hr />
                                             <Stack key={"post_actions_btn"} direction="row" spacing={2} justifyContent="center">
@@ -311,12 +246,11 @@ export default function PostItem({ data }: { data: GetPostType }) {
                                         </Stack>
                                     </>
                                     : 
-                                    <PostViewer content={post.description ?? "<p>Hello World! 🌎️</p>"} />
+                                    <PostViewer content={post.description ?? ""} />
                                 }
                             </Grid>
                         </Grid>
                     </Stack>
-                   
                 </Stack>
             }
             <CustomSnackbar isOpen={openNotification.isOpen} message={openNotification.message} isDanger={openNotification.isDanger} onClose={() => setOpenNotification({...openNotification, isOpen: false})}/>
