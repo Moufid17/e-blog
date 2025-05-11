@@ -1,4 +1,4 @@
-// [ ] image, table, task item, code, math, Link.
+// [ ] image, table, code, math, Link.
 'use client'
 import "@/app/theme/style.scss"
 
