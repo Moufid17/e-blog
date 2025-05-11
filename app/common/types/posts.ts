@@ -25,6 +25,7 @@ export type PostCardType = {
 export type GetPostType = {
   id: string,
   title: string,
+  slug: string,
   description: string,
   userId: string | null,
   owner: {

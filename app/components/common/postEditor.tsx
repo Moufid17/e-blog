@@ -1,4 +1,4 @@
-// [ ] image, table, math, Link.
+// [ ] image, table, math, Link (not visible), highlight (not visible).
 'use client'
 import "@/app/theme/style.scss"
 
@@ -116,9 +116,7 @@ const PostEditor = ({ description, setDescription }: PostEditorProps) => {
         // class: "min-height: 156px; border-width: 1px; background-color: rgb(248 250 252); border-radius: 6px; py:8px; px: 12px"
       },
     },
-    onUpdate: ({ editor }) => {
-      setDescription(editor.getHTML());
-    },
+    onUpdate: ({ editor }) => {  setDescription(editor.getHTML()) },
   });
   const setLink = useCallback(() => {
     if (!editor) {

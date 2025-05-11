@@ -163,7 +163,6 @@ export default function PostItem({ data }: { data: GetPostType }) {
 
         if (descriptionUpdate.length <= 0 || descriptionUpdate === "<p></p>") {
             setIsError({...isError, description: true})
-
             setOpenNotification({message: "La description ne peut pas être vide.", isOpen: true, isDanger: true})
         }
         if (post != null) {
@@ -174,10 +173,9 @@ export default function PostItem({ data }: { data: GetPostType }) {
                 if (post.categoryId == undefined) newIsError.category = true
                 setIsError(newIsError)
             } else {
-                const postSlug = slugify(post.title)
-                await updatePost({post: {...post, slug: postSlug, userId: post.userId, description: descriptionUpdate}})
+                await updatePost({post: {...post, slug: post.slug, userId: post.userId, description: descriptionUpdate}})
                 setOpenNotification({message: "Mise à jour avec succès.", isOpen: true})
-                router.replace(`/posts/${postSlug}`)
+                router.replace(`/posts/${post.slug}`)
                 router.prefetch(`/`)
             }
         } else {
@@ -281,7 +279,15 @@ export default function PostItem({ data }: { data: GetPostType }) {
                                 {/* Check logged user is owner */}
                                 {isOwner(post?.owner?.email) ? 
                                     <>
-                                        <PostEditor description={description ?? ""} setDescription={(desc: string) => setDescription(desc)} />
+                                        <PostEditor description={description ?? ""} setDescription={(desc: string) => 
+                                            {
+                                                console.log("desc === description", desc === description);
+                                                console.log("description => ", description);
+                                                console.log("desc => ", desc);
+                                                
+                                                setDescription(desc)
+                                            }
+                                        } />
                                         <Stack spacing={2} sx={{ mt: 3 }}>
                                             <hr />
                                             <Stack key={"post_actions_btn"} direction="row" spacing={2} justifyContent="center">

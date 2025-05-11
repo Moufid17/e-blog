@@ -5,7 +5,6 @@ import { Post } from "@prisma/client";
 import authOptions from "@/app/lib/authOptions";
 import { prismaClientDB } from "@/app/lib/prismaClient";
 import { AddPostType, UpdatePostType } from "../common/types/posts";
-import { slugify } from "../lib/utils";
 
 export const addLike = async ({postId}: {postId: string}) => {
   const session = await getServerSession(authOptions);
@@ -72,6 +71,7 @@ export const fetchPostBySlug = async ({slug}: {slug: string}) => {
     select: {
       id: true,
       title: true,
+      slug: true,
       description: true,
       userId: true,
       owner: {
