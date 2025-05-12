@@ -1,4 +1,4 @@
-// [ ] image, table, math, Link (not visible), highlight (not visible).
+// [ ] image, table, math.
 'use client'
 import "@/app/theme/style.scss"
 
@@ -14,9 +14,9 @@ import TaskList from '@tiptap/extension-task-list'
 import Link from '@tiptap/extension-link'
 import {  EditorContent, useEditor } from '@tiptap/react'
 import MenuBar from '@/app/components/global/PostEditorMenu'
-import { useCallback } from "react"
+import { useCallback, useEffect } from "react"
 
-interface PostEditorProps {
+interface IPostEditor {
   description: string;
   setDescription: (description: string) => void;
 }
@@ -107,7 +107,7 @@ export const EditorExtensions =  [
   })
 ]
 
-const PostEditor = ({ description, setDescription }: PostEditorProps) => {
+const PostEditor = ({ description, setDescription }: IPostEditor) => {
 
   const editor = useEditor({
     extensions: EditorExtensions,
@@ -115,6 +115,8 @@ const PostEditor = ({ description, setDescription }: PostEditorProps) => {
     immediatelyRender: false,
     onUpdate: ({ editor }) => {  setDescription(editor.getHTML()) },
   });
+
+  // [ ] Use dialog instead of window prompt
   const setLink = useCallback(() => {
     if (!editor) {
       return
@@ -127,19 +129,23 @@ const PostEditor = ({ description, setDescription }: PostEditorProps) => {
 
     // empty
     if (url === '') {
-      editor.chain().focus().extendMarkRange('link').unsetLink()
-        .run()
+      editor.chain().focus().extendMarkRange('link').unsetLink().run()
       return
     }
 
     // update link
     try {
-      editor.chain().focus().extendMarkRange('link').setLink({ href: url })
-        .run()
+      editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
     } catch (e: any) {
       alert(e.message)
     }
   }, [editor])
+
+  useEffect(() => {
+    if (editor) {
+      editor.commands.setContent(description)
+    }
+  }, [editor, description])
 
   return (
     <>

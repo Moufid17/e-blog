@@ -72,6 +72,8 @@ export default function PostItem({ data }: { data: GetPostType }) {
           alert("Error : Impossible de générer la description")
           return
         }
+        console.log("generateDescription title => ", title);
+        
         setIsLoading(true)
         fetch("/api/generate", {
           method: "POST",
@@ -90,8 +92,10 @@ export default function PostItem({ data }: { data: GetPostType }) {
         })
           .then((d) => {
             const descriptionHTML = d.message.content.replaceAll("<body>", "").replaceAll("</body>", "");
+            console.log("descriptionHTML => ", descriptionHTML);
+            
             setDescription(descriptionHTML)
-            setPost((prev) => { return {...prev, description: descriptionHTML} as GetPostType})
+            // setPost((prev) => { return {...prev, description: descriptionHTML} as GetPostType})
         })
           .catch((error) => {
             console.error(error);
@@ -184,7 +188,9 @@ export default function PostItem({ data }: { data: GetPostType }) {
     },[data])
 
     useEffect(() => {
-        if (description) {
+        if (description && description.length > 0) {
+            console.log("Description changed =>", description);
+            
             setPost((prev) => { return {...prev, description: description} as GetPostType})
         }
     },[description])
