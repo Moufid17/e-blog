@@ -4,46 +4,34 @@
 - Création d’article avec un wysiwyg épuré et suggestion de contenu avec assistance d’ia.
 - Espace personnel (profil et analytics), page public d’auteur customisable (about-me).
 - SSO et Conteneurisation
-# Requirement :
+
+### Requirement :
 - Create `.env` file and fill the parameters missing.
 
-# Lancement projet
+### Commands
 
 ```bash
-make up
-make dpm  // Create migration (optional if db already exist)
-make seed
-make dev
+make secret // Generate Next auth secret
 ```
 
-# Arreter le projet
 ```bash
-make down
-```
-# Generate Next auth secret
-```bash
-make secret
+make up   // Up container
+make dpm  // Create migration ( optional if db already exist )
+make seed // Populate categories table in database
+make dev  // Run locally
 ```
 
-# Run Command in server
 ```bash
-make bash
+make down // Stop Container
+make bash // Access to container terminal
 ```
 
-# Prisma Migration
-- First migration
-    ```bash
-    make dpm
-    ```
-- Create migration after update
-    ```bash
-    make dbupdate
-    make dpm
-    ```
+# Database Migration commande
+>Create migration after update
+```bash
+make dbupdate
+make dpm
+```
 
 ## Ressources
-### Prisma
-- [Prisma/postgres](https://www.prisma.io/docs/concepts/database-connectors/postgresql)
-- [Prisma/NextJs](https://www.prisma.io/nextjs)
 - [Prisma seed](https://www.prisma.io/docs/orm/prisma-migrate/workflows/seeding#seeding-your-database-with-typescript-or-javascript)
-    ```
